@@ -20,7 +20,10 @@ This makes TDD even more efficient.
 * send some commands from the tertestrial editor plugin
 * watch your tests run in your terminal
 
-__Pro tip:__ if you start `tertestrial` in the background (`tertestrial &`),
+To end the server, simply press __ctrl-c__ in the terminal.
+
+
+__Pro tip:__ if you start tertestrial in the background by running `tertestrial &`,
 your terminal remains interactive,
 and you can keep running other commands there as well.
 
