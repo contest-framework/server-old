@@ -14,7 +14,7 @@ function! RepeatLastTest()
 endfunction
 
 function! SendTestCommand(data)
-  :call writefile([a:data], 'test-commands')
+  :call writefile([a:data], 'tertestrial')
 endfunction
 
 
