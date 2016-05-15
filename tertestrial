@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+# This script executes tests configured via a named pipe.
+# The named pipe is written to by VIM commands.
+# This is used for TDD.
+
+VERSION=0.1
+
+tput dim
+echo -n "Tertestrial server "
+tput setaf 6
+echo $VERSION
+tput sgr0
+echo
+case $(ps -o stat= -p $$) in
+
+  *+*)
+    # running in the foreground
+    tput bold
+    echo -n "ctrl-c "
+    tput sgr0
+    echo "to exit"
+    ;;
+
+  *)
+    # running in the background
+    #
+    # Note: cannot use formatting here,
+    # since we need to output this text as fast as possible.
+    # Otherwise the output happens after the shell renders the next prompt
+    echo "to exit, run 'fg', then hit [ctrl-c]"
+
+esac
+
+
+# Cleanup after user presses Ctrl-C
+trap ctrl_c INT
+function ctrl_c() {
+  rm test-commands
+  exit
+}
+
+
+# Create the named pipe if it doesn't exist
+if [ ! -p test-commands ]; then
+  mkfifo test-commands
+fi
+
+
+# Runs the whole given Cucucmber file
+function test_file_cucumber {
+  last_test_command="cucumber-js $filename"
+  sh -c "$last_test_command"
+}
+
+
+# Runs the given Cucumber file at the given line
+function test_file_line_cucumber {
+  last_test_command="cucumber-js $filename:$line"
+  sh -c "$last_test_command"
+}
+
+
+# Repeats the last run test
+function repeat_last_test_ {
+  sh -c "$last_test_command"
+}
+
+
+# Parses the data received from VIM
+function parse_data {
+  operation=''
+  filetype=''
+  filename=''
+  line=''
+  eval "$1"
+}
+
+
+# Executes the parsed command received from VIM
+function run_operation {
+  clear
+  eval "${operation}_${filetype}"
+}
+
+
+# Blocks until it receives the next command from VIM,
+# then returns that command
+function receive_next_operation {
+  cat test-commands
+}
+
+while true; do
+  data=$(receive_next_operation)
+  parse_data "$data"
+  run_operation
+done
+

@@ -14,8 +14,8 @@ The commands sent by the Tertestrial clients contain the following fields:
   * `test_file_line`: test the given file at the given line
   * `repeat_last_test`: repeat the last test sent
 
-The wire format is valid Bash code, and looks like:
+The wire format is valid Bash code. An example looks like this:
 
-```
-operation=<...>; filetype=<...>; filename=<...>; line=<...>
+```bash
+operation="test_file_line"; filetype="cucumber"; filename="features/foo.feature"; line="23"
 ```

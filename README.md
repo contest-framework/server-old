@@ -9,8 +9,8 @@ This makes TDD even more efficient.
 ## Installation
 
 * Copy the file `tertestrial` somewhere into your path and make sure it is executable
-* install an editor plugin, for example [tertestrial-vim]()
-* add the file `tertestrial` to your
+* install an editor plugin, for example [tertestrial-vim](https://github.com/kevgo/tertestrial-vim)
+* optionally add the file `tertestrial` to your
   [global gitignore](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore).
 
 
@@ -20,12 +20,14 @@ This makes TDD even more efficient.
 * send some commands from the tertestrial editor plugin
 * watch your tests run in your terminal
 
-To end the server, simply press __ctrl-c__ in the terminal.
+To end the server, press __ctrl-c__ in the terminal.
 
 
 __Pro tip:__ if you start tertestrial in the background by running `tertestrial &`,
 your terminal remains interactive,
-and you can keep running other commands there as well.
+i.e. you can keep running other commands there as well.
+To exit in this case, run `fg` to bring tertestrial back into the foreground,
+then press __ctrl-c__.
 
 
 ## How it works
@@ -37,3 +39,15 @@ The editor plugins send commands to the server
 via a pipe named `tertestrial` in the directory where you start the server
 (typically the base directory of the code base you are working on).
 Don't check this file into Git.
+
+
+## Credits
+
+This software is based on an idea described by Gary Bernhard in his excellent
+[Destroy All Software screencasts](https://www.destroyallsoftware.com/screencasts/catalog/running-tests-asynchronously).
+If you find this software useful, subscribe to Gary's other talks and presentations!
+
+
+## Development
+
+see our [developer documentation](CONTRIBUTING.md).
