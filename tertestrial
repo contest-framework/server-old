@@ -95,4 +95,3 @@ while true; do
   parse_data "$data"
   run_operation
 done
-
