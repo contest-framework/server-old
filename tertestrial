@@ -4,6 +4,14 @@
 # The named pipe is written to by VIM commands.
 # This is used for TDD.
 
+
+# Terminology:
+# - editors send "data" that describes the next test to run
+# - this data contains amongst other things an "operation"
+#   like "test_file_line" to test a file at a given line number
+# - this server script parses the data into the full "command" to run the test on the command line
+
+
 VERSION=0.1
 
 tput dim
@@ -33,41 +41,59 @@ case $(ps -o stat= -p $$) in
 esac
 
 
-# Cleanup after user presses Ctrl-C
+
+# GLOBAL VARIABLES
+
+# The test command that was last run (example: "cucumber-js features/foo.feature:23")
+last_test_command=''
+
+# The operation to execute next (example: "test_file_line")
+operation=''
+
+# The file type that the editor thinks it has (example: "cucumber")
+filetype=''
+
+# The path of the file relative to the current directory (example: "features/foo.feature")
+filename=''
+
+# The line number in the file to run (example: "23")
+line=''
+
+
+# NAMED PIPE SETUP
+
+# create the named pipe if it doesn't exist
+if [ ! -p tertestrial ]; then
+  mkfifo tertestrial
+fi
+
+# remove the pipe when the script ends
 trap ctrl_c INT
-function ctrl_c() {
-  rm test-commands
+function ctrl_c {
+  rm tertestrial
   exit
 }
 
 
-# Create the named pipe if it doesn't exist
-if [ ! -p test-commands ]; then
-  mkfifo test-commands
-fi
 
+# PARSE THE INCOMING DATA
 
-# Runs the whole given Cucucmber file
-function test_file_cucumber {
-  last_test_command="cucumber-js $filename"
-  sh -c "$last_test_command"
+# These functions determine the test command for particular combinations of input.
+# They get called by determine_command_to_run.
+function command_for_test_file_cucumber {
+  echo "cucumber-js $filename"
 }
 
-
-# Runs the given Cucumber file at the given line
-function test_file_line_cucumber {
-  last_test_command="cucumber-js $filename:$line"
-  sh -c "$last_test_command"
+function command_for_test_file_line_cucumber {
+  echo "cucumber-js $filename:$line"
 }
 
-
-# Repeats the last run test
-function repeat_last_test_ {
-  sh -c "$last_test_command"
+function command_for_repeat_last_test_ {
+  echo $last_test_command
 }
-
 
 # Parses the data received from VIM
+# into a set of global variables
 function parse_data {
   operation=''
   filetype=''
@@ -76,22 +102,34 @@ function parse_data {
   eval "$1"
 }
 
-
-# Executes the parsed command received from VIM
-function run_operation {
-  clear
-  eval "${operation}_${filetype}"
+# Returns the exact command to run the next test
+function determine_command_to_run {
+  eval "command_for_${operation}_${filetype}"
 }
 
 
-# Blocks until it receives the next command from VIM,
+
+# RUNNING TESTS
+
+# Executes the current test command
+function run_test {
+  clear
+  sh -c "$last_test_command"
+}
+
+
+
+# RECEIVING COMMANDS
+
+# This function blocks until it receives the next command from the pipe,
 # then returns that command
 function receive_next_operation {
-  cat test-commands
+  cat tertestrial
 }
 
 while true; do
   data=$(receive_next_operation)
   parse_data "$data"
-  run_operation
+  last_test_command=$(determine_command_to_run)
+  run_test
 done
