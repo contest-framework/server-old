@@ -16,7 +16,6 @@ set -e
 
 VERSION=0.1
 
-tput dim
 echo -n "Tertestrial server "
 tput setaf 6
 echo $VERSION
