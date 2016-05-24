@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # This script executes tests configured via a named pipe.
 # The named pipe is written to by VIM commands.
@@ -118,7 +119,9 @@ function determine_command_to_run {
 # Executes the current test command
 function run_test {
   clear
+  set +e
   sh -c "$last_test_command"
+  set -e
 }
 
 
