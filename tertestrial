@@ -89,8 +89,17 @@ function command_for_test_file_cucumber {
   echo "cucumber-js $filename"
 }
 
+function command_for_test_file_ls {
+  echo "mocha --compilers ls:livescript $filename"
+}
+
 function command_for_test_file_line_cucumber {
   echo "cucumber-js $filename:$line"
+}
+
+function command_for_test_file_line_ls {
+  # Note: mocha does not seem to support running tests by line
+  echo "mocha --compilers ls:livescript $filename"
 }
 
 function command_for_repeat_last_test_ {
