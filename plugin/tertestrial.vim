@@ -1,11 +1,11 @@
 function! TestFile()
   call SendTestCommand( 'operation="test_file"; filetype="'.&filetype.'"; filename="'.bufname('%').'"' )
-  echo 'testing file'
+  echo 'testing file '.bufname('%')
 endfunction
 
 function! TestFileLine()
   call SendTestCommand( 'operation="test_file_line"; filetype="'.&filetype.'"; filename="'.bufname('%').'"; line="'.line('.').'"' )
-  echo 'testing file at line'
+  echo 'testing file '.bufname('%').' at line '.line('.')
 endfunction
 
 function! RepeatLastTest()
@@ -21,8 +21,8 @@ let g:autotest = 0
 function! ToggleTestAutorun()
   let g:autotest = 1 - g:autotest
   if g:autotest
-    echo 'Tertestrial AutoTest ON'
+    echo 'AutoTest ON'
   else
-    echo 'Tertestrial AutoTest OFF'
+    echo 'AutoTest OFF'
   endif
 endfunction
