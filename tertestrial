@@ -71,6 +71,9 @@ fi
 # remove the pipe when the script ends
 trap ctrl_c INT
 function ctrl_c {
+  echo
+  echo
+  echo "tertestrial shutting down..."
   rm tertestrial
   exit
 }
