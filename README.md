@@ -1,5 +1,5 @@
 # Tertestrial Server
-> TDD at your fingertips
+> pragmatic test auto-runner
 
 Tertestrial allows you to run unit tests from inside your editor
 and see their output in your terminal.
@@ -34,11 +34,10 @@ then press __ctrl-c__.
 
 Tertestrial consists of a server (in this repository)
 and a number of editor plugins.
-
 The editor plugins send commands to the server
 via a pipe named `tertestrial` in the directory where you start the server
 (typically the base directory of the code base you are working on).
-Don't check this file into Git.
+Tertestrial removes this pipe when stopping.
 
 
 ## Credits
