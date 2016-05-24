@@ -9,7 +9,8 @@
 # - editors send "data" that describes the next test to run
 # - this data contains amongst other things an "operation"
 #   like "test_file_line" to test a file at a given line number
-# - this server script parses the data into the full "command" to run the test on the command line
+# - this server script parses the data into the full "command"
+#   to run the test on the command line
 
 
 VERSION=0.1
