@@ -25,6 +25,7 @@ function! SendTestCommand(data, message)
   else
     echoerr "ERROR: Tertestrial server is not running!"
   endif
+  echo findfile('tertestrial', '.')
 endfunction
 
 
