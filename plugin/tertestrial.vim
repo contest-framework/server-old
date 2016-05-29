@@ -23,7 +23,7 @@ function! SendTestCommand(data, message)
   if findfile('tertestrial', '.') == 'tertestrial'
     call writefile([a:data], 'tertestrial')
   else
-    echo "ERROR: Tertestrial server is not running!"
+    echoerr "ERROR: Tertestrial server is not running!"
   endif
 endfunction
 
