@@ -20,12 +20,11 @@ endfunction
 
 
 function! SendTestCommand(data, message)
-  if findfile('tertestrial', '.') == 'tertestrial'
+  if findfile('tertestrial', '.;') == 'tertestrial'
     call writefile([a:data], 'tertestrial')
   else
     echoerr "ERROR: Tertestrial server is not running!"
   endif
-  echo findfile('tertestrial', '.;')
 endfunction
 
 
