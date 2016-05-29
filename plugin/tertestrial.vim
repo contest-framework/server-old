@@ -1,18 +1,21 @@
 function! TestFile()
-  call SendTestCommand( 'operation="test_file"; filetype="'.&filetype.'"; filename="'.bufname('%').'"',
-                        'testing file '.bufname('%') )
+  let command = 'operation="test_file"; filetype="'.&filetype.'"; filename="'.bufname('%').'"'
+  let message = 'testing file '.bufname('%')
+  call SendTestCommand(command, message)
 endfunction
 
 
 function! TestFileLine()
-  call SendTestCommand( 'operation="test_file_line"; filetype="'.&filetype.'"; filename="'.bufname('%').'"; line="'.line('.').'"',
-                        'testing file '.bufname('%').' at line '.line('.') )
+  let command = 'operation="test_file_line"; filetype="'.&filetype.'"; filename="'.bufname('%').'"; line="'.line('.').'"'
+  let message = 'testing file '.bufname('%').' at line '.line('.')
+  call SendTestCommand(command, message)
 endfunction
 
 
 function! RepeatLastTest()
-  call SendTestCommand( 'operation="repeat_last_test"',
-                        'repeating last test' )
+  let command = 'operation="repeat_last_test"'
+  let message = 'repeating last test'
+  call SendTestCommand(command, message)
 endfunction
 
 
