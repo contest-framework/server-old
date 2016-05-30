@@ -92,6 +92,10 @@ function command_for_test_file_ls {
   echo "mocha --compilers ls:livescript $filename"
 }
 
+function command_for_test_file_sh {
+  echo $filename
+}
+
 function command_for_test_file_line_cucumber {
   echo "cucumber-js $filename:$line"
 }
