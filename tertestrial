@@ -64,9 +64,11 @@ line=''
 # NAMED PIPE SETUP
 
 # create the named pipe if it doesn't exist
-if [ ! -p tertestrial.tmp ]; then
-  mkfifo tertestrial.tmp
+if [ -p tertestrial.tmp ]; then
+  rm tertestrial.tmp
 fi
+mkfifo tertestrial.tmp
+
 
 # remove the pipe when the script ends
 trap ctrl_c INT
