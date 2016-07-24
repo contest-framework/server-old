@@ -5,8 +5,8 @@ function! TestFile()
 endfunction
 
 
-function! TestFileLine()
-  let command = 'operation="test_file_line"; filetype="'.&filetype.'"; filename="'.bufname('%').'"; line="'.line('.').'"'
+function! TestLine()
+  let command = 'operation="test_line"; filetype="'.&filetype.'"; filename="'.bufname('%').'"; line="'.line('.').'"'
   let message = 'testing file '.bufname('%').' at line '.line('.')
   call SendTestCommand(command, message)
 endfunction
