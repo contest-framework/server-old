@@ -64,8 +64,8 @@ line=''
 # NAMED PIPE SETUP
 
 # create the named pipe if it doesn't exist
-if [ ! -p tertestrial ]; then
-  mkfifo tertestrial
+if [ ! -p tertestrial.tmp ]; then
+  mkfifo tertestrial.tmp
 fi
 
 # remove the pipe when the script ends
@@ -74,7 +74,7 @@ function ctrl_c {
   echo
   echo
   echo "tertestrial shutting down..."
-  rm tertestrial
+  rm tertestrial.tmp
   exit
 }
 
@@ -143,7 +143,7 @@ function run_test {
 # This function blocks until it receives the next command from the pipe,
 # then returns that command
 function receive_next_operation {
-  cat tertestrial
+  cat tertestrial.tmp
 }
 
 while true; do
