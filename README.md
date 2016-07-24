@@ -1,26 +1,101 @@
 # Tertestrial Server
+
 [![CircleCI](https://circleci.com/gh/kevgo/tertestrial-server.svg?style=shield)](https://circleci.com/gh/kevgo/tertestrial-server)
 [![Dependency Status](https://david-dm.org/kevgo/tertestrial-server.svg)](https://david-dm.org/kevgo/tertestrial-server)
 [![devDependency Status](https://david-dm.org/kevgo/tertestrial-server/dev-status.svg)](https://david-dm.org/kevgo/tertestrial-server#info=devDependencies)
 
-Tertestrial allows you to run unit tests from inside your code editor
-and see their output in your terminal.
-This makes TDD even more efficient.
-It works with any editor,
-given you have installed the Tertestrial plugin for it.
+_Tertestrial runs your tests for the files you are currently working on,
+using hotkeys from inside your code editor._
+
+It can be configured to work with all test frameworks,
+and works with any text editor that has a Tertestrial plugin installed.
+Currently there is only a plugin for [Vim](https://github.com/kevgo/tertestrial-vim),
+more can be built easily.
 
 
 ## Installation
 
-* Copy the file `tertestrial` somewhere into your path and make sure it is executable
-* install an editor plugin, for example [tertestrial-vim](https://github.com/kevgo/tertestrial-vim)
-* optionally add the file `tertestrial.tmp` to your
+* Copy the file [tertestrial](https://raw.githubusercontent.com/kevgo/tertestrial-server/master/tertestrial)
+  somewhere into your path and make sure it is executable
+* install the Tertestrial plugin for your editor, for example [tertestrial-vim](https://github.com/kevgo/tertestrial-vim)
+* optionally add `tertestrial.tmp` to your
   [global gitignore](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore).
+
+
+## Setup
+
+Tertestrial needs a configuration file,
+so that it knows how your test framework works.
+These configuration files are simple [Bash Script](https://www.gnu.org/software/bash)
+files.
+They define functions that output the name of the test command you want to run
+when receiving a signal from your text editor.
+
+The signal from the text editor is made available in these variables:
+<table>
+  <tr>
+    <th>variable name</th>
+    <th>description</th>
+    <th>example content</th>
+  </tr>
+  <tr>
+    <td>$operation</td>
+    <td>the operation to perform</td>
+    <td>
+      "test_file" to test the whole file,<br>
+      "test_file_line" to test the file at the given line
+    </td>
+  <tr>
+  <tr>
+    <td>$filetype</td>
+    <td>the type of file you want to test</td>
+    <td>"cucumber"</td>
+  <tr>
+  <tr>
+    <td>$filename</td>
+    <td>path to the file to test</td>
+    <td>"features/foo.feature"</td>
+  <tr>
+  <tr>
+    <td>$line</td>
+    <td>
+      the current line in the file <br>
+      (only provided when you want to test at a line)
+    </td>
+    <td>"12"</td>
+  <tr>
+</table>
+
+
+The config file defines functions that tell Tertestrial
+how to perform a given operation on a given file type.
+The name for these functions has the format
+`command_for_<operation>_<filetype>`.
+Here is an example Tertestrial config file to run
+[Cucumber-JS](https://github.com/cucumber/cucumber-js)
+tests:
+
+```bash
+#!/usr/bin/env bash
+
+# Provides the command to test a whole Cucumber file
+function command_for_test_file_cucumber {
+  echo "cucumber-js $filename"
+}
+
+# Provides the command to test a Cucumber file at the given line
+function command_for_test_file_line_cucumber {
+  echo "cucumber-js $filename:$line"
+}
+```
+
+Save this file as `tertestrial-config` and you are good to go.
 
 
 ## Usage
 
-* start `tertestrial` in the base directory of the code base you are currently developing
+Once you have created the config file:
+* start `tertestrial` in the base directory of your code base
 * send some commands from the tertestrial editor plugin
 * watch your tests run in your terminal
 
@@ -30,7 +105,9 @@ To end the server, press __ctrl-c__ in the terminal.
 __Pro tip:__ if you start tertestrial in the background by running `tertestrial &`,
 your terminal remains interactive,
 i.e. you can keep running other commands there as well.
-To exit in this case, run `fg` to bring tertestrial back into the foreground,
+Just start typing in the terminal to see your command prompt.
+To exit the Tertestrial server in this case,
+run `fg` to bring tertestrial back into the foreground,
 then press __ctrl-c__.
 
 
@@ -48,7 +125,9 @@ Tertestrial removes this pipe when stopping.
 
 This software is based on an idea described by Gary Bernhard in his excellent
 [Destroy All Software screencasts](https://www.destroyallsoftware.com/screencasts/catalog/running-tests-asynchronously).
-If you find this software useful, subscribe to Gary's other talks and presentations!
+If you find this software useful,
+subscribe to Gary's talks and presentations
+for more of his cool ideas!
 
 
 ## Development
