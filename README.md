@@ -4,7 +4,7 @@
 [![Dependency Status](https://david-dm.org/kevgo/tertestrial-server.svg)](https://david-dm.org/kevgo/tertestrial-server)
 [![devDependency Status](https://david-dm.org/kevgo/tertestrial-server/dev-status.svg)](https://david-dm.org/kevgo/tertestrial-server#info=devDependencies)
 
-_Tertestrial runs your tests for the files you are currently working on,
+_Tertestrial runs your tests for the file you are currently working on,
 using hotkeys from inside your code editor._
 
 It can be configured to work with all test frameworks,
@@ -12,26 +12,37 @@ and works with any text editor that has a Tertestrial plugin installed.
 Currently there is only a plugin for [Vim](https://github.com/kevgo/tertestrial-vim),
 more can be built easily.
 
+Examples:
+- open a test file in your editor
+- hit a hotkey to run all tests in that file
+- hit another hotkey to run only the test under your cursor
+- open other code files and edit them
+- hit a hotkey to re-run the last test
+- hit another hotkey to enable auto-run,
+  i.e. automatically re-run the last run test
+  each time you save any file in your editor (without having to press further hotkeys)
+
 
 ## Installation
 
 * Copy the file [tertestrial](https://raw.githubusercontent.com/kevgo/tertestrial-server/master/tertestrial)
-  somewhere into your path and make sure it is executable
+  somewhere into your path and make sure it is executable.
 * install the Tertestrial plugin for your editor, for example [tertestrial-vim](https://github.com/kevgo/tertestrial-vim)
-* optionally add `tertestrial.tmp` to your
+* (optionally) add `tertestrial.tmp` to your
   [global gitignore](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore).
 
 
-## Setup
+## Usage
 
-Tertestrial needs a configuration file,
+Tertestrial requires a configuration file,
 so that it knows how your test framework works.
 These configuration files are simple [Bash Script](https://www.gnu.org/software/bash)
 files.
-They define functions that output the name of the test command you want to run
-when receiving a signal from your text editor.
+The config file defines functions that tell Tertestrial
+how to perform a particular operation on a particular file type.
 
-The signal from the text editor is made available in these variables:
+What type of operation and file type is requested by the user
+is made available in these variables:
 <table>
   <tr>
     <th>variable name</th>
@@ -67,9 +78,7 @@ The signal from the text editor is made available in these variables:
 </table>
 
 
-The config file defines functions that tell Tertestrial
-how to perform a given operation on a given file type.
-The name for these functions has the format
+The name for the functions in the config file has the format
 `command_for_<operation>_<filetype>`.
 Here is an example Tertestrial config file to run
 [Cucumber-JS](https://github.com/cucumber/cucumber-js)
@@ -89,14 +98,10 @@ function command_for_test_file_line_cucumber {
 }
 ```
 
-Save this file as `tertestrial-config` and you are good to go.
-
-
-## Usage
-
-Once you have created the config file:
+Save this file under the name `tertestrial-config` into the root directory of your code base.
+Then:
 * start `tertestrial` in the base directory of your code base
-* send some commands from the tertestrial editor plugin
+* send some commands using the tertestrial editor plugin
 * watch your tests run in your terminal
 
 To end the server, press __ctrl-c__ in the terminal.
