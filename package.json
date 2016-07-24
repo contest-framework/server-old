@@ -10,5 +10,8 @@
     "observable-process": "2.3.0",
     "rimraf": "2.5.4",
     "wait": "0.1.0"
+  },
+  "scripts": {
+    "test": "bin/spec"
   }
 }

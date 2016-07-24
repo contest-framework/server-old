@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+
 # This script executes tests configured via a named pipe.
 # The named pipe is written to by VIM commands.
 # This is used for TDD.
@@ -16,19 +17,14 @@ set -e
 
 VERSION=0.1
 
-echo -n "Tertestrial server "
-tput setaf 6
-echo $VERSION
-tput sgr0
+echo "Tertestrial server $VERSION"
 echo
 case $(ps -o stat= -p $$) in
 
   *+*)
     # running in the foreground
-    tput bold
-    echo -n "ctrl-c "
-    tput sgr0
-    echo "to exit"
+    echo "ctrl-c to exit"
+    echo
     ;;
 
   *)
@@ -84,7 +80,7 @@ function ctrl_c {
 # load the command generators
 
 if [ ! -e 'tertestrial.config' ]; then
-  echo "Cannot find configuration file tertestrial.config"
+  echo "Error: Cannot find configuration file tertestrial.config"
   exit 1
 fi
 

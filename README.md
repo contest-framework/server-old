@@ -1,9 +1,13 @@
 # Tertestrial Server
-> pragmatic test auto-runner
+[![CircleCI](https://circleci.com/gh/kevgo/tertestrial-server.svg?style=shield)](https://circleci.com/gh/kevgo/tertestrial-server)
+[![Dependency Status](https://david-dm.org/kevgo/tertestrial-server.svg)](https://david-dm.org/kevgo/tertestrial-server)
+[![devDependency Status](https://david-dm.org/kevgo/tertestrial-server/dev-status.svg)](https://david-dm.org/kevgo/tertestrial-server#info=devDependencies)
 
-Tertestrial allows you to run unit tests from inside your editor
+Tertestrial allows you to run unit tests from inside your code editor
 and see their output in your terminal.
 This makes TDD even more efficient.
+It works with any editor,
+given you have installed the Tertestrial plugin for it.
 
 
 ## Installation

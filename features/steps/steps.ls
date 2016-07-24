@@ -21,7 +21,7 @@ module.exports = ->
       cwd: 'tmp'
     if @verbose
       args.console = dim-console.console
-    @process = new ObservableProcess ['bash', '-c', command], args
+    @process = new ObservableProcess ['bash', '-c', "../#{command}"], args
     wait 100, done   # give tertestrial some time to boot up
 
 
