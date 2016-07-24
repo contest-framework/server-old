@@ -4,8 +4,7 @@
 [![Dependency Status](https://david-dm.org/kevgo/tertestrial-server.svg)](https://david-dm.org/kevgo/tertestrial-server)
 [![devDependency Status](https://david-dm.org/kevgo/tertestrial-server/dev-status.svg)](https://david-dm.org/kevgo/tertestrial-server#info=devDependencies)
 
-_Tertestrial runs your tests for the file you are currently working on,
-using hotkeys from inside your code editor._
+_Runs the currently relevant test from inside your code editor._
 
 It can be configured to work with all test frameworks,
 and works with any text editor that has a Tertestrial plugin installed.
