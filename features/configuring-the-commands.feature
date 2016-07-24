@@ -10,7 +10,6 @@ Feature: configuring the commands
     for different situations
 
 
-  @verbose
   Scenario: simple configuration file
     Given a file "tertestrial.config" with the content:
       """
