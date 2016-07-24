@@ -8,6 +8,7 @@
     "dim-console": "0.3.2",
     "livescript": "1.5.0",
     "observable-process": "2.3.0",
+    "rimraf": "2.5.4",
     "wait": "0.1.0"
   }
 }

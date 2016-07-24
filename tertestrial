@@ -81,31 +81,19 @@ function ctrl_c {
 }
 
 
+# load the command generators
+
+if [ ! -e 'tertestrial.config' ]; then
+  echo "Cannot find configuration file tertestrial.config"
+  exit 1
+fi
+
+
+# load the tertestrial configuration file
+source tertestrial.config
+
 
 # PARSE THE INCOMING DATA
-
-# These functions determine the test command for particular combinations of input.
-# They get called by determine_command_to_run.
-function command_for_test_file_cucumber {
-  echo "cucumber-js $filename"
-}
-
-function command_for_test_file_ls {
-  echo "mocha --compilers ls:livescript $filename"
-}
-
-function command_for_test_file_sh {
-  echo $filename
-}
-
-function command_for_test_file_line_cucumber {
-  echo "cucumber-js $filename:$line"
-}
-
-function command_for_test_file_line_ls {
-  # Note: mocha does not seem to support running tests by line
-  echo "mocha --compilers ls:livescript $filename"
-}
 
 function command_for_repeat_last_test_ {
   echo $last_test_command
