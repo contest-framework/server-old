@@ -1,12 +1,12 @@
 function! TestFile()
-  let command = 'operation="test_file"; filetype="'.&filetype.'"; filename="'.bufname('%').'"'
+  let command = '{"operation": "test_file", filename="'.bufname('%').'"}'
   let message = 'testing file '.bufname('%')
   call SendTestCommand(command, message)
 endfunction
 
 
 function! TestLine()
-  let command = 'operation="test_line"; filetype="'.&filetype.'"; filename="'.bufname('%').'"; line="'.line('.').'"'
+  let command = '{"operation": "test_line", "filename": "'.bufname('%').'", line="'.line('.').'"}'
   let message = 'testing file '.bufname('%').' at line '.line('.')
   call SendTestCommand(command, message)
 endfunction
