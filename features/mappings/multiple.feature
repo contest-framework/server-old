@@ -1,4 +1,4 @@
-Feature: mappings
+Feature: multiple mappings
 
   As a developer working on a code base that uses different types of test runners or linters
   I want to be able to run different test runners on my files
