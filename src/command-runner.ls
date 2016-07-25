@@ -1,5 +1,6 @@
 require! {
   'chalk' : {bold, cyan, red}
+  './helpers/error-message' : {abort, error}
   './helpers/file-type'
 }
 
@@ -17,8 +18,7 @@ class CommandRunner
       return
 
     unless mapper = @get-mapper command
-      console.log red "Error: cannot find a mapper for ", command
-      process.exit 1
+      abort "cannot find a mapper for ", command
     run-string = mapper command
     console.log bold run-string
 
@@ -28,19 +28,17 @@ class CommandRunner
 
     type = file-type filename
     unless type-mapping = mapping[type]
-      console.log red "Error: no mapping for file type #{cyan type}"
-      process.exit 1
+      abort "no mapping for file type #{cyan type}"
 
     unless mapper = type-mapping[operation]
-      console.log red "Error: no mapper for operation #{cyan operation} on file type #{cyan type}"
-      process.exit 1
+      abort "no mapper for operation #{cyan operation} on file type #{cyan type}"
 
     mapper
 
 
   set-mapping: ({mapping}) ->
-    | !@config.mappings[mapping]  =>  return console.log red "Error: mapping #{cyan mapping} does not exist"
-    console.log "Activating mapping #{cyan mapping}"
+    | !@config.mappings[mapping]  =>  return error "mapping #{cyan mapping} does not exist"
+    console.log "\nActivating mapping #{cyan mapping}"
     @current-mapping = mapping
 
 

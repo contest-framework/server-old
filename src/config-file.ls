@@ -1,9 +1,9 @@
 require! {
+  './helpers/error-message' : {abort}
   './helpers/file-type'
   'fs'
   'glob'
   'livescript'
-  'path'
   'prelude-ls' : {capitalize}
   'remove-value'
 }
@@ -32,11 +32,9 @@ class ConfigFile
     config-files = glob.sync 'tertestrial.*'
     remove-value config-files, 'tertestrial.tmp'
     if config-files.length is 0
-      console.log red "Error: cannot find configuration file"
-      process.exit 1
+      abort "cannot find configuration file"
     if config-files.length > 1
-      console.log red "Multiple config files found: #{config-files.join ', '}"
-      process.exit 1
+      abort "multiple config files found: #{config-files.join ', '}"
     config-files[0]
 
 
@@ -44,7 +42,7 @@ class ConfigFile
     switch mapping-type = typeof! mappings
       | 'Object'  =>  [mappings]
       | 'Array'   =>  mappings
-      | _         =>  throw new Error "Error: unknown mapping type: #{mapping-type}"
+      | _         =>  abort "unknown mapping type: #{mapping-type}"
 
 
 
