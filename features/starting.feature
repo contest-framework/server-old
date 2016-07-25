@@ -8,5 +8,5 @@ Feature: starting
 
 
   Scenario: starting in foreground
-    When running "tertestrial"
+    When starting tertestrial
     Then I see "ctrl-c to exit"
