@@ -10,6 +10,7 @@ Feature: repeating the last test
   Background:
     Given Tertestrial is running inside the "js-cucumber-mocha" example application
 
+
   Scenario: with a previous test
     When sending the command:
       | OPERATION | FILENAME             |
