@@ -15,19 +15,21 @@ class CommandRunner
 
 
   run-command: (command) ~>
-    if command.operation is 'setMapping'
-      return @set-mapping command
+    switch command.operation
 
-    if command.operation is 'repeatLastTest'
-      return if @current-test?.length > 0
-        @run-test @current-test
-      else
-        error "No previous test run"
+      case 'setMapping'
+        @set-mapping command
 
-    unless mapper = @get-mapper command
-      abort "cannot find a mapper for ", command
+      case 'repeatLastTest'
+        if @current-test?.length > 0
+          @run-test @current-test
+        else
+          error "No previous test run"
 
-    @run-test mapper(command)
+      default
+        unless mapper = @get-mapper command
+          abort "cannot find a mapper for ", command
+        @run-test mapper(command)
 
 
   get-mapper: ({operation, filename}) ~>
