@@ -10,10 +10,10 @@ Feature: built-in mappers
   Scenario Outline: using the built-in "js-cucumber-mocha" mapping
     Given Tertestrial is running inside the "js-cucumber-mocha" example application
     When sending the operation "<OPERATION>" on filename "<FILENAME>" and line "<LINE>"
-    Then I see "<TEST-COMMAND>"
+    Then I see "<RESULTING-TEST-COMMAND>"
 
     Examples:
-      | OPERATION | FILENAME             | LINE | TEST-COMMAND                                                |
+      | OPERATION | FILENAME             | LINE | RESULTING-TEST-COMMAND                                      |
       | testFile  | features/one.feature |      | cucumber-js features/one.feature                            |
       | testLine  | features/one.feature | 123  | cucumber-js features/one.feature:123                        |
       | testFile  | spec/one_spec.js     |      | mocha spec/one_spec.js                                      |
