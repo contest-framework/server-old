@@ -1,1 +1,0 @@
-mappings: 'js-cucumber-mocha'

@@ -3,6 +3,7 @@ require! {
   './helpers/file-type'
   'fs'
   'glob'
+  'js-yaml' : yaml
   'livescript'
   'path'
   'prelude-ls' : {capitalize}
@@ -28,6 +29,9 @@ class ConfigFile
   # Compiles the given LSON text, and returns a hash
   _compile-ls: (content) ->
     eval livescript.compile content, bare: yes, header: no
+
+  _compile-yml: (content) ->
+    yaml.safe-load content
 
 
   # Finds the Tertestrial config file and returns its name

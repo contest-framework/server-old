@@ -7,7 +7,13 @@ require! {
   './helpers/run-mode-checker'
   '../package.json' : {version}
   './pipe-listener' : PipeListener
+  './setup-wizard'
 }
+
+
+if process.argv.length is 3 and process.argv[2] is '--setup'
+  setup-wizard!
+  return
 
 
 reset-terminal!

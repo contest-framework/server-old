@@ -4,12 +4,12 @@
 [![Dependency Status](https://david-dm.org/kevgo/tertestrial-server.svg)](https://david-dm.org/kevgo/tertestrial-server)
 [![devDependency Status](https://david-dm.org/kevgo/tertestrial-server/dev-status.svg)](https://david-dm.org/kevgo/tertestrial-server#info=devDependencies)
 
-_Runs the currently relevant test from inside your code editor._
+_Run the currently relevant test while coding._
 
-It can be configured to work with all test frameworks,
+Tertestrial can be configured to work with all test frameworks,
 and works with any text editor that has a Tertestrial plugin installed.
 Currently there is only a plugin for [Vim](https://github.com/kevgo/tertestrial-vim),
-more can be built easily.
+more can be [built easily](#write-editor-plugin).
 
 Examples:
 - open a test file in your editor

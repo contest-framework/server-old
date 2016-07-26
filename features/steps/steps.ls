@@ -38,6 +38,10 @@ module.exports = ->
       ..on 'ended', (exit-code) ~> done "App crashed with code #{exit-code}!\n\n#{@process.full-output!}"
 
 
+  @When /^entering '\[ENTER\]'$/ ->
+    @process.stdin.write "\n"
+
+
   @When /^starting tertestrial$/ (done) ->
     @root-dir = 'tmp'
     args =
@@ -48,6 +52,16 @@ module.exports = ->
     @process = new ObservableProcess '../bin/tertestrial', args
       ..wait 'running', done
       ..on 'ended', -> done!
+
+
+  @When /^starting 'tertestrial \-\-setup'$/ ->
+    @root-dir = 'tmp'
+    args =
+      console: off
+      cwd: @root-dir
+    if @verbose
+      args.console = dim-console.console
+    @process = new ObservableProcess '../bin/tertestrial --setup', args
 
 
   @When /^sending the command:$/ (table, done) ->
@@ -66,3 +80,7 @@ module.exports = ->
 
   @Then /^I see "([^"]*)"$/ (expected-text, done) ->
     @process.wait expected-text, done
+
+
+  @Then /^it creates a file "([^"]*)"$/ (filename) ->
+    fs.stat-sync path.join(@root-dir, filename)
