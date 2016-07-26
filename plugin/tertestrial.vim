@@ -13,7 +13,7 @@ endfunction
 
 
 function! RepeatLastTest()
-  let command = '{"operation": "repeat_last_test"}'
+  let command = '{"operation": "repeatLastTest"}'
   let message = 'repeating last test'
   call SendTestCommand(command, message)
 endfunction
