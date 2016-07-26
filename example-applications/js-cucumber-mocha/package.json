@@ -1,5 +1,5 @@
 {
-  "name": "DO NOT DEPLOY!",
+  "name": "DO-NOT-DEPLOY!",
   "version": "0.0.1",
   "dependencies": {
     "cucumber": "1.2.1"
