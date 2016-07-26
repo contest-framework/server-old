@@ -33,7 +33,6 @@ class PipeListener extends EventEmitter
   #
   # This shouldn't happen, but does on OS X.
   on-stream-end: ~>
-    console.log 'read stream ended, restarting'
     @open-read-stream!
 
 
