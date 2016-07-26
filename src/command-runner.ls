@@ -24,7 +24,7 @@ class CommandRunner
     run-string = mapper command
     reset-terminal!
     console.log bold "#{run-string}\n"
-    new ObservableProcess run-string
+    new ObservableProcess ['sh', '-c', run-string]
 
 
   get-mapper: ({operation, filename}) ~>
