@@ -21,7 +21,7 @@ module.exports = ->
     fs.write-file-sync path.join('tmp', file-name), content
 
 
-  @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 10_000, (app-name, done) ->
+  @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 20_000, (app-name, done) ->
     @root-dir = path.join 'example-applications', app-name
 
     # install npm dependencies
