@@ -35,7 +35,7 @@ module.exports = ->
       args.console = dim-console.console
     @process = new ObservableProcess '../../bin/tertestrial', args
       ..wait 'running', done
-      ..on 'ended', -> done!
+      ..on 'ended', (exit-code) ~> done "App crashed with code #{exit-code}!\n\n#{@process.full-output!}"
 
 
   @When /^starting tertestrial$/ (done) ->
