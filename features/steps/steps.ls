@@ -1,6 +1,7 @@
 require! {
   'chai' : {expect}
   'chalk' : {strip-color}
+  'child_process'
   'dim-console'
   'fs'
   'lowercase-keys'
@@ -20,11 +21,28 @@ module.exports = ->
     fs.write-file-sync path.join('tmp', file-name), content
 
 
+  @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 10_000, (app-name, done) ->
+    @root-dir = path.join 'example-applications', app-name
 
-  @When /^starting tertestrial$/ (done) ->
+    # install npm dependencies
+    child_process.exec-sync 'npm i', cwd: @root-dir
+
+    # start Tertestrial
     args =
       console: off
-      cwd: 'tmp'
+      cwd: @root-dir
+    if @verbose
+      args.console = dim-console.console
+    @process = new ObservableProcess '../../bin/tertestrial', args
+      ..wait 'running', done
+      ..on 'ended', -> done!
+
+
+  @When /^starting tertestrial$/ (done) ->
+    @root-dir = 'tmp'
+    args =
+      console: off
+      cwd: @root-dir
     if @verbose
       args.console = dim-console.console
     @process = new ObservableProcess '../bin/tertestrial', args
@@ -32,9 +50,18 @@ module.exports = ->
       ..on 'ended', -> done!
 
 
-  @When /^sending the command:$/ (table) ->
-    command-data = table.hashes![0] |> lowercase-keys |> JSON.stringify
-    fs.append-file-sync 'tmp/tertestrial.tmp', command-data
+  @When /^sending the command:$/ (table, done) ->
+    wait 10, ~>
+      command-data = table.hashes![0] |> lowercase-keys |> JSON.stringify
+      fs.append-file-sync path.join(@root-dir, 'tertestrial.tmp'), command-data
+      done!
+
+
+  @When /^sending the operation "([^"]*)" on filename "([^"]*)" and line "([^"]*)"$/ (operation, filename, line, done) ->
+    wait 10, ~>
+      command-data = {operation, filename, line} |> JSON.stringify
+      fs.append-file-sync path.join(@root-dir, 'tertestrial.tmp'), command-data
+      done!
 
 
   @Then /^I see "([^"]*)"$/ (expected-text, done) ->

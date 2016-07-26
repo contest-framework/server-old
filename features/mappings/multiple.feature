@@ -47,6 +47,7 @@ Feature: multiple mappings
     When sending the command:
       | OPERATION  | MAPPING |
       | setMapping | 1       |
+    Then I see "Activating mapping 1"
     And sending the command:
       | OPERATION | FILENAME    |
       | testFile  | foo_spec.js |

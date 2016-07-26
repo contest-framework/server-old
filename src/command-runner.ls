@@ -24,7 +24,8 @@ class CommandRunner
 
 
   get-mapper: ({operation, filename}) ~>
-    mapping = @config.mappings[@current-mapping]
+    unless mapping = @config.mappings[@current-mapping]
+      abort "mapping ##{@current-mapping} not found"
 
     type = file-type filename
     unless type-mapping = mapping[type]

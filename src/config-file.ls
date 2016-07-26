@@ -4,6 +4,7 @@ require! {
   'fs'
   'glob'
   'livescript'
+  'path'
   'prelude-ls' : {capitalize}
   'remove-value'
 }
@@ -24,7 +25,7 @@ class ConfigFile
 
   # Compiles the given LSON text, and returns a hash
   _compile-ls: (content) ->
-    eval livescript.compile "#{content}", bare: yes, header: no
+    eval livescript.compile content, bare: yes, header: no
 
 
   # Finds the Tertestrial config file and returns its name
@@ -38,10 +39,16 @@ class ConfigFile
     config-files[0]
 
 
+  _load-internal-mapping: (filename) ->
+    file-content = fs.read-file-sync path.join(__dirname, '..', 'mappings', "#{filename}.ls"), 'utf8'
+    @_compile-ls file-content
+
+
   _standardize-mappings: (mappings) ->
     switch mapping-type = typeof! mappings
       | 'Object'  =>  [mappings]
       | 'Array'   =>  mappings
+      | 'String'  =>  @_standardize-mappings @_load-internal-mapping(mappings).mappings
       | _         =>  abort "unknown mapping type: #{mapping-type}"
 
 

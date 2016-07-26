@@ -24,4 +24,4 @@ pipe-listener = new PipeListener
   ..on 'command-received', command-runner.run-command
 
 
-console.log 'running'
+console.log '\nrunning'
