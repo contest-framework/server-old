@@ -2,6 +2,8 @@ require! {
   'chalk' : {bold, cyan, red}
   './helpers/error-message' : {abort, error}
   './helpers/file-type'
+  './helpers/reset-terminal'
+  'observable-process' : ObservableProcess
 }
 
 
@@ -20,7 +22,9 @@ class CommandRunner
     unless mapper = @get-mapper command
       abort "cannot find a mapper for ", command
     run-string = mapper command
-    console.log bold run-string
+    reset-terminal!
+    console.log bold "#{run-string}\n"
+    new ObservableProcess run-string
 
 
   get-mapper: ({operation, filename}) ~>
