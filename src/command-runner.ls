@@ -16,15 +16,18 @@ class CommandRunner
 
   run-command: (command) ~>
     if command.operation is 'setMapping'
-      @set-mapping command
-      return
+      return @set-mapping command
+
+    if command.operation is 'repeatLastTest'
+      return if @current-test?.length > 0
+        @run-test @current-test
+      else
+        error "No previous test run"
 
     unless mapper = @get-mapper command
       abort "cannot find a mapper for ", command
-    run-string = mapper command
-    reset-terminal!
-    console.log bold "#{run-string}\n"
-    new ObservableProcess ['sh', '-c', run-string]
+
+    @run-test mapper(command)
 
 
   get-mapper: ({operation, filename}) ~>
@@ -39,6 +42,13 @@ class CommandRunner
       abort "no mapper for operation #{cyan operation} on file type #{cyan type}"
 
     mapper
+
+
+  run-test: (command) ->
+    @current-test = command
+    reset-terminal!
+    console.log bold "#{@current-test}\n"
+    new ObservableProcess ['sh', '-c', @current-test]
 
 
   set-mapping: ({mapping}) ->
