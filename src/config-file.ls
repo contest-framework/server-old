@@ -19,6 +19,8 @@ class ConfigFile
   ->
     config-file-name = @_get-config-file-name!
     compiler-method-name = "_compile#{capitalize file-type config-file-name}"
+    unless @[compiler-method-name]
+      abort "Config files of type '#{file-type config-file-name}' are not supported"
     config = @[compiler-method-name] fs.read-file-sync(config-file-name, 'utf8')
     @mappings = @_standardize-mappings config.mappings
 
