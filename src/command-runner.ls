@@ -11,10 +11,11 @@ require! {
 class CommandRunner
 
   (@config) ->
-    @current-mapping = 0
+    @current-mapping = 1
 
 
   run-command: (command) ~>
+    reset-terminal!
     switch command.operation
 
       case 'setMapping'
@@ -48,14 +49,13 @@ class CommandRunner
 
   run-test: (command) ->
     @current-test = command
-    reset-terminal!
     console.log bold "#{@current-test}\n"
     new ObservableProcess ['sh', '-c', @current-test]
 
 
   set-mapping: ({mapping}) ->
     | !@config.mappings[mapping]  =>  return error "mapping #{cyan mapping} does not exist"
-    console.log "\nActivating mapping #{cyan mapping}"
+    console.log "Activating mapping #{cyan mapping}"
     @current-mapping = mapping
 
 

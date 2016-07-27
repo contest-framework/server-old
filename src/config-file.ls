@@ -23,7 +23,7 @@ class ConfigFile
     unless @[compiler-method-name]
       abort "Config files of type '#{file-type config-file-name}' are not supported"
     config = @[compiler-method-name] fs.read-file-sync(config-file-name, 'utf8')
-    @mappings = @_standardize-mappings config.mappings
+    @mappings = config.mappings |> @_standardize-mappings |> @_prepend-empty-mapping
 
 
   # Compiles the given LSON text, and returns a hash
@@ -48,6 +48,11 @@ class ConfigFile
   _load-internal-mapping: (filename) ->
     file-content = fs.read-file-sync path.join(__dirname, '..', 'mappings', "#{filename}.ls"), 'utf8'
     @_compile-ls file-content
+
+
+  _prepend-empty-mapping: (mappings) ->
+    mappings.unshift {}
+    mappings
 
 
   _standardize-mappings: (mappings) ->
