@@ -15,7 +15,7 @@ function built-in-mappings
 
 
 function create-builtin-config mapping
-  fs.write-file-sync 'tertestrial.yml', "mapping: #{mapping}"
+  fs.write-file-sync 'tertestrial.yml', "mappings: #{mapping}"
   console.log """
 
   Created configuration file #{cyan 'tertestrial.yml'}.
