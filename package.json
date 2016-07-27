@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "author": "Kevin Goslar",
   "dependencies": {
+    "chalk": "1.1.3",
     "js-yaml": "3.6.1",
     "lowercase-keys": "1.0.0",
     "remove-value": "1.0.0",
