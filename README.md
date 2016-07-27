@@ -4,7 +4,7 @@
 [![Dependency Status](https://david-dm.org/kevgo/tertestrial-server.svg)](https://david-dm.org/kevgo/tertestrial-server)
 [![devDependency Status](https://david-dm.org/kevgo/tertestrial-server/dev-status.svg)](https://david-dm.org/kevgo/tertestrial-server#info=devDependencies)
 
-_Run the currently relevant test while coding._
+_Runs the currently relevant test while coding._
 
 Tertestrial can be configured to work with all test frameworks,
 and works with any text editor that has a Tertestrial plugin installed.
