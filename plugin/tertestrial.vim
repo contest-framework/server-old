@@ -19,6 +19,12 @@ function! RepeatLastTest()
 endfunction
 
 
+function SetMapping(mapping)
+  let command = '{"operation": "setMapping", "mapping": '.a:mapping.'}'
+  let message = 'Set mapping '.a:mapping
+  call SendTestCommand(command, message)
+endfunction
+
 function! SendTestCommand(data, message)
   if findfile('tertestrial.tmp', '.;') == 'tertestrial.tmp'
     call writefile([a:data], 'tertestrial.tmp')
