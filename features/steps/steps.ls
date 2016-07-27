@@ -4,7 +4,6 @@ require! {
   'child_process'
   'dim-console'
   'fs'
-  'lowercase-keys'
   'observable-process' : ObservableProcess
   'path'
   'wait' : {wait}

@@ -1,6 +1,5 @@
 require! {
   'observable-process' : ObservableProcess
-  'process'
 }
 
 
