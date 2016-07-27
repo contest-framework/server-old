@@ -64,10 +64,9 @@ module.exports = ->
     @process = new ObservableProcess '../bin/tertestrial --setup', args
 
 
-  @When /^sending the command:$/ (table, done) ->
+  @When /^sending the command:$/ (command, done) ->
     wait 10, ~>
-      command-data = table.hashes![0] |> lowercase-keys |> JSON.stringify
-      fs.append-file-sync path.join(@root-dir, 'tertestrial.tmp'), command-data
+      fs.append-file-sync path.join(@root-dir, 'tertestrial.tmp'), command
       done!
 
 

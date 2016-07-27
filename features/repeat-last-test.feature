@@ -13,17 +13,20 @@ Feature: repeating the last test
 
   Scenario: with a previous test
     When sending the command:
-      | OPERATION | FILENAME             |
-      | testFile  | features/one.feature |
+      """
+      {"operation": "testFile", "filename": "features/one.feature"}
+      """
     Then I see "cucumber-js features/one.feature"
     When sending the command:
-      | OPERATION      |
-      | repeatLastTest |
+      """
+      {"operation": "repeatLastTest"}
+      """
     Then I see "cucumber-js features/one.feature"
 
 
   Scenario: without a previous test
     When sending the command:
-      | OPERATION      |
-      | repeatLastTest |
+      """
+      {"operation": "repeatLastTest"}
+      """
     Then I see "No previous test run"

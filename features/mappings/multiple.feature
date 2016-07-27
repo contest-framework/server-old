@@ -38,24 +38,28 @@ Feature: multiple mappings
 
   Scenario: default mapping
     When sending the command:
-      | OPERATION | FILENAME    |
-      | testFile  | foo_spec.js |
+      """
+      {"operation": "testFile", "filename": "foo_spec.js"}
+      """
     Then I see "Running Mocha for foo_spec.js in API mode!"
 
 
   Scenario: selecting another mapping
     When sending the command:
-      | OPERATION  | MAPPING |
-      | setMapping | 1       |
-    Then I see "Activating mapping 1"
+      """
+      {"operation": "setMapping", "mapping": 2}
+      """
+    Then I see "Activating mapping 2"
     And sending the command:
-      | OPERATION | FILENAME    |
-      | testFile  | foo_spec.js |
+      """
+      {"operation": "testFile", "filename": "foo_spec.js"}
+      """
     Then I see "Running Mocha for foo_spec.js in CLI mode!"
 
 
   Scenario: switching to a non-existing mapping
     When sending the command:
-      | OPERATION  | MAPPING |
-      | setMapping | 2       |
-    Then I see "Error: mapping 2 does not exist"
+      """
+      {"operation": "setMapping", "mapping": 3}
+      """
+    Then I see "Error: mapping 3 does not exist"

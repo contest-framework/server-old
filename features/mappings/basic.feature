@@ -22,12 +22,14 @@ Feature: configuring the commands
       """
     And starting tertestrial
     When sending the command:
-      | OPERATION | FILENAME |
-      | testFile  | one.js   |
+      """
+      {"operation": "testFile", "filename": "one.js"}
+      """
     Then I see "Running Mocha with one.js!"
     When sending the command:
-      | OPERATION | FILENAME | LINE |
-      | testLine  | one.js   | 12   |
+      """
+      {"operation": "testLine", "filename": "one.js", "line": 12}
+      """
     Then I see "Running Mocha with one.js:12!"
 
 
@@ -45,8 +47,9 @@ Feature: configuring the commands
       """
     And starting tertestrial
     When sending the command:
-      | OPERATION | FILENAME |
-      | testFile  | one.zonk |
+      """
+      {"operation": "testFile", "filename": "one.zonk"}
+      """
     Then I see "Error: no mapping for file type zonk"
 
 
@@ -59,7 +62,7 @@ Feature: configuring the commands
       """
     And starting tertestrial
     When sending the command:
-      | OPERATION | FILENAME |
-      | zonk      | one.js   |
+      """
+      {"operation": "zonk", "filename": "one.js"}
+      """
     Then I see "Error: no mapper for operation zonk on file type js"
-
