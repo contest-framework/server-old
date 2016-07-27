@@ -1,0 +1,10 @@
+mappings:
+  feature:
+    testFile: "cucumber-js {{filename}}"
+    testLine: "cucumber-js {{filename}}:{{line}}"
+  js:
+    testFile: "mocha {{filename}}"
+  coffee:
+    testFile: "mocha --compilers coffee:coffee-script {{filename}}"
+  ls:
+    testFile: "mocha --compilers ls:livescript {{filename}}"

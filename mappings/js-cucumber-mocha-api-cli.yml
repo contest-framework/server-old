@@ -1,0 +1,35 @@
+mappings:
+
+  - all:
+      feature:
+        testFile: "cuc-api {{filename}} && cuc-cli {{filename}}"
+        testLine: "cuc-api {{filename}}:{{line}} && cuc-cli {{filename}}:{{line}}"
+      js:
+        testFile: "mocha {{filename}}"
+      coffee:
+        testFile: "mocha --compilers coffee:coffee-script {{filename}}"
+      ls:
+        testFile: "mocha --compilers ls:livescript {{filename}}"
+
+
+  - API:
+      feature:
+        testFile: "cuc-api {{filename}}"
+        testLine: "cuc-api {{filename}}:{{line}}"
+      js:
+        testFile: "mocha {{filename}}"
+      coffee:
+        testFile: "mocha --compilers coffee:coffee-script {{filename}}"
+      ls:
+        testFile: "mocha --compilers ls:livescript {{filename}}"
+
+  - CLI:
+      feature:
+        testFile: "cuc-cli {{filename}}"
+        testLine: "cuc-cli {{filename}}:{{line}}"
+      js:
+        testFile: "mocha {{filename}}"
+      coffee:
+        testFile: "mocha --compilers coffee:coffee-script {{filename}}"
+      ls:
+        testFile: "mocha --compilers ls:livescript {{filename}}"

@@ -11,27 +11,25 @@ Feature: multiple mappings
 
 
   Background:
-    Given a file "tertestrial.ls" with the content:
+    Given a file "tertestrial.yml" with the content:
       """
-      api-mapping =
-        feature:
-          test-file: ({filename}) -> "echo Running Cucumber for #{filename} in API mode!"
-          test-line: ({filename, line}) -> "echo Running Cucumber for #{filename}:#{line} in API mode!"
-        js:
-          test-file: ({filename}) -> "echo Running Mocha for #{filename} in API mode!"
-          test-line: ({filename, line}) -> "echo Running Mocha for #{filename}:#{line} in API mode!"
-
-      cli-mapping =
-        feature:
-          test-file: ({filename}) -> "echo Running Cucumber for #{filename} in CLI mode!"
-          test-line: ({filename, line}) -> "echo Running Cucumber for #{filename}:#{line} in CLI mode!"
-        js:
-          test-file: ({filename}) -> "echo Running Mocha for #{filename} in CLI mode!"
-          test-line: ({filename, line}) -> "echo Running Mocha for #{filename}:#{line} in CLI mode!"
-
       mappings:
-        * api-mapping
-        * cli-mapping
+
+        - 'API':
+            feature:
+              testFile: "echo Running Cucumber for {{filename}} in API mode!"
+              testLine: "echo Running Cucumber for {{filename}}:{{line}} in API mode!"
+            js:
+              testFile: "echo Running Mocha for {{filename}} in API mode!"
+              testLine: "echo Running Mocha for {{filename}}:{{line}} in API mode!"
+
+        - 'CLI':
+            feature:
+              testFile: "echo Running Cucumber for {{filename}} in CLI mode!"
+              testLine: "echo Running Cucumber for {{filename}}:{{line}} in CLI mode!"
+            js:
+              testFile: "echo Running Mocha for {{filename}} in CLI mode!"
+              testLine: "echo Running Mocha for {{filename}}:{{line}} in CLI mode!"
       """
     And starting tertestrial
 

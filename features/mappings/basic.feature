@@ -13,12 +13,12 @@ Feature: configuring the commands
 
 
   Scenario: simple configuration file
-    Given a file "tertestrial.ls" with the content:
+    Given a file "tertestrial.yml" with the content:
       """
       mappings:
         js:
-          test-file: ({filename}) -> "echo Running Mocha with #{filename}!"
-          test-line: ({filename, line}) -> "echo Running Mocha with #{filename}:#{line}!"
+          testFile: "echo Running Mocha with {{filename}}!"
+          testLine: "echo Running Mocha with {{filename}}:{{line}}!"
       """
     And starting tertestrial
     When sending the command:
@@ -39,11 +39,11 @@ Feature: configuring the commands
 
 
   Scenario: mapping missing
-    Given a file "tertestrial.ls" with the content:
+    Given a file "tertestrial.yml" with the content:
       """
       mappings:
         js:
-          test-file: ({filename}) -> "echo Running Mocha with #{filename}!"
+          test-file: "echo Running Mocha with {{filename}}!"
       """
     And starting tertestrial
     When sending the command:
@@ -54,11 +54,11 @@ Feature: configuring the commands
 
 
   Scenario: mapper for operation missing
-    Given a file "tertestrial.ls" with the content:
+    Given a file "tertestrial.yml" with the content:
       """
       mappings:
         js:
-          test: ({filename}) -> "echo Running Mocha with #{filename}!"
+          test: "echo Running Mocha with {{filename}}!"
       """
     And starting tertestrial
     When sending the command:

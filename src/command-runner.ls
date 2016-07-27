@@ -4,6 +4,7 @@ require! {
   './helpers/file-type'
   './helpers/reset-terminal'
   'observable-process' : ObservableProcess
+  './helpers/template'
 }
 
 
@@ -30,12 +31,14 @@ class CommandRunner
       default
         unless mapper = @get-mapper command
           abort "cannot find a mapper for ", command
-        @run-test mapper(command)
+        @run-test template(mapper, command)
 
 
   get-mapper: ({operation, filename}) ~>
     unless mapping = @config.mappings[@current-mapping]
       abort "mapping ##{@current-mapping} not found"
+
+    mapping = [value for _, value of mapping][0]
 
     type = file-type filename
     unless type-mapping = mapping[type]
