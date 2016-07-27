@@ -82,19 +82,17 @@ and another to run them using a faster headless browser.
 __tertestrial.yml__
 
 ```yml
-headless-mappings:
-  feature:
-    testFile: "TEST_PLATFORM=headless cucumber-js {{filename}}"
-    testLine: "TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}"
-
-firefox-mappings:
-  feature:
-    testFile: "TEST_PLATFORM=firefox cucumber-js {{filename}}"
-    testLine: "TEST_PLATFORM=firefox cucumber-js {{filename}}:{{line}}"
-
 mappings:
-  - headless-mappings
-  - firefox-mappings
+
+  - headless:
+      feature:
+        testFile: "TEST_PLATFORM=headless cucumber-js {{filename}}"
+        testLine: "TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}"
+
+  - firefox:
+      feature:
+        testFile: "TEST_PLATFORM=firefox cucumber-js {{filename}}"
+        testLine: "TEST_PLATFORM=firefox cucumber-js {{filename}}:{{line}}"
 ```
 
 
