@@ -6,99 +6,100 @@
 
 _Runs the currently relevant test while coding._
 
-Tertestrial can be configured to work with all test frameworks,
-and works with any text editor that has a Tertestrial plugin installed.
-Currently there is only a plugin for [Vim](https://github.com/kevgo/tertestrial-vim),
-more can be [built easily](#write-editor-plugin).
+Tertestrial runs configurable tasks on files or parts of files.
+Tasks are triggered by hotkeys from within your code editor,
+or automatically on file save.
+An example is running a particular unit test that you want to make green
+as part of test-driven development.
 
-Examples:
-- open a test file in your editor
-- hit a hotkey to run all tests in that file
-- hit another hotkey to run only the test under your cursor
-- open other code files and edit them
-- hit a hotkey to re-run the last test
-- hit another hotkey to enable auto-run,
-  i.e. automatically re-run the last run test
-  each time you save any file in your editor (without having to press further hotkeys)
+[screencast]
+
+Tertestrial works with all test frameworks (see the ones [supported out of the box](mappings))
+and any text editor with a [Tertestrial plugin](#editor-plugins).
 
 
 ## Installation
 
-* Copy the file [tertestrial](https://raw.githubusercontent.com/kevgo/tertestrial-server/master/tertestrial)
-  somewhere into your path and make sure it is executable.
-* install the Tertestrial plugin for your editor, for example [tertestrial-vim](https://github.com/kevgo/tertestrial-vim)
-* (optionally) add `tertestrial.tmp` to your
+* install [Node.js](https://nodejs.org/en)
+
+* install the Tertestrial server:
+
+  ```
+  npm i -g tertestrial
+  ```
+
+* install the [Tertestrial plugin for your editor](#editor-plugins)
+
+* add `tertestrial.tmp` to your
   [global gitignore](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore).
 
 
-## Usage
+## Creating a configuration file
 
-Tertestrial requires a configuration file,
-so that it knows how your test framework works.
-These configuration files are simple [Bash Script](https://www.gnu.org/software/bash)
-files.
-The config file defines functions that tell Tertestrial
-how to perform a particular operation on a particular file type.
+To use Tertestrial with a code base,
+run `tertestrial --setup` in the root directory of that code base.
+This generates a configuration file
+that tells Tertestrial
+what to do with the different types of files in your project.
 
-What type of operation and file type is requested by the user
-is made available in these variables:
-<table>
-  <tr>
-    <th>variable name</th>
-    <th>description</th>
-    <th>example content</th>
-  </tr>
-  <tr>
-    <td>$operation</td>
-    <td>the operation to perform</td>
-    <td>
-      "test_file" to test the whole file,<br>
-      "test_file_line" to test the file at the given line
-    </td>
-  <tr>
-  <tr>
-    <td>$filetype</td>
-    <td>the type of file you want to test</td>
-    <td>"cucumber"</td>
-  <tr>
-  <tr>
-    <td>$filename</td>
-    <td>path to the file to test</td>
-    <td>"features/foo.feature"</td>
-  <tr>
-  <tr>
-    <td>$line</td>
-    <td>
-      the current line in the file <br>
-      (only provided when you want to test at a line)
-    </td>
-    <td>"12"</td>
-  <tr>
-</table>
+The setup script asks whether you want to use one of the built-in configurations
+or make your own.
+If you select a built-in configuration,
+you are done with the setup and can [start using Tertestrial](#running-tertestrial).
 
+If you want to make your own custom configuration,
+the setup script scaffolds a config file for you that you have to finish yourself.
+Make it look similar to the example configuration file below,
+which is for running unit tests using [Mocha](https://mochajs.org)
+and end-to-end tests using [Cucumber-JS](https://github.com/cucumber/cucumber-js):
 
-The name for the functions in the config file has the format
-`command_for_<operation>_<filetype>`.
-Here is an example Tertestrial config file to run
-[Cucumber-JS](https://github.com/cucumber/cucumber-js)
-tests:
-
-```bash
-#!/usr/bin/env bash
-
-# Provides the command to test a whole Cucumber file
-function command_for_test_file_cucumber {
-  echo "cucumber-js $filename"
-}
-
-# Provides the command to test a Cucumber file at the given line
-function command_for_test_file_line_cucumber {
-  echo "cucumber-js $filename:$line"
-}
+__tertestrial.yml__
+```yml
+mappings:
+  js:
+    testFile: "mocha {{filename}}"
+    testLine: "mocha {{filename}} -l {{line}}"
+  feature:
+    testFile: "cucumber-js {{filename}}"
+    testLine: "cucumber-js {{filename}}:{{line}}"
 ```
 
-Save this file under the name `tertestrial-config` into the root directory of your code base.
-Then:
+In this example,
+`js` and `feature` are the filename extensions for which we provide test commands.
+`testFile` means the user wants to run all tests in the current file,
+`testLine` means to run only the test at the current line of the current file.
+The commands to run are specified via
+<a href="https://en.wikipedia.org/wiki/Mustache_(template_system)#Examples)">Mustache</a> templates.
+
+
+### Multiple mapping sets
+
+Tertestrial allows to define several sets of mappings
+and switch between them at runtime.
+An example is to have one mapping for running end-to-end tests using a real browser
+and another to run them using a faster headless browser.
+
+__tertestrial.yml__
+
+```yml
+headless-mappings:
+  feature:
+    testFile: "TEST_PLATFORM=headless cucumber-js {{filename}}"
+    testLine: "TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}"
+
+firefox-mappings:
+  feature:
+    testFile: "TEST_PLATFORM=firefox cucumber-js {{filename}}"
+    testLine: "TEST_PLATFORM=firefox cucumber-js {{filename}}:{{line}}"
+
+mappings:
+  - headless-mappings
+  - firefox-mappings
+```
+
+
+## Running tertestrial
+
 * start `tertestrial` in the base directory of your code base
 * send some commands using the tertestrial editor plugin
 * watch your tests run in your terminal
@@ -120,9 +121,45 @@ then press __ctrl-c__.
 Tertestrial consists of a server (in this repository)
 and a number of editor plugins.
 The editor plugins send commands to the server
-via a pipe named `tertestrial.tmp` in the directory where you start the server
+via a named pipe `tertestrial.tmp` in the directory where you start the server
 (typically the base directory of the code base you are working on).
 Tertestrial removes this pipe when stopping.
+
+
+## Editor plugins
+
+* [Vim](https://github.com/kevgo/tertestrial-vim)
+
+
+## Create your own editor plugin
+
+Making your own editor plugin is super easy.
+All your plugin has to do is be triggered somehow (ideally via hotkeys)
+and write the command to execute as a JSON string into the file `tertestrial.tmp`:
+
+* to test a whole file:
+
+  ```json
+  {"operation": "testFile", "filename": "test/foo.rb"}
+  ```
+
+* to test just the current line of a file:
+
+  ```json
+  {"operation": "testLine", "filename": "test/foo.rb", "line": 12}
+  ```
+
+* to repeat the last run test
+
+  ```json
+  {"operation": "repeatLastTest"}
+  ```
+
+* to switch to a different mapping:
+
+  ```json
+  {"operation": "setMapping", "mapping": 2}
+  ```
 
 
 ## Credits
