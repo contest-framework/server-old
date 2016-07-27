@@ -11,5 +11,5 @@ Feature: generating the configuration file
   Scenario: generating a custom configuration file
     When starting 'tertestrial --setup'
     And entering '[ENTER]'
-    Then I see "Created configuration file tertestrial.js"
-    And it creates a file "tertestrial.js"
+    Then I see "Created configuration file tertestrial.yml"
+    And it creates a file "tertestrial.yml"

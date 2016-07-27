@@ -24,10 +24,10 @@ function create-builtin-config mapping
 
 
 function create-custom-mapping language
-  cp path.join(__dirname, '..' 'templates' 'tertestrial.js'), 'tertestrial.js'
+  cp path.join(__dirname, '..' 'templates' 'tertestrial.yml'), 'tertestrial.yml'
   console.log """
 
-  Created configuration file #{cyan 'tertestrial.js'} as a starter.
+  Created configuration file #{cyan 'tertestrial.yml'} as a starter.
   Please adapt it to your project.
 
   """
