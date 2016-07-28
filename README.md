@@ -9,12 +9,17 @@ _Runs the currently relevant test while coding._
 Tertestrial runs configurable tasks on files or parts of files.
 Tasks are triggered by hotkeys from within your code editor,
 or automatically on file save.
-An example is running a particular unit test that you want to make green
+A common application for this is
+running a particular unit test that is currently driving your development,
+i.e. which you want to make green,
 as part of test-driven development.
+With Tertestrial you can do this with an absolute minimum of key presses,
+noise and slowdown from unnecessary test runs,
+and without having to leave your text editor.
 
-[screencast]
+[screencast coming soon]
 
-Tertestrial works with all test frameworks (see the ones [supported out of the box](mappings))
+Tertestrial works with all test frameworks (a lot are built-in)
 and any text editor with a [Tertestrial plugin](#editor-plugins).
 
 
@@ -77,7 +82,7 @@ The commands to run are specified via
 Tertestrial allows to define several sets of mappings
 and switch between them at runtime.
 An example is to have one mapping for running end-to-end tests using a real browser
-and another to run them using a faster headless browser.
+and another mapping to run them using a faster headless browser.
 
 __tertestrial.yml__
 
@@ -98,15 +103,17 @@ mappings:
 
 ## Running tertestrial
 
-* start `tertestrial` in the base directory of your code base
-* send some commands using the tertestrial editor plugin
+* align your text editor and terminal so that you see both at the same time
+  (for example side by side)
+* in the terminal, start `tertestrial` in the base directory of your code base
+* in the text editor, send some commands using the tertestrial editor plugin
 * watch your tests run in your terminal
 
 To end the server, press __ctrl-c__ in the terminal.
 
-
 __Pro tip:__ if you start tertestrial in the background by running `tertestrial &`,
-your terminal remains interactive,
+you can see all test output,
+and your terminal remains interactive,
 i.e. you can keep running other commands there as well.
 Just start typing in the terminal to see your command prompt.
 To exit the Tertestrial server in this case,
