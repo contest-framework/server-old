@@ -26,8 +26,8 @@ function SetMapping(mapping)
 endfunction
 
 function! SendTestCommand(data, message)
-  if findfile('tertestrial.tmp', '.;') == 'tertestrial.tmp'
-    call writefile([a:data], 'tertestrial.tmp')
+  if findfile('.tertestrial.tmp', '.;') == '.tertestrial.tmp'
+    call writefile([a:data], '.tertestrial.tmp')
   else
     echoerr "ERROR: Tertestrial server is not running!"
   endif
