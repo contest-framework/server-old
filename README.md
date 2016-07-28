@@ -30,7 +30,7 @@ and any text editor with a [Tertestrial plugin](#editor-plugins).
 
 * install the [Tertestrial plugin for your editor](#editor-plugins)
 
-* add `tertestrial.tmp` to your
+* add `.tertestrial.tmp` to your
   [global gitignore](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore).
 
 
@@ -119,7 +119,7 @@ then press __ctrl-c__.
 Tertestrial consists of a server (in this repository)
 and a number of editor plugins.
 The editor plugins send commands to the server
-via a named pipe `tertestrial.tmp` in the directory where you start the server
+via a named pipe `.tertestrial.tmp` in the directory where you start the server
 (typically the base directory of the code base you are working on).
 Tertestrial removes this pipe when stopping.
 
@@ -133,7 +133,7 @@ Tertestrial removes this pipe when stopping.
 
 Making your own editor plugin is super easy.
 All your plugin has to do is be triggered somehow (ideally via hotkeys)
-and write the command to execute as a JSON string into the file `tertestrial.tmp`:
+and write the command to execute as a JSON string into the file `.tertestrial.tmp`:
 
 * to test a whole file:
 

@@ -16,12 +16,12 @@ class PipeListener extends EventEmitter
 
 
   create-named-pipe: ->
-    child_process.exec-sync 'mkfifo tertestrial.tmp'
+    child_process.exec-sync 'mkfifo .tertestrial.tmp'
 
 
   delete-named-pipe: ->
     try
-      fs.unlink-sync 'tertestrial.tmp'
+      fs.unlink-sync '.tertestrial.tmp'
 
 
   # Called when a new command is received from the pipe
@@ -37,7 +37,7 @@ class PipeListener extends EventEmitter
 
 
   open-read-stream: ->
-    @read-stream = fs.create-read-stream 'tertestrial.tmp', auto-close: no, encoding: 'utf8'
+    @read-stream = fs.create-read-stream '.tertestrial.tmp', auto-close: no, encoding: 'utf8'
       ..on 'data', @on-stream-data
       ..on 'end', @on-stream-end
 

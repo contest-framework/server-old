@@ -65,14 +65,14 @@ module.exports = ->
 
   @When /^sending the command:$/ (command, done) ->
     wait 10, ~>
-      fs.append-file-sync path.join(@root-dir, 'tertestrial.tmp'), command
+      fs.append-file-sync path.join(@root-dir, '.tertestrial.tmp'), command
       done!
 
 
   @When /^sending the operation "([^"]*)" on filename "([^"]*)" and line "([^"]*)"$/ (operation, filename, line, done) ->
     wait 10, ~>
       command-data = {operation, filename, line} |> JSON.stringify
-      fs.append-file-sync path.join(@root-dir, 'tertestrial.tmp'), command-data
+      fs.append-file-sync path.join(@root-dir, '.tertestrial.tmp'), command-data
       done!
 
 
