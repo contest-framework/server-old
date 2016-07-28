@@ -47,7 +47,7 @@ Feature: multiple mappings
       """
       {"operation": "setMapping", "mapping": 2}
       """
-    Then I see "Activating mapping 2"
+    Then I see "Activating mapping CLI"
     And sending the command:
       """
       {"operation": "testFile", "filename": "foo_spec.js"}

@@ -57,8 +57,9 @@ class CommandRunner
 
 
   set-mapping: ({mapping}) ->
-    | !@config.mappings[mapping]  =>  return error "mapping #{cyan mapping} does not exist"
-    console.log "Activating mapping #{cyan mapping}"
+    unless new-mapping = @config.mappings[mapping]
+      return error "mapping #{cyan mapping} does not exist"
+    console.log "Activating mapping #{cyan Object.keys(new-mapping)[0]}"
     @current-mapping = mapping
 
 
