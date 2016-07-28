@@ -29,30 +29,21 @@ class CommandRunner
 
       case 'repeatLastTest'
         if @current-command?.length is 0 then return error "No previous test run"
-        unless mapper = @get-mapper @current-command then abort "cannot find a mapper for ", @current-command
+        mapper = @get-mapper(@current-command) or abort "cannot find a mapper for ", @current-command
         @run-test template(mapper, @current-command)
 
       default
-        unless mapper = @get-mapper command
-          abort "cannot find a mapper for ", command
+        mapper = @get-mapper(command) or abort "cannot find a mapper for ", command
         @current-command = command
         @run-test template(mapper, command)
 
 
   get-mapper: ({operation, filename}) ~>
-    unless mapping = @config.mappings[@current-mapping]
-      abort "mapping ##{@current-mapping} not found"
-
+    mapping = @config.mappings[@current-mapping] or abort "mapping ##{@current-mapping} not found"
     mapping = [value for _, value of mapping][0]
-
     type = file-type filename
-    unless type-mapping = mapping[type]
-      abort "no mapping for file type #{cyan type}"
-
-    unless mapper = type-mapping[operation]
-      abort "no mapper for operation #{cyan operation} on file type #{cyan type}"
-
-    mapper
+    type-mapping = mapping[type] or abort "no mapping for file type #{cyan type}"
+    type-mapping[operation] or abort "no mapper for operation #{cyan operation} on file type #{cyan type}"
 
 
   run-test: (command) ->
