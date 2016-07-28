@@ -4,17 +4,17 @@ mappings:
   feature:
 
     # define the command to test a full ".feature" file using cucumber-js
-    test-file: "cucumber-js {{filename}}"
+    testFile: "cucumber-js {{filename}}"
 
     # define the command to test a ".feature" file at a certain line using cucumber-js
-    test-line: "cucumber-js {{filename}}:{{line}}"
+    testLine: "cucumber-js {{filename}}:{{line}}"
 
   # mappings for files with the extension ".js"
   js:
-    test-file: "mocha {{filename}}"
+    testFile: "mocha {{filename}}"
 
   coffee:
-    test-file: "mocha --compilers coffee:coffee-script {{filename}}"
+    testFile: "mocha --compilers coffee:coffee-script {{filename}}"
 
   ls:
-    test-file: "mocha --compilers ls:livescript {{filename}}"
+    testFile: "mocha --compilers ls:livescript {{filename}}"
