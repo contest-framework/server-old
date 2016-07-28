@@ -76,6 +76,12 @@ In this example,
 The commands to run are specified via
 <a href="https://en.wikipedia.org/wiki/Mustache_(template_system)#Examples)">Mustache</a> templates.
 
+If you have created a good config file
+that you think should ship with Tertestrial,
+please submit a PR that adds a file with your mapping to
+[the mappings folder](https://github.com/kevgo/tertestrial-server/tree/master/mappings),
+matching the structure of the other files there.
+
 
 ### Multiple mapping sets
 
