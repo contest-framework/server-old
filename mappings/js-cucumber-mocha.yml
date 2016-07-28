@@ -1,3 +1,4 @@
+name: 'JS: Cucumber + Mocha'
 mappings:
   feature:
     testFile: "cucumber-js {{filename}}"

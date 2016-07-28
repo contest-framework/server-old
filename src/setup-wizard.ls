@@ -2,6 +2,7 @@ require! {
   'chalk' : {bold, cyan, green}
   'fs'
   'inquirer'
+  'js-yaml' : yaml
   'path'
   'prelude-ls' : {map, sort}
   'shelljs/global'
@@ -9,9 +10,12 @@ require! {
 
 
 function built-in-mappings
-  fs.readdir-sync(path.join __dirname, '..' 'mappings')
+  mappings = fs.readdir-sync(path.join __dirname, '..' 'mappings')
     |> map -> path.basename it, path.extname(it)
     |> sort
+  for mapping in mappings
+    content = yaml.safe-load fs.read-file-sync(path.join __dirname, '..' 'mappings' "#{mapping}.yml")
+    { name: content.name, value: mapping }
 
 
 function create-builtin-config mapping
