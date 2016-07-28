@@ -45,12 +45,17 @@ Feature: multiple mappings
   Scenario: selecting another mapping
     When sending the command:
       """
+      {"operation": "testFile", "filename": "foo_spec.js"}
+      """
+    Then I see "Running Mocha for foo_spec.js in API mode!"
+    When sending the command:
+      """
       {"operation": "setMapping", "mapping": 2}
       """
     Then I see "Activating mapping CLI"
     And sending the command:
       """
-      {"operation": "testFile", "filename": "foo_spec.js"}
+      {"operation": "repeatLastTest"}
       """
     Then I see "Running Mocha for foo_spec.js in CLI mode!"
 

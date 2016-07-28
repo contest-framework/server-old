@@ -12,7 +12,12 @@ require! {
 class CommandRunner
 
   (@config) ->
+
+    # the currently activated mapping number
     @current-mapping = 1
+
+    # the last test command that was sent from the editor
+    @current-command = ''
 
 
   run-command: (command) ~>
@@ -23,14 +28,14 @@ class CommandRunner
         @set-mapping command
 
       case 'repeatLastTest'
-        if @current-test?.length > 0
-          @run-test @current-test
-        else
-          error "No previous test run"
+        if @current-command?.length is 0 then return error "No previous test run"
+        unless mapper = @get-mapper @current-command then abort "cannot find a mapper for ", @current-command
+        @run-test template(mapper, @current-command)
 
       default
         unless mapper = @get-mapper command
           abort "cannot find a mapper for ", command
+        @current-command = command
         @run-test template(mapper, command)
 
 
@@ -51,9 +56,8 @@ class CommandRunner
 
 
   run-test: (command) ->
-    @current-test = command
-    console.log bold "#{@current-test}\n"
-    new ObservableProcess ['sh', '-c', @current-test]
+    console.log bold "#{command}\n"
+    new ObservableProcess ['sh', '-c', command]
 
 
   set-mapping: ({mapping}) ->
