@@ -29,7 +29,7 @@
   "files": [
     "bin/tertestrial",
     "dist",
-    "mappers"
+    "mappings"
   ],
   "homepage": "https://github.com/kevgo/tertestrial-server",
   "license": "ISC",
