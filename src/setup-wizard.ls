@@ -23,15 +23,16 @@ function create-builtin-config mapping
   console.log """
 
   Created configuration file #{cyan 'tertestrial.yml'}.
+  You are done with the setup. Happy testing!
 
   """
 
 
-function create-custom-mapping language
-  cp path.join(__dirname, '..' 'templates' 'tertestrial.yml'), 'tertestrial.yml'
+function create-custom-mapping template
+  cp path.join(__dirname, '..' 'mappings' "#{template}.yml"), 'tertestrial.yml'
   console.log """
 
-  Created configuration file #{cyan 'tertestrial.yml'} as a starter.
+  I have created configuration file #{cyan 'tertestrial.yml'} as a starter.
   Please adapt it to your project.
 
   """
@@ -39,6 +40,7 @@ function create-custom-mapping language
 
 module.exports = ->
   console.log bold 'Tertestrial setup wizard\n'
+  console.log 'We are going to create a Tertestrial configuration file together.\n'
   questions =
     message: 'Do you want to use a built-in mapping?'
     type: 'list'
@@ -50,4 +52,11 @@ module.exports = ->
       create-builtin-config answers.mapping
       process.exit!
 
-    create-custom-mapping answers.language
+    console.log '\nOkay, creating a custom mapping for you.\n'
+    questions =
+      message: 'Which mapping to you want to use as a starting point?'
+      type: 'list'
+      name: 'mapping'
+      choices: built-in-mappings!
+    inquirer.prompt(questions).then (answers) ->
+      create-custom-mapping answers.mapping

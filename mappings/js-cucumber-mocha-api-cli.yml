@@ -1,19 +1,46 @@
-name: 'JS: Cucumber + Mocha - multi-level with API and CLI world'
+# This is an example mapping file.
+# Please adapt it to your project, and then delete this comment.
+
+name: 'JS: Cucumber + Mocha - multi-level with API and CLI test runners'
 mappings:
 
+  # Our first mapping, called "all".
+  # It runs both the "API" and "CLI" tests.
   - all:
+
+      # Here we define how to run tests for files that have the extension ".feature"
+      # when the "all" mapping is active.
       feature:
+
+        # Here we define how to run all tests in a file with extension ".feature"
+        # when the "all" mapping is active.
         testFile: "cuc-api {{filename}} && cuc-cli {{filename}}"
+
+        # Here we define how to run just the test at the given line
+        # in a file with extension ".feature" when the "all" mapping is active.
         testLine: "cuc-api {{filename}}:{{line}} && cuc-cli {{filename}}:{{line}}"
+
+      # Here we define how to run tests for files that have the extension ".js"
+      # when the "all" mapping is active.
       js:
         testFile: "mocha {{filename}}"
+
+      # Here we define how to run tests for CoffeeScript files
+      # when the "all" mapping is active.
       coffee:
         testFile: "mocha --compilers coffee:coffee-script {{filename}}"
+
+      # Here we define how to run tests for Livescript files
+      # when the "all" mapping is active.
       ls:
         testFile: "mocha --compilers ls:livescript {{filename}}"
 
 
+  # The next mapping, called "API". It runs only the API tests
   - API:
+
+      # Here we define how to run all tests in a file with extension ".feature"
+      # when the "API" mapping is active.
       feature:
         testFile: "cuc-api {{filename}}"
         testLine: "cuc-api {{filename}}:{{line}}"
@@ -24,6 +51,8 @@ mappings:
       ls:
         testFile: "mocha --compilers ls:livescript {{filename}}"
 
+
+  # The next mapping, called "CLI". It runs only the CLI tests
   - CLI:
       feature:
         testFile: "cuc-cli {{filename}}"
