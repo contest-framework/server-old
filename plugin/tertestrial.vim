@@ -19,7 +19,7 @@ function! g:RepeatLastTest()
 endfunction
 
 
-function g:SetMapping(mapping)
+function! g:SetMapping(mapping)
   let command = '{"operation": "setMapping", "mapping": '.a:mapping.'}'
   let message = 'Set mapping '.a:mapping
   call SendTestCommand(command, message)
