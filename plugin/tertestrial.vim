@@ -1,29 +1,30 @@
-function! TestFile()
+function! g:TestFile()
   let command = '{"operation": "testFile", "filename": "'.bufname('%').'"}'
   let message = 'testing file '.bufname('%')
   call SendTestCommand(command, message)
 endfunction
 
 
-function! TestLine()
+function! g:TestLine()
   let command = '{"operation": "testLine", "filename": "'.bufname('%').'", "line": "'.line('.').'"}'
   let message = 'testing file '.bufname('%').' at line '.line('.')
   call SendTestCommand(command, message)
 endfunction
 
 
-function! RepeatLastTest()
+function! g:RepeatLastTest()
   let command = '{"operation": "repeatLastTest"}'
   let message = 'repeating last test'
   call SendTestCommand(command, message)
 endfunction
 
 
-function SetMapping(mapping)
+function g:SetMapping(mapping)
   let command = '{"operation": "setMapping", "mapping": '.a:mapping.'}'
   let message = 'Set mapping '.a:mapping
   call SendTestCommand(command, message)
 endfunction
+
 
 function! SendTestCommand(data, message)
   if findfile('.tertestrial.tmp', '.;') == '.tertestrial.tmp'
@@ -35,7 +36,7 @@ endfunction
 
 
 let g:autotest = 0
-function! ToggleTestAutorun()
+function! g:ToggleTestAutorun()
   let g:autotest = 1 - g:autotest
   if g:autotest
     echo 'AutoTest ON'
