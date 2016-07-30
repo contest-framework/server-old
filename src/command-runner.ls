@@ -1,9 +1,9 @@
 require! {
   'chalk' : {bold, cyan, red}
+  'child_process' : {spawn}
   './helpers/error-message' : {abort, error}
   './helpers/file-type'
   './helpers/reset-terminal'
-  'observable-process' : ObservableProcess
   './helpers/template'
 }
 
@@ -48,7 +48,7 @@ class CommandRunner
 
   run-test: (command) ->
     console.log bold "#{command}\n"
-    new ObservableProcess ['sh', '-c', command]
+    spawn 'sh' ['-c', command], stdio: 'inherit'
 
 
   set-mapping: ({mapping}) ->
