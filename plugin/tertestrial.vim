@@ -48,7 +48,7 @@ endfunction
 function! SendTestCommand(data, message)
   if findfile('.tertestrial.tmp', '.;') == '.tertestrial.tmp'
     call writefile([a:data], '.tertestrial.tmp')
-    echo message
+    echo a:message
   else
     echoerr "ERROR: Tertestrial server is not running!"
   endif
