@@ -34,7 +34,7 @@ endfunction
 
 
 let g:tertestrialAutotest = 0
-function! g:ToggleTestAutorun()
+function! g:TertestrialToggle()
   let g:tertestrialAutotest = 1 - g:tertestrialAutotest
   if g:tertestrialAutotest
     echo 'AutoTest ON'
