@@ -28,7 +28,7 @@ endfunction
 
 function! g:TertestrialFileSaved()
   if g:tertestrialAutotest
-    call RepeatLastTest()
+    call TertestrialRepeat()
   endif
 endfunction
 
