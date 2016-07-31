@@ -52,7 +52,9 @@ endfunction
 function! SendTestCommand(data, message)
   if findfile('.tertestrial.tmp', '.;') == '.tertestrial.tmp'
     call writefile([a:data], '.tertestrial.tmp')
-    if a:message != ''
+    if a:message == ''
+      echo 'no echo here'
+    else
       echo a:message
     endif
   else
