@@ -32,6 +32,41 @@ Feature: configuring the commands
       """
     Then I see "Running Mocha with one.js:12!"
 
+  Scenario: has default mapping
+    Given a file "tertestrial.yml" with the content:
+      """
+      mappings:
+        default:
+          testFile: "echo Running Mocha with {{filename}}!"
+          testLine: "echo Running Mocha with {{filename}}:{{line}}!"
+      """
+    And starting tertestrial
+    When sending the command:
+      """
+      {"operation": "testFile", "filename": "one.js"}
+      """
+    Then I see "Running Mocha with one.js!"
+    When sending the command:
+      """
+      {"operation": "testLine", "filename": "one.js", "line": 12}
+      """
+    Then I see "Running Mocha with one.js:12!"
+
+
+  Scenario: operation is file agnostic
+    Given a file "tertestrial.yml" with the content:
+      """
+      mappings:
+        default:
+          testSuite: "echo Running Buttercup with pattern: {{pattern}}!"
+      """
+    And starting tertestrial
+    When sending the command:
+      """
+      {"operation": "testSuite", "pattern": "get-*"}
+      """
+    Then I see "Running Buttercup with pattern: get-*!"
+
 
   Scenario: configuration file missing
     When starting tertestrial
@@ -66,3 +101,18 @@ Feature: configuring the commands
       {"operation": "zonk", "filename": "one.js"}
       """
     Then I see "Error: no mapper for operation zonk on file type js"
+
+
+  Scenario: no file type and no default mapping
+    Given a file "tertestrial.yml" with the content:
+      """
+      mappings:
+        js:
+          test: "echo Running Mocha with {{filename}}!"
+      """
+    And starting tertestrial
+    When sending the command:
+      """
+      {"operation": "zonk", "filename": "one"}
+      """
+    Then I see "Error: no file type or default mapping specified"
