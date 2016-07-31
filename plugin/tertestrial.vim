@@ -15,9 +15,9 @@ endfunction
 function! g:TertestrialRepeat(autorepeating)
   let command = '{"operation": "repeatLastTest"}'
   if a:autorepeating
-    let message = 'repeating last test'
-  else
     let message = ''
+  else
+    let message = 'repeating last test'
   endif
   call SendTestCommand(command, message)
 endfunction
@@ -52,9 +52,7 @@ endfunction
 function! SendTestCommand(data, message)
   if findfile('.tertestrial.tmp', '.;') == '.tertestrial.tmp'
     call writefile([a:data], '.tertestrial.tmp')
-    if a:message == ''
-      echo 'no echo here'
-    else
+    if a:message != ''
       echo a:message
     endif
   else
