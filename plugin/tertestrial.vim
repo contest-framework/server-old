@@ -12,9 +12,13 @@ function! g:TertestrialLine()
 endfunction
 
 
-function! g:TertestrialRepeat()
+function! g:TertestrialRepeat(autorepeating)
   let command = '{"operation": "repeatLastTest"}'
-  let message = 'repeating last test'
+  if a:autorepeating
+    let message = 'repeating last test'
+  else
+    let message = ''
+  endif
   call SendTestCommand(command, message)
 endfunction
 
@@ -28,7 +32,7 @@ endfunction
 
 function! g:TertestrialFileSaved()
   if g:tertestrialAutotest
-    call TertestrialRepeat()
+    call TertestrialRepeat(1)
   endif
 endfunction
 
@@ -48,7 +52,9 @@ endfunction
 function! SendTestCommand(data, message)
   if findfile('.tertestrial.tmp', '.;') == '.tertestrial.tmp'
     call writefile([a:data], '.tertestrial.tmp')
-    echo a:message
+    if a:message != ''
+      echo a:message
+    endif
   else
     echoerr "ERROR: Tertestrial server is not running!"
   endif
