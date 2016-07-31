@@ -12,9 +12,11 @@ function! g:TertestrialLine()
 endfunction
 
 
-function! g:TertestrialRepeat(autorepeating)
+function! g:TertestrialRepeat(...)
   let command = '{"operation": "repeatLastTest"}'
-  if a:autorepeating
+  echo a:0
+  echo a:1
+  if a:0 == 1
     let message = ''
   else
     let message = 'repeating last test'
@@ -32,7 +34,7 @@ endfunction
 
 function! g:TertestrialFileSaved()
   if g:tertestrialAutotest
-    call TertestrialRepeat(1)
+    call TertestrialRepeat('autorepeating')
   endif
 endfunction
 
