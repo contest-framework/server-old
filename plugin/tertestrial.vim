@@ -14,8 +14,6 @@ endfunction
 
 function! g:TertestrialRepeat(...)
   let command = '{"operation": "repeatLastTest"}'
-  echo a:0
-  echo a:1
   if a:0 == 1
     let message = ''
   else
