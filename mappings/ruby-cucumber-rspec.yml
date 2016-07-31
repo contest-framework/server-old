@@ -1,0 +1,21 @@
+# This is an example mapping file.
+# Please adapt it to your project, and then delete this comment.
+
+name: 'Ruby: Cucumber + RSpec'
+mappings:
+
+  # Here we define what to do with files that have the extension ".feature"
+  feature:
+
+    # Here we define how to run all tests in a file with extension ".feature"
+    testFile: "cucumber {{filename}}"
+
+    # Here we define how to run just the test at the given line
+    # in a file with extension ".feature"
+    testLine: "cucumber {{filename}}:{{line}}"
+
+
+  # Here we define what to do with files that have the extension ".rb"
+  rb:
+    testFile: "rspec {{filename}}"
+    testLine: "rspec {{filename}}:{{line}}"
