@@ -13,14 +13,13 @@ Feature: configuring the commands
 
 
   Scenario: simple configuration file
-    Given a file "tertestrial.yml" with the content:
+    Given Tertestrial runs with the configuration:
       """
       mappings:
         js:
           testFile: "echo Running Mocha with {{filename}}!"
           testLine: "echo Running Mocha with {{filename}}:{{line}}!"
       """
-    And starting tertestrial
     When sending the command:
       """
       {"operation": "testFile", "filename": "one.js"}
@@ -34,18 +33,17 @@ Feature: configuring the commands
 
 
   Scenario: configuration file missing
-    When starting tertestrial
+    When trying to start tertestrial
     Then I see "Error: cannot find configuration file"
 
 
   Scenario: mapping missing
-    Given a file "tertestrial.yml" with the content:
+    Given Tertestrial runs with the configuration:
       """
       mappings:
         js:
           test-file: "echo Running Mocha with {{filename}}!"
       """
-    And starting tertestrial
     When sending the command:
       """
       {"operation": "testFile", "filename": "one.zonk"}
@@ -54,13 +52,12 @@ Feature: configuring the commands
 
 
   Scenario: mapper for operation missing
-    Given a file "tertestrial.yml" with the content:
+    Given Tertestrial runs with the configuration:
       """
       mappings:
         js:
           test: "echo Running Mocha with {{filename}}!"
       """
-    And starting tertestrial
     When sending the command:
       """
       {"operation": "zonk", "filename": "one.js"}

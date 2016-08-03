@@ -11,7 +11,7 @@ Feature: multiple mappings
 
 
   Background:
-    Given a file "tertestrial.yml" with the content:
+    Given Tertestrial runs with the configuration:
       """
       mappings:
 
@@ -31,7 +31,6 @@ Feature: multiple mappings
               testFile: "echo Running Mocha for {{filename}} in CLI mode!"
               testLine: "echo Running Mocha for {{filename}}:{{line}} in CLI mode!"
       """
-    And starting tertestrial
 
 
   Scenario: default mapping
