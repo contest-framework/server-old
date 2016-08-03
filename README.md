@@ -143,6 +143,7 @@ Tertestrial removes this pipe when stopping.
 ## Editor plugins
 
 * [Vim](https://github.com/kevgo/tertestrial-vim)
+* [Emacs](https://github.com/dmh43/emacs-tertestrial)
 
 
 ## Create your own editor plugin
