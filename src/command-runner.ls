@@ -41,8 +41,13 @@ class CommandRunner
   get-mapper: ({operation, filename}) ~>
     mapping = @config.mappings[@current-mapping] or abort "mapping ##{@current-mapping} not found"
     mapping = [value for _, value of mapping][0]
-    type = file-type filename
-    type-mapping = mapping[type] or abort "no mapping for file type #{cyan type}"
+    type = if filename then file-type filename
+    if type
+      type-mapping = mapping[type] or mapping.default
+      if not type-mapping then abort "no mapping for file type #{cyan type}"
+    else if mapping.default
+      type-mapping = mapping.default
+    else abort "no file type or default mapping specified"
     type-mapping[operation] or abort "no mapper for operation #{cyan operation} on file type #{cyan type}"
 
 
