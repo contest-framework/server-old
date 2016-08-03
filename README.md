@@ -8,7 +8,8 @@ _Runs the currently relevant test while coding._
 
 Tertestrial runs configurable tasks on files or parts of files.
 Tasks are triggered by hotkeys from within your code editor,
-or automatically on file save.
+or automatically on file save,
+and run in a separate terminal window outside of your editor.
 A common application for this is
 running a particular unit test that is currently driving your development,
 i.e. which you want to make green,
@@ -17,7 +18,9 @@ With Tertestrial you can do this with an absolute minimum of key presses,
 noise and slowdown from unnecessary test runs,
 and without having to leave your text editor.
 
-[screencast coming soon]
+<a href="https://youtu.be/pxrES6xQlxo" target="_blank">
+  <img src="documentation/tertestrial_video_1.png" width="480" height="269">
+</a>
 
 Tertestrial works with all test frameworks (a lot are built-in)
 and any text editor with a [Tertestrial plugin](#editor-plugins).
