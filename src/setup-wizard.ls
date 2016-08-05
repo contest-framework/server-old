@@ -9,17 +9,17 @@ require! {
 }
 
 
-function built-in-mappings
-  mappings = fs.readdir-sync(path.join __dirname, '..' 'mappings')
+function built-in-action-sets
+  files = fs.readdir-sync(path.join __dirname, '..' 'actions')
     |> map -> path.basename it, path.extname(it)
     |> sort
-  for mapping in mappings
-    content = yaml.safe-load fs.read-file-sync(path.join __dirname, '..' 'mappings' "#{mapping}.yml")
-    { name: content.name, value: mapping }
+  for file in files
+    content = yaml.safe-load fs.read-file-sync(path.join __dirname, '..' 'actions' "#{file}.yml")
+    { name: content.name, value: file }
 
 
-function create-builtin-config mapping
-  fs.write-file-sync 'tertestrial.yml', "mappings: #{mapping}"
+function create-builtin-config file-name
+  fs.write-file-sync 'tertestrial.yml', "actions: #{file-name}"
   console.log """
 
   Created configuration file #{cyan 'tertestrial.yml'}.
@@ -28,35 +28,35 @@ function create-builtin-config mapping
   """
 
 
-function create-custom-mapping template
-  cp path.join(__dirname, '..' 'mappings' "#{template}.yml"), 'tertestrial.yml'
+function create-custom-configuration template
+  cp path.join(__dirname, '..' 'actions' "#{template}.yml"), 'tertestrial.yml'
   console.log """
 
-  I have created configuration file #{cyan 'tertestrial.yml'} as a starter.
-  Please adapt it to your project.
+    I have created configuration file #{cyan 'tertestrial.yml'} as a starter.
+    Please adapt it to your project.
 
-  """
+    """
 
 
 module.exports = ->
   console.log bold 'Tertestrial setup wizard\n'
   console.log 'We are going to create a Tertestrial configuration file together.\n'
   questions =
-    message: 'Do you want to use a built-in mapping?'
+    message: 'Do you want to use a built-in configuration?'
     type: 'list'
-    name: 'mapping'
-    choices: [{name: 'No, I want to build my own custom mapping', value: 'no'},
-              new inquirer.Separator!].concat built-in-mappings!
+    name: 'built-in'
+    choices: [{name: 'No, I want to build my own custom configuration', value: 'no'},
+              new inquirer.Separator!].concat built-in-action-sets!
   inquirer.prompt(questions).then (answers) ->
-    if answers.mapping isnt 'no'
-      create-builtin-config answers.mapping
+    if answers['built-in'] isnt 'no'
+      create-builtin-config answers['built-in']
       process.exit!
 
-    console.log '\nOkay, creating a custom mapping for you.\n'
+    console.log '\nOkay, creating a custom configuration for you.\n'
     questions =
-      message: 'Which mapping to you want to use as a starting point?'
+      message: 'Which configuration to you want to use as a starting point?'
       type: 'list'
-      name: 'mapping'
-      choices: built-in-mappings!
+      name: 'built-in'
+      choices: built-in-action-sets!
     inquirer.prompt(questions).then (answers) ->
-      create-custom-mapping answers.mapping
+      create-custom-configuration answers['built-in']

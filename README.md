@@ -63,7 +63,7 @@ and end-to-end tests using [Cucumber-JS](https://github.com/cucumber/cucumber-js
 
 __tertestrial.yml__
 ```yml
-mappings:
+actions:
   js:
     testFile: "mocha {{filename}}"
     testLine: "mocha {{filename}} -l {{line}}"
@@ -81,22 +81,22 @@ The commands to run are specified via
 
 If you have created a good config file
 that you think should ship with Tertestrial,
-please submit a PR that adds a file with your mapping to
-[the mappings folder](https://github.com/kevgo/tertestrial-server/tree/master/mappings),
+please submit a PR that adds a file with your configuration to
+[the "actions" folder](https://github.com/kevgo/tertestrial-server/tree/master/actions),
 matching the structure of the other files there.
 
 
-### Multiple mapping sets
+### Multiple action sets
 
-Tertestrial allows to define several sets of mappings
+Tertestrial allows to define several sets of actions
 and switch between them at runtime.
-An example is to have one mapping for running end-to-end tests using a real browser
-and another mapping to run them using a faster headless browser.
+An example is to have one action set for running end-to-end tests using a real browser
+and another action set to run them using a faster headless browser.
 
 __tertestrial.yml__
 
 ```yml
-mappings:
+actions:
 
   - headless:
       feature:
@@ -170,10 +170,10 @@ and write the command to execute as a JSON string into the file `.tertestrial.tm
   {"operation": "repeatLastTest"}
   ```
 
-* to switch to a different mapping:
+* to switch to a different action set:
 
   ```json
-  {"operation": "setMapping", "mapping": 2}
+  {"actionSet": 2}
   ```
 
 

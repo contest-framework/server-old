@@ -9,6 +9,7 @@
     "chalk": "1.1.3",
     "inquirer": "1.1.2",
     "js-yaml": "3.6.1",
+    "object-depth": "0.0.2",
     "prelude-ls": "1.1.2",
     "remove-value": "1.0.0",
     "shelljs": "0.7.3"
@@ -32,7 +33,7 @@
   "files": [
     "bin/tertestrial",
     "dist",
-    "mappings"
+    "actions"
   ],
   "homepage": "https://github.com/kevgo/tertestrial-server",
   "license": "ISC",

@@ -10,10 +10,6 @@ module.exports = ->
     @create-file file-name, content
 
 
-  @Given /^a mapper "([^"]*)" with content:$/ (file-name, content) ->
-    @create-file file-name, content
-
-
   @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 20_000, (app-name, done) ->
     @root-dir = path.join 'example-applications', app-name
     @run-process 'npm i'
@@ -46,11 +42,17 @@ module.exports = ->
     @send-command command, done
 
 
-  @When /^sending the operation "([^"]*)" on filename "([^"]*)" and line "([^"]*)"$/ (operation, filename, line, done) ->
-    @send-command JSON.stringify({operation, filename, line}), done
+  @When /^sending filename "([^"]*)" and line "([^"]*)"$/ (filename, line, done) ->
+    data = {filename}
+    data.line = line if line
+    @send-command JSON.stringify(data), done
 
 
   @Then /^I see "([^"]*)"$/ (expected-text, done) ->
+    @process.wait expected-text, done
+
+
+  @Then /^I see:$/ (expected-text, done) ->
     @process.wait expected-text, done
 
 

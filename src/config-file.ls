@@ -3,6 +3,7 @@ require! {
   './helpers/file-type'
   'fs'
   'js-yaml' : yaml
+  'object-depth' : object-depth
   'path'
   'prelude-ls' : {capitalize}
   'remove-value'
@@ -21,24 +22,44 @@ class ConfigFile
     catch
       abort 'cannot find configuration file'
     config = yaml.safe-load fs.read-file-sync('tertestrial.yml', 'utf8')
-    @mappings = config.mappings |> @_standardize-mappings |> @_prepend-empty-mapping
+    @actions = config.actions
+      |> @_standardize-actions
+      |> @_convert-regex
 
 
-  _load-internal-mapping: (filename) ->
-    yaml.safe-load fs.read-file-sync path.join(__dirname, '..', 'mappings', "#{filename}.yml"), 'utf8'
+  _convert-regex: (actions) ->
+    switch typeof! actions
+
+      case 'Array'
+        for action in actions
+          @_convert-regex(action)
+
+      case 'Object'
+        for key, value of actions
+          if key is 'command' then continue
+          if typeof! value is 'String'
+            actions[key] = new RegExp value
+          else
+            actions[key] = @_convert-regex value
+
+      default abort "unknown action key: #{actions}"
+    actions
 
 
-  _prepend-empty-mapping: (mappings) ->
-    mappings.unshift {}
-    mappings
+  _load-internal-action: (filename) ->
+    path.join __dirname, '..', 'actions', "#{filename}.yml"
+      |> fs.read-file-sync _, 'utf8'
+      |> yaml.safe-load
 
 
-  _standardize-mappings: (mappings) ->
-    switch mapping-type = typeof! mappings
-      | 'Object'  =>  [default: mappings]
-      | 'Array'   =>  mappings
-      | 'String'  =>  @_standardize-mappings @_load-internal-mapping(mappings).mappings
-      | _         =>  abort "unknown mapping type: #{mapping-type}"
+  _standardize-actions: (actions) ->
+    type = typeof! actions
+    depth = object-depth actions
+    switch
+      | type is 'String'                 =>  @_load-internal-action(actions).actions |> @_standardize-actions
+      | type is 'Array' and depth is 2   =>  [default: actions]
+      | type is 'Array' and depth is 4   =>  actions
+      | _                                =>  abort "unknown action type: #{actions}"
 
 
 

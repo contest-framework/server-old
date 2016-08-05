@@ -11,7 +11,7 @@ Feature: generating the configuration file
   Scenario: generating a custom configuration file
     When starting 'tertestrial --setup'
     And entering '[ENTER]'
-    Then I see "creating a custom mapping"
+    Then I see "creating a custom configuration"
     When entering '[ENTER]'
     Then I see "created configuration file tertestrial.yml"
     And it creates a file "tertestrial.yml"
