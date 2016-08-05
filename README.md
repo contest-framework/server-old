@@ -1,8 +1,8 @@
 # Tertestrial Server
 
-[![CircleCI](https://circleci.com/gh/kevgo/tertestrial-server.svg?style=shield)](https://circleci.com/gh/kevgo/tertestrial-server)
-[![Dependency Status](https://david-dm.org/kevgo/tertestrial-server.svg)](https://david-dm.org/kevgo/tertestrial-server)
-[![devDependency Status](https://david-dm.org/kevgo/tertestrial-server/dev-status.svg)](https://david-dm.org/kevgo/tertestrial-server#info=devDependencies)
+[![CircleCI](https://circleci.com/gh/Originate/tertestrial-server.svg?style=shield)](https://circleci.com/gh/Originate/tertestrial-server)
+[![Dependency Status](https://david-dm.org/Originate/tertestrial-server.svg)](https://david-dm.org/Originate/tertestrial-server)
+[![devDependency Status](https://david-dm.org/Originate/tertestrial-server/dev-status.svg)](https://david-dm.org/Originate/tertestrial-server#info=devDependencies)
 
 _Runs the currently relevant test while coding._
 
@@ -188,7 +188,7 @@ it well test files using Firefox as the browser.
 If you have created a good config file
 that you think should ship with Tertestrial,
 please submit a PR that adds a file with your configuration to
-[the "actions" folder](https://github.com/kevgo/tertestrial-server/tree/master/actions),
+[the "actions" folder](https://github.com/Originate/tertestrial-server/tree/master/actions),
 matching the structure of the other files there.
 
 
@@ -214,7 +214,7 @@ then press __ctrl-c__.
 
 ## Editor plugins
 
-* [Vim](https://github.com/kevgo/tertestrial-vim)
+* [Vim](https://github.com/Originate/tertestrial-vim)
 * [Emacs](https://github.com/dmh43/emacs-tertestrial)
 * [Atom](https://github.com/charlierudolph/tertestrial-atom)
 
