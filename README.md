@@ -1,8 +1,8 @@
 # Tertestrial Server
 
-[![CircleCI](https://circleci.com/gh/Originate/tertestrial-server.svg?style=shield)](https://circleci.com/gh/Originate/tertestrial-server)
-[![Dependency Status](https://david-dm.org/Originate/tertestrial-server.svg)](https://david-dm.org/Originate/tertestrial-server)
-[![devDependency Status](https://david-dm.org/Originate/tertestrial-server/dev-status.svg)](https://david-dm.org/Originate/tertestrial-server#info=devDependencies)
+[![CircleCI](https://circleci.com/gh/kevgo/tertestrial-server.svg?style=shield)](https://circleci.com/gh/kevgo/tertestrial-server)
+[![Dependency Status](https://david-dm.org/kevgo/tertestrial-server.svg)](https://david-dm.org/kevgo/tertestrial-server)
+[![devDependency Status](https://david-dm.org/kevgo/tertestrial-server/dev-status.svg)](https://david-dm.org/kevgo/tertestrial-server#info=devDependencies)
 
 _Runs the currently relevant test while coding._
 
@@ -80,6 +80,12 @@ and how your editor plugin works.
 As an example, here are the messages sent by
 [Tertestrial-Vim](https://github.com/originate/tertestrial-vim):
 
+- when the user wants to run the current action on the whole code base
+
+  ```json
+  {}
+  ```
+
 - when the user wants to run the current action on the given file
 
   ```json
@@ -99,11 +105,13 @@ As an example, here are the messages sent by
   ```
 
 Tertestrial's configuration file (tertestrial.yml)
-contains a list of data structures that describe the actions to perform
+contains data structures with a comparable structure.
+They describe the actions to perform
 in response to incoming messages.
-Actions define the same fields as messages, but with regex placeholders.
-The action that most specifically matches an incoming message gets executed.
-Executing means running the command specified in the action's `command` field.
+Actions contain the same fields as messages,
+but their values are regular expressions.
+The action that most specifically matches an incoming message gets executed
+by running the command specified in the action's `command` field.
 
 Below is an example configuration file
 for JavaScript developers
@@ -118,8 +126,8 @@ actions:
   - filename: '\.feature$'
     command: 'cucumber-js {{filename}}'
 
-    # Here we define how to run just the test at the given line
-    # in a file with extension ".feature"
+  # Here we define how to run just the test at the given line
+  # in a file with extension ".feature"
   - filename: '\.feature$'
     line: '\d+'
     command: 'cucumber-js {{filename}}:{{line}}'
@@ -134,23 +142,14 @@ The commands to run are specified via
 
 When you tell the setup wizard that you want to create your own custom configuration,
 it sets up the config file pre-populated with a built-in configuration of your choice
-as a starting point for your convenience.
-
-
-## Submitting commonly used configurations
-
-If you have created a good config file
-that you think should ship with Tertestrial,
-please submit a PR that adds a file with your configuration to
-[the "actions" folder](https://github.com/Originate/tertestrial-server/tree/master/actions),
-matching the structure of the other files there.
+as a starting point for your customizations.
 
 
 ### Multiple action sets
 
 Tertestrial allows to define several sets of actions
 and switch between them at runtime.
-An example is to have one action set for running end-to-end tests using a real browser
+An example is to have one action set for running tests using a real browser
 and another action set to run them using a faster headless browser.
 
 __tertestrial.yml__
@@ -159,15 +158,38 @@ __tertestrial.yml__
 actions:
 
   - headless:
-      feature:
-        testFile: "TEST_PLATFORM=headless cucumber-js {{filename}}"
-        testLine: "TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}"
+
+      - filename: '\.feature$'
+        command: 'TEST_PLATFORM=headless cucumber-js {{filename}}'
+
+      - filename: '\.feature$'
+        line: '\d+'
+        command: 'TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}'
 
   - firefox:
-      feature:
-        testFile: "TEST_PLATFORM=firefox cucumber-js {{filename}}"
-        testLine: "TEST_PLATFORM=firefox cucumber-js {{filename}}:{{line}}"
+
+      - filename: '\.feature$'
+        command: 'TEST_PLATFORM=firefox cucumber-js {{filename}}'
+
+      - filename: '\.feature$'
+        line: '\d+'
+        command: 'TEST_PLATFORM=firefox cucumber-js {{filename}}:{{line}}'
 ```
+
+When Tertestrial starts, in activates the first action set.
+In this example, it means if you tell it to test a file,
+it will do so using the headless browser.
+When you switch to the second action set,
+it well test files using Firefox as the browser.
+
+
+### Submitting commonly used configurations
+
+If you have created a good config file
+that you think should ship with Tertestrial,
+please submit a PR that adds a file with your configuration to
+[the "actions" folder](https://github.com/kevgo/tertestrial-server/tree/master/actions),
+matching the structure of the other files there.
 
 
 ## Running tertestrial
@@ -192,7 +214,7 @@ then press __ctrl-c__.
 
 ## Editor plugins
 
-* [Vim](https://github.com/Originate/tertestrial-vim)
+* [Vim](https://github.com/kevgo/tertestrial-vim)
 * [Emacs](https://github.com/dmh43/emacs-tertestrial)
 * [Atom](https://github.com/charlierudolph/tertestrial-atom)
 
