@@ -19,6 +19,8 @@ Feature: configuring the commands
         - filename: '\.js$'
           line: '\d+'
           command: 'echo Running Mocha with {{filename}}:{{line}}!'
+        - pattern: '.*'
+          command: 'echo Running Mocha with -g {{pattern}}!'
       """
 
 
@@ -33,6 +35,11 @@ Feature: configuring the commands
       {"filename": "one.js", "line": 12}
       """
     Then I see "Running Mocha with one.js:12!"
+    When sending the command:
+      """
+      {"pattern": "get-*"}
+      """
+    Then I see "Running Mocha with -g get-*!"
 
 
   Scenario: no matching action
