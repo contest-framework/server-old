@@ -1,12 +1,12 @@
 function! g:TertestrialFile()
-  let command = '{"operation": "testFile", "filename": "'.bufname('%').'"}'
+  let command = '{"filename": "'.bufname('%').'"}'
   let message = 'testing file '.bufname('%')
   call SendTestCommand(command, message)
 endfunction
 
 
 function! g:TertestrialLine()
-  let command = '{"operation": "testLine", "filename": "'.bufname('%').'", "line": "'.line('.').'"}'
+  let command = '{"filename": "'.bufname('%').'", "line": "'.line('.').'"}'
   let message = 'testing file '.bufname('%').' at line '.line('.')
   call SendTestCommand(command, message)
 endfunction
@@ -23,9 +23,9 @@ function! g:TertestrialRepeat(...)
 endfunction
 
 
-function! g:TertestrialSet(mapping)
-  let command = '{"operation": "setMapping", "mapping": '.a:mapping.'}'
-  let message = 'Set mapping '.a:mapping
+function! g:TertestrialSet(actionSet)
+  let command = '{"actionSet": '.a:actionSet.'}'
+  let message = 'Activate action set '.a:actionSet
   call SendTestCommand(command, message)
 endfunction
 
