@@ -15,15 +15,27 @@ running a particular unit test that is currently driving your development,
 i.e. which you want to make green,
 as part of test-driven development.
 With Tertestrial you can do this with an absolute minimum of key presses,
-noise and slowdown from unnecessary test runs,
+distractions, slowdown from unnecessary test runs,
 and without having to leave your text editor.
 
 <a href="https://youtu.be/pxrES6xQlxo" target="_blank">
   <img src="documentation/tertestrial_video_1.png" width="480" height="269">
 </a>
 
-Tertestrial works with all test frameworks (a lot are built-in)
+Tertestrial works with all test frameworks
 and any text editor with a [Tertestrial plugin](#editor-plugins).
+It comes with a set of built-in configurations for common frameworks
+that allow you to get started using it right away.
+
+
+## How it works
+
+Tertestrial consists of a server (in this repository)
+and a number of editor plugins.
+The editor plugins send commands to the server
+via a named pipe `.tertestrial.tmp` in the directory where you start the server
+(typically the base directory of the code base you are working on).
+Tertestrial removes this pipe when stopping.
 
 
 ## Installation
@@ -49,35 +61,83 @@ run `tertestrial --setup` in the root directory of that code base.
 This generates a configuration file
 that tells Tertestrial
 what to do with the different types of files in your project.
-
 The setup script asks whether you want to use one of the built-in configurations
 or make your own.
+
+
+### Built-in configurations
+
 If you select a built-in configuration,
 you are done with the setup and can [start using Tertestrial](#running-tertestrial).
 
-If you want to make your own custom configuration,
-the setup script scaffolds a config file for you that you have to finish yourself.
-Make it look similar to the example configuration file below,
-which is for running unit tests using [Mocha](https://mochajs.org)
-and end-to-end tests using [Cucumber-JS](https://github.com/cucumber/cucumber-js):
+
+### Custom configurations
+
+Editor plugins send simple JSON-encoded messages
+that define what the user wants Tertestrial to do.
+What keys and values they contain depends on your use case,
+and how your editor plugin works.
+As an example, here are the messages sent by
+[Tertestrial-Vim](https://github.com/originate/tertestrial-vim):
+
+- when the user wants to run the current action on the given file
+
+  ```json
+  {"filename": "foo.js"}
+  ```
+
+- when the user wants to run the current action on the given line at the given file:
+
+  ```json
+  {"filename": "foo.js", "line": 3}
+  ```
+
+- when the user wants to switch to a different set of actions:
+
+  ```json
+  {"actionSet": 2}
+  ```
+
+Tertestrial's configuration file (tertestrial.yml)
+contains a list of data structures that describe the actions to perform
+in response to incoming messages.
+Actions define the same fields as messages, but with regex placeholders.
+The action that most specifically matches an incoming message gets executed.
+Executing means running the command specified in the action's `command` field.
+
+Below is an example configuration file
+for JavaScript developers
+who use [Mocha](https://mochajs.org) for unit testing
+and [Cucumber-JS](https://github.com/cucumber/cucumber-js) for end-to-end tests:
 
 __tertestrial.yml__
 ```yml
 actions:
-  js:
-    testFile: "mocha {{filename}}"
-    testLine: "mocha {{filename}} -l {{line}}"
-  feature:
-    testFile: "cucumber-js {{filename}}"
-    testLine: "cucumber-js {{filename}}:{{line}}"
+
+  # Here we define what to do with files that have the extension ".feature"
+  - filename: '\.feature$'
+    command: 'cucumber-js {{filename}}'
+
+    # Here we define how to run just the test at the given line
+    # in a file with extension ".feature"
+  - filename: '\.feature$'
+    line: '\d+'
+    command: 'cucumber-js {{filename}}:{{line}}'
+
+  # Here we define what to do with files that have the extension ".js"
+  - filename: '\.js$'
+    command: 'mocha {{filename}}'
 ```
 
-In this example,
-`js` and `feature` are the filename extensions for which we provide test commands.
-`testFile` means the user wants to run all tests in the current file,
-`testLine` means to run only the test at the current line of the current file.
 The commands to run are specified via
 <a href="https://en.wikipedia.org/wiki/Mustache_(template_system)#Examples)">Mustache</a> templates.
+
+When you tell the setup wizard that you want to create your own custom configuration,
+it sets up the config file pre-populated with a built-in configuration of your choice
+as a starting point for your convenience.
+
+
+## Submitting commonly used configurations
 
 If you have created a good config file
 that you think should ship with Tertestrial,
@@ -128,16 +188,6 @@ Just start typing in the terminal to see your command prompt.
 To exit the Tertestrial server in this case,
 run `fg` to bring tertestrial back into the foreground,
 then press __ctrl-c__.
-
-
-## How it works
-
-Tertestrial consists of a server (in this repository)
-and a number of editor plugins.
-The editor plugins send commands to the server
-via a named pipe `.tertestrial.tmp` in the directory where you start the server
-(typically the base directory of the code base you are working on).
-Tertestrial removes this pipe when stopping.
 
 
 ## Editor plugins
