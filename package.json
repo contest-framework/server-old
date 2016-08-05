@@ -35,12 +35,12 @@
     "dist",
     "actions"
   ],
-  "homepage": "https://github.com/kevgo/tertestrial-server",
+  "homepage": "https://github.com/Originate/tertestrial-server",
   "license": "ISC",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/kevgo/tertestrial-server.git"
+    "url": "git://github.com/Originate/tertestrial-server.git"
   },
   "scripts": {
     "test": "bin/spec"
