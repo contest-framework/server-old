@@ -194,6 +194,7 @@ then press __ctrl-c__.
 
 * [Vim](https://github.com/Originate/tertestrial-vim)
 * [Emacs](https://github.com/dmh43/emacs-tertestrial)
+* [Atom](https://github.com/charlierudolph/tertestrial-atom)
 
 
 ## Create your own editor plugin
