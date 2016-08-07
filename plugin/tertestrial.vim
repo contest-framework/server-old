@@ -1,3 +1,10 @@
+function! g:TertestrialAll()
+  let command = '{}'
+  let message = 'running all tests'
+  call SendTestCommand(command, message)
+endfunction
+
+
 function! g:TertestrialFile()
   let command = '{"filename": "'.bufname('%').'"}'
   let message = 'testing file '.bufname('%')
