@@ -64,7 +64,7 @@ class CommandRunner
   _is-match: (action, command) ->
     for key, value of action
       continue if key is 'command'
-      if !action[key]?.exec command[key] then return false
+      if !command[key] or !action[key]?.exec command[key] then return false
     true
 
 
