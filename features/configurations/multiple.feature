@@ -63,6 +63,7 @@ Feature: multiple action sets
       {"filename": "foo_spec.js"}
       """
     Then I see "Running Mocha for foo_spec.js in API mode!"
+    And the process is still running
 
 
   Scenario: selecting another action set
@@ -81,6 +82,7 @@ Feature: multiple action sets
       {"operation": "repeatLastTest"}
       """
     Then I see "Running Mocha for foo_spec.js in CLI mode!"
+    And the process is still running
 
 
   Scenario: switching to a non-existing action set
@@ -89,3 +91,4 @@ Feature: multiple action sets
       {"actionSet": 3}
       """
     Then I see "Error: action set 3 does not exist"
+    And the process is still running

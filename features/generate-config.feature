@@ -15,3 +15,4 @@ Feature: generating the configuration file
     When entering '[ENTER]'
     Then I see "created configuration file tertestrial.yml"
     And it creates a file "tertestrial.yml"
+    And the process ends

@@ -11,6 +11,7 @@ Feature: built-in configurations with multiple action sets
     Given Tertestrial is running inside the "js-cucumber-mocha-api-cli" example application
     When sending filename "<FILENAME>" and line "<LINE>"
     Then I see "<TEST-COMMAND>"
+    And the process is still running
 
     Examples:
       | FILENAME             | LINE | TEST-COMMAND                                                         |

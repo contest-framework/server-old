@@ -35,6 +35,7 @@ Feature: configuring the commands
       {"filename": "one.js", "line": 12}
       """
     Then I see "Running Mocha with one.js:12!"
+    And the process is still running
 
 
   Scenario: no matching action
@@ -42,7 +43,8 @@ Feature: configuring the commands
       """
       {"filename": "one.zonk"}
       """
-      Then I see:
-        """
-        Error: no matching action found for {"filename":"one.zonk"}
-        """
+    Then I see:
+      """
+      Error: no matching action found for {"filename":"one.zonk"}
+      """
+    And the process is still running

@@ -1,7 +1,7 @@
 require! {
   'chalk' : {bold, cyan, red}
   'child_process' : {spawn}
-  './helpers/error-message' : {abort, error}
+  './helpers/error-message' : {error}
   './helpers/file-type'
   './helpers/fill-template'
   './helpers/reset-terminal'
@@ -30,11 +30,11 @@ class CommandRunner
 
     if command.operation is 'repeatLastTest'
       if @current-command?.length is 0 then return error "No previous test run"
-      template = @_get-template(@current-command) or abort "cannot find a template for ", @current-command
+      unless template = @_get-template(@current-command) then error "cannot find a template for '#{@current-command}'"
       @_run-test fill-template(template, @current-command)
       return
 
-    template = @_get-template(command) or abort "cannot find a template for ", command
+    unless template = @_get-template(command) then return error "cannot find a template for ", command
     @current-command = command
     @_run-test fill-template(template, command)
 
@@ -48,8 +48,9 @@ class CommandRunner
 
   # Returns the string template for the given command
   _get-template: (command) ~>
-    matching-actions = @_get-matching-actions command
-    if matching-actions.length is 0 then abort "no matching action found for #{JSON.stringify command}"
+    if (matching-actions = @_get-matching-actions command).length is 0
+      error "no matching action found for #{JSON.stringify command}"
+      return null
     matching-actions[*-1].command
 
 

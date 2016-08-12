@@ -25,3 +25,4 @@ Feature: configuring the commands
       {}
       """
     Then I see "Running the command!"
+    And the process is still running

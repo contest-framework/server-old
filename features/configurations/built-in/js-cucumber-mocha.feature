@@ -11,6 +11,7 @@ Feature: built-in configurations with simple action sets
     Given Tertestrial is running inside the "js-cucumber-mocha" example application
     When sending filename "<FILENAME>" and line "<LINE>"
     Then I see "<RESULTING-TEST-COMMAND>"
+    And the process is still running
 
     Examples:
       | FILENAME             | LINE | RESULTING-TEST-COMMAND                                      |

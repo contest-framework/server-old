@@ -22,6 +22,7 @@ Feature: repeating the last test
       {"operation": "repeatLastTest"}
       """
     Then I see "cucumber-js features/one.feature"
+    And the process is still running
 
 
   Scenario: without a previous test
@@ -30,3 +31,4 @@ Feature: repeating the last test
       {"operation": "repeatLastTest"}
       """
     Then I see "No previous test run"
+    And the process is still running

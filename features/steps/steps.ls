@@ -1,6 +1,7 @@
 require! {
   'chai' : {expect}
   'path'
+  'wait' : {wait, wait-until}
 }
 
 
@@ -35,7 +36,7 @@ module.exports = ->
 
   @When /^starting 'tertestrial setup'$/ ->
     @root-dir = 'tmp'
-    @start-process '../bin/tertestrial setup'
+    @process = @start-process '../bin/tertestrial setup'
 
 
   @When /^sending the command:$/ (command, done) ->
@@ -58,3 +59,14 @@ module.exports = ->
 
   @Then /^it creates a file "([^"]*)"$/ (filename) ->
     @file-exists filename
+
+
+  @Then /^the process ends$/ (done) ->
+    wait-until (~> @process.ended), done
+
+
+  @Then /^the process is still running$/ (done) ->
+    # Note: if the process doesn't crash within 100ms, we consider it remains running
+    wait 100, ~>
+      expect(@process.ended).to.be.false
+      done!
