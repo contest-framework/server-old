@@ -2,18 +2,15 @@ require! {
   'child_process'
   'events' : EventEmitter
   'fs'
+  'wait' : {wait}
 }
 
 
 # Creates a named pipe and listens on it for commands coming from the text editor.
 #
+# Call 'listen' to bring it online.
 # Emits a 'command-received' event when it receives a new command
 class PipeListener extends EventEmitter
-
-  ->
-    @reset-named-pipe!
-    @open-read-stream!
-
 
   create-named-pipe: ->
     child_process.exec-sync 'mkfifo .tertestrial.tmp'
@@ -22,6 +19,28 @@ class PipeListener extends EventEmitter
   delete-named-pipe: ->
     try
       fs.unlink-sync '.tertestrial.tmp'
+
+
+  empty-named-pipe: (done) ->
+    | !@exists-named-pipe  =>  return done!
+    done-called = no
+    exit = ->
+      | done-called  =>  return
+      done-called := yes
+      done!
+    fs.read-file '.tertestrial.tmp', exit
+    wait 0, exit
+
+
+  exists-named-pipe: ->
+    try
+      fs.stat-sync '.tertestrial.tmp'
+
+
+  listen: (done) ->
+    @reset-named-pipe ~>
+      @open-read-stream!
+      done!
 
 
   # Called when a new command is received from the pipe
@@ -42,9 +61,11 @@ class PipeListener extends EventEmitter
       ..on 'end', @on-stream-end
 
 
-  reset-named-pipe: ->
-    @delete-named-pipe!
-    @create-named-pipe!
+  reset-named-pipe: (done) ->
+    @empty-named-pipe ~>
+      @delete-named-pipe!
+      @create-named-pipe!
+      done!
 
 
 

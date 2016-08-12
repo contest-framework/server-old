@@ -12,7 +12,8 @@
     "object-depth": "0.0.3",
     "prelude-ls": "1.1.2",
     "remove-value": "1.0.0",
-    "shelljs": "0.7.3"
+    "shelljs": "0.7.3",
+    "wait": "0.1.0"
   },
   "description": "Runs the currently relevant test from inside your code editor",
   "devDependencies": {
@@ -24,8 +25,7 @@
     "o-tools": "0.4.18",
     "o-tools-livescript": "1.1.2",
     "observable-process": "2.3.2",
-    "rimraf": "2.5.4",
-    "wait": "0.1.0"
+    "rimraf": "2.5.4"
   },
   "engines": {
     "npm": ">= 3.0.0"

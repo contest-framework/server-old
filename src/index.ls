@@ -27,6 +27,5 @@ config = new ConfigFile
 command-runner = new CommandRunner config
 pipe-listener = new PipeListener
   ..on 'command-received', command-runner.run-command
-
-
-console.log '\nrunning'
+  ..listen ->
+    console.log '\nrunning'
