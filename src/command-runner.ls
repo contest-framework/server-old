@@ -6,6 +6,7 @@ require! {
   './helpers/fill-template'
   './helpers/reset-terminal'
   'prelude-ls' : {filter, sort-by}
+  'util'
 }
 
 
@@ -30,11 +31,11 @@ class CommandRunner
 
     if command.operation is 'repeatLastTest'
       if @current-command?.length is 0 then return error "No previous test run"
-      unless template = @_get-template(@current-command) then error "cannot find a template for '#{@current-command}'"
+      unless template = @_get-template(@current-command) then return error "cannot find a template for '#{command}'"
       @_run-test fill-template(template, @current-command)
       return
 
-    unless template = @_get-template(command) then return error "cannot find a template for ", command
+    unless template = @_get-template(command) then return error "no matching action found for #{JSON.stringify command}"
     @current-command = command
     @_run-test fill-template(template, command)
 
@@ -49,7 +50,6 @@ class CommandRunner
   # Returns the string template for the given command
   _get-template: (command) ~>
     if (matching-actions = @_get-matching-actions command).length is 0
-      error "no matching action found for #{JSON.stringify command}"
       return null
     matching-actions[*-1].command
 
