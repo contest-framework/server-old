@@ -34,21 +34,10 @@ class ConfigFile
 
   _convert-regex: (actions) ->
     switch typeof! actions
-
-      case 'Array'
-        for action in actions
-          @_convert-regex(action)
-
-      case 'Object'
-        for key, value of actions
-          if key is 'command' then continue
-          if typeof! value is 'String'
-            actions[key] = new RegExp value
-          else
-            actions[key] = @_convert-regex value
-
-      default abort "unknown action key: #{actions}"
-    actions
+      | 'String'   =>  new RegExp actions
+      | 'Array'    =>  @_convert-regex action for action in actions
+      | 'Object'   =>  actions[key] = @_convert-regex value for key, value of actions when key isnt 'command'
+      | otherwise  =>  abort "unknown action key: #{actions}"
 
 
   _load-internal-action: (filename) ->
