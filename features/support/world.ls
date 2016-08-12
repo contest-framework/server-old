@@ -29,10 +29,12 @@ World = !->
 
   @start-process = (command, done = ->) ->
     args =
-      console: off
+      stdout: off
+      stderr: off
       cwd: @root-dir
     if @verbose
-      args.console = dim-console.console
+      args.stdout = dim-console.process.stdout
+      args.stderr = dim-console.process.stderr
     @process = new ObservableProcess command, args
       ..wait 'running', done
       ..on 'ended', (@exit-code) ~> done "App crashed with code #{@exit-code}!\n\n#{@process.full-output!}"
