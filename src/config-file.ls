@@ -17,14 +17,16 @@ require! {
 class ConfigFile
 
   ->
-    try
-      fs.stat-sync 'tertestrial.yml'
-    catch
-      abort 'cannot find configuration file'
+    | !@exists!  =>  abort 'cannot find configuration file'
     config = yaml.safe-load fs.read-file-sync('tertestrial.yml', 'utf8')
     @actions = config.actions
       |> @_standardize-actions
       |> @_convert-regex
+
+
+  exists: ->
+    try
+      fs.stat-sync 'tertestrial.yml'
 
 
   _convert-regex: (actions) ->
