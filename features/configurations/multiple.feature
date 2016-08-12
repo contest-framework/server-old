@@ -66,7 +66,7 @@ Feature: multiple action sets
     And the process is still running
 
 
-  Scenario: selecting another action set
+  Scenario: selecting another action set by number
     When sending the command:
       """
       {"filename": "foo_spec.js"}
@@ -85,10 +85,47 @@ Feature: multiple action sets
     And the process is still running
 
 
-  Scenario: switching to a non-existing action set
+  Scenario: switching to a non-existing action set by number
     When sending the command:
       """
       {"actionSet": 3}
       """
     Then I see "Error: action set 3 does not exist"
+    And the process is still running
+
+
+  Scenario: selecting another action set by name
+    When sending the command:
+      """
+      {"filename": "foo_spec.js"}
+      """
+    Then I see "Running Mocha for foo_spec.js in API mode!"
+    When sending the command:
+      """
+      {"actionSet": "CLI"}
+      """
+    Then I see "Activating action set CLI"
+    And sending the command:
+      """
+      {"operation": "repeatLastTest"}
+      """
+    Then I see "Running Mocha for foo_spec.js in CLI mode!"
+    And the process is still running
+
+
+  Scenario: switching to a non-existing action set by name
+    When sending the command:
+      """
+      {"actionSet": "zonk"}
+      """
+    Then I see "Error: action set zonk does not exist"
+    And the process is still running
+
+
+  Scenario: providing a non-supported action set id
+    When sending the command:
+      """
+      {"actionSet": [2]}
+      """
+    Then I see "Error: unsupported action-set id type: Array"
     And the process is still running

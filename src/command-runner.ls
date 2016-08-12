@@ -5,7 +5,7 @@ require! {
   './helpers/file-type'
   './helpers/fill-template'
   './helpers/reset-terminal'
-  'prelude-ls' : {filter, sort-by}
+  'prelude-ls' : {filter, find, sort-by}
   'util'
 }
 
@@ -16,7 +16,7 @@ class CommandRunner
   (@config) ->
 
     # the currently activated action set
-    @current-action-set-nr = 1
+    @current-action-set = @config.actions[0]
 
     # the last test command that was sent from the editor
     @current-command = ''
@@ -42,7 +42,7 @@ class CommandRunner
 
   # Returns the actions in the current action set
   _current-actions: ->
-    for key, value of @config.actions[@current-action-set-nr - 1]
+    for key, value of @current-action-set
       return value
 
 
@@ -85,11 +85,26 @@ class CommandRunner
     spawn 'sh' ['-c', command], stdio: 'inherit'
 
 
-  set-actionset: (+action-set-nr) ->
-    unless new-actionset = @config.actions[action-set-nr - 1]
-      return error "action set #{cyan action-set-nr} does not exist"
-    console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}"
-    @current-action-set-nr = action-set-nr
+  set-actionset: (action-set-id) ->
+    switch type = typeof! action-set-id
+
+      case 'Number'
+        unless new-actionset = @config.actions[action-set-id - 1]
+          return error "action set #{cyan action-set-id} does not exist"
+        console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}"
+        @current-action-set = new-actionset
+
+      case 'String'
+        console.log @config.actions
+        console.log find
+        new-actionset = @config.actions |> find (action-set) -> Object.keys(action-set)[0] is action-set-id
+        unless new-actionset
+          return error "action set #{cyan action-set-id} does not exist"
+        console.log "Activating action set #{cyan action-set-id}"
+        @current-action-set = new-actionset
+
+      default
+        error "unsupported action-set id type: #{type}"
 
 
 
