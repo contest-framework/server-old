@@ -15,26 +15,43 @@ Feature: configuring the commands
       """
       actions:
         - match:
+          command: 'echo Running all tests'
+
+        - match:
             filename: '\.js$'
-          command: 'echo Running Mocha with {{filename}}!'
+          command: 'echo Running Mocha with {{filename}}'
+
         - match:
             filename: '\.js$'
             line: '\d+'
-          command: 'echo Running Mocha with {{filename}}:{{line}}!'
+          command: 'echo Running Mocha with {{filename}}:{{line}}'
       """
 
 
-  Scenario: simple configuration file
+  Scenario: sending a command with zero match keys
+    When sending the command:
+      """
+      {}
+      """
+    Then I see "Running all tests"
+    And the process is still running
+
+
+  Scenario: sending a command with one match key
     When sending the command:
       """
       {"filename": "one.js"}
       """
-    Then I see "Running Mocha with one.js!"
+    Then I see "Running Mocha with one.js"
+    And the process is still running
+
+
+  Scenario: sending a command with two match keys
     When sending the command:
       """
       {"filename": "one.js", "line": 12}
       """
-    Then I see "Running Mocha with one.js:12!"
+    Then I see "Running Mocha with one.js:12"
     And the process is still running
 
 

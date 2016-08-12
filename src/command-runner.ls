@@ -61,11 +61,23 @@ class CommandRunner
       |> sort-by (.length)
 
 
+  _action-has-empty-match: (action) ->
+    !action.match
+
+
   # Returns whether the given action is a match for the given command
   _is-match: (action, command) ->
+
+    # Make sure non-empty commands don't match generic actions
+    if @_is-non-empty-command(command) and @_action-has-empty-match(action) then return false
+
     for key, value of action.match
       if !action.match[key]?.exec command[key] then return false
     true
+
+
+  _is-non-empty-command: (command) ->
+    Object.keys(command).length > 0
 
 
   _run-test: (command) ->
