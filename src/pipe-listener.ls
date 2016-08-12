@@ -12,13 +12,16 @@ require! {
 # Emits a 'command-received' event when it receives a new command
 class PipeListener extends EventEmitter
 
+  ->
+    @pipe-name = '.tertestrial.tmp'
+
   create-named-pipe: ->
-    child_process.exec-sync 'mkfifo .tertestrial.tmp'
+    child_process.exec-sync "mkfifo #{@pipe-name}"
 
 
   delete-named-pipe: ->
     try
-      fs.unlink-sync '.tertestrial.tmp'
+      fs.unlink-sync @pipe-name
 
 
   empty-named-pipe: (done) ->
@@ -28,13 +31,13 @@ class PipeListener extends EventEmitter
       | done-called  =>  return
       done-called := yes
       done!
-    fs.read-file '.tertestrial.tmp', exit
+    fs.read-file @pipe-name, exit
     wait 0, exit
 
 
   exists-named-pipe: ->
     try
-      fs.stat-sync '.tertestrial.tmp'
+      fs.stat-sync @pipe-name
 
 
   listen: (done) ->
@@ -56,7 +59,7 @@ class PipeListener extends EventEmitter
 
 
   open-read-stream: ->
-    @read-stream = fs.create-read-stream '.tertestrial.tmp', auto-close: no, encoding: 'utf8'
+    @read-stream = fs.create-read-stream @pipe-name, auto-close: no, encoding: 'utf8'
       ..on 'data', @on-stream-data
       ..on 'end', @on-stream-end
 
