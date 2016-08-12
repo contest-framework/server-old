@@ -18,8 +18,7 @@ class ConfigFile
 
   ->
     | !@exists!  =>  abort 'cannot find configuration file'
-    config = yaml.safe-load fs.read-file-sync('tertestrial.yml', 'utf8')
-    @actions = config.actions
+    @actions = @content!.actions
       |> @_standardize-actions
       |> @_convert-regex
 
@@ -27,6 +26,10 @@ class ConfigFile
   exists: ->
     try
       fs.stat-sync 'tertestrial.yml'
+
+
+  content: ->
+    yaml.safe-load fs.read-file-sync('tertestrial.yml', 'utf8')
 
 
   _convert-regex: (actions) ->
