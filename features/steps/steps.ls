@@ -33,9 +33,9 @@ module.exports = ->
       done!
 
 
-  @When /^starting 'tertestrial \-\-setup'$/ ->
+  @When /^starting 'tertestrial setup'$/ ->
     @root-dir = 'tmp'
-    @start-process '../bin/tertestrial --setup'
+    @start-process '../bin/tertestrial setup'
 
 
   @When /^sending the command:$/ (command, done) ->

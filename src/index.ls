@@ -11,7 +11,7 @@ require! {
 }
 
 
-if process.argv.length is 3 and process.argv[2] is '--setup'
+if process.argv.length is 3 and process.argv[2] is 'setup'
   setup-wizard!
   return
 

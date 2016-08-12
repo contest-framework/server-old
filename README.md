@@ -57,7 +57,7 @@ Tertestrial removes this pipe when stopping.
 ## Creating a configuration file
 
 To use Tertestrial with a code base,
-run `tertestrial --setup` in the root directory of that code base.
+run `tertestrial setup` in the root directory of that code base.
 This generates a configuration file
 that tells Tertestrial
 what to do with the different types of files in your project.
