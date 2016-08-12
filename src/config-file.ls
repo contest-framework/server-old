@@ -18,9 +18,8 @@ class ConfigFile
 
   ->
     | !@exists!  =>  abort 'cannot find configuration file'
-    @actions = @content!.actions
-      |> @_standardize-actions
-      |> @_convert-regex
+    @actions = @content!.actions |> @_standardize-actions
+    @_convert-regex @actions
 
 
   exists: ->
@@ -32,12 +31,12 @@ class ConfigFile
     yaml.safe-load fs.read-file-sync('tertestrial.yml', 'utf8')
 
 
-  _convert-regex: (actions) ->
-    switch typeof! actions
-      | 'String'   =>  new RegExp actions
-      | 'Array'    =>  @_convert-regex action for action in actions
-      | 'Object'   =>  actions[key] = @_convert-regex value for key, value of actions when key isnt 'command'
-      | otherwise  =>  abort "unknown action key: #{actions}"
+  _convert-regex: (action-sets) !->
+    for action-set in action-sets
+      for actionset-name, actions of action-set
+        for action in actions
+          for key, value of action.match
+            action.match[key] = new RegExp value
 
 
   _load-internal-action: (filename) ->
@@ -51,8 +50,8 @@ class ConfigFile
     depth = object-depth actions
     switch
       | type is 'String'                 =>  @_load-internal-action(actions).actions |> @_standardize-actions
-      | type is 'Array' and depth is 2   =>  [default: actions]
-      | type is 'Array' and depth is 4   =>  actions
+      | type is 'Array' and depth is 3   =>  [default: actions]
+      | type is 'Array' and depth is 5   =>  actions
       | _                                =>  abort "unknown action type: #{actions}"
 
 

@@ -14,10 +14,12 @@ Feature: configuring the commands
     Given Tertestrial runs with the configuration:
       """
       actions:
-        - filename: '\.js$'
+        - match:
+            filename: '\.js$'
           command: 'echo Running Mocha with {{filename}}!'
-        - filename: '\.js$'
-          line: '\d+'
+        - match:
+            filename: '\.js$'
+            line: '\d+'
           command: 'echo Running Mocha with {{filename}}:{{line}}!'
       """
 

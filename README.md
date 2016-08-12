@@ -123,17 +123,20 @@ __tertestrial.yml__
 actions:
 
   # Here we define what to do with files that have the extension ".feature"
-  - filename: '\.feature$'
+  - match:
+      filename: '\.feature$'
     command: 'cucumber-js {{filename}}'
 
-  # Here we define how to run just the test at the given line
-  # in a file with extension ".feature"
-  - filename: '\.feature$'
-    line: '\d+'
+  # Here we define how to run just a test at the given line
+  # in files with the extension ".feature"
+  - match:
+      filename: '\.feature$'
+      line: '\d+'
     command: 'cucumber-js {{filename}}:{{line}}'
 
   # Here we define what to do with files that have the extension ".js"
-  - filename: '\.js$'
+  - match:
+      filename: '\.js$'
     command: 'mocha {{filename}}'
 ```
 
@@ -159,20 +162,24 @@ actions:
 
   - headless:
 
-      - filename: '\.feature$'
+      - match:
+          filename: '\.feature$'
         command: 'TEST_PLATFORM=headless cucumber-js {{filename}}'
 
-      - filename: '\.feature$'
-        line: '\d+'
+      - match:
+          filename: '\.feature$'
+          line: '\d+'
         command: 'TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}'
 
   - firefox:
 
-      - filename: '\.feature$'
+      - match:
+          filename: '\.feature$'
         command: 'TEST_PLATFORM=firefox cucumber-js {{filename}}'
 
-      - filename: '\.feature$'
-        line: '\d+'
+      - match:
+          filename: '\.feature$'
+          line: '\d+'
         command: 'TEST_PLATFORM=firefox cucumber-js {{filename}}:{{line}}'
 ```
 

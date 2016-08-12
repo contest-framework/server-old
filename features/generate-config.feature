@@ -4,7 +4,7 @@ Feature: generating the configuration file
   I want to get assistance setting up the configuration file
   So that I can make my way through this complicated process without having to study documentation.
 
-  - run "tertestrial --setup" to start the configuration wizard
+  - run "tertestrial setup" to start the configuration wizard
   - the configuration wizard asks a number of questions and generates a configuration file
 
 

@@ -17,34 +17,42 @@ Feature: multiple action sets
 
         - 'API':
 
-          - filename: '\.feature$'
+          - match:
+              filename: '\.feature$'
             command: "echo Running Cucumber for {{filename}} in API mode!"
 
-          - filename: '\.feature$'
-            line: '\d+'
+          - match:
+              filename: '\.feature$'
+              line: '\d+'
             command: "echo Running Cucumber for {{filename}}:{{line}} in API mode!"
 
-          - filename: '\.js$'
+          - match:
+              filename: '\.js$'
             command: "echo Running Mocha for {{filename}} in API mode!"
 
-          - filename: '\.js$'
-            line: '\d+'
+          - match:
+              filename: '\.js$'
+              line: '\d+'
             command: "echo Running Mocha for {{filename}}:{{line}} in API mode!"
 
         - 'CLI':
 
-          - filename: '\.feature$'
+          - match:
+              filename: '\.feature$'
             command: "echo Running Cucumber for {{filename}} in CLI mode!"
 
-          - filename: '\.feature$'
-            line: '\d+'
+          - match:
+              filename: '\.feature$'
+              line: '\d+'
             command: "echo Running Cucumber for {{filename}}:{{line}} in CLI mode!"
 
-          - filename: '\.js$'
+          - match:
+              filename: '\.js$'
             command: "echo Running Mocha for {{filename}} in CLI mode!"
 
-          - filename: '\.js$'
-            line: '\d+'
+          - match:
+              filename: '\.js$'
+              line: '\d+'
             command: "echo Running Mocha for {{filename}}:{{line}} in CLI mode!"
       """
 

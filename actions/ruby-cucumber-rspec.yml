@@ -5,22 +5,26 @@ name: 'Ruby: Cucumber + RSpec'
 actions:
 
   # Here we define what to do with files that have the extension ".feature"
-  - filename: '\.feature$'
+  - match:
+      filename: '\.feature$'
     command: 'cucumber {{filename}}'
 
   # Here we define how to run just the test at the given line
   # in a file with extension ".feature"
-  - filename: '\.feature$'
-    line: '\d+'
+  - match:
+      filename: '\.feature$'
+      line: '\d+'
     command: 'cucumber {{filename}}:{{line}}'
 
 
   # Here we define what to do with files that have the extension ".rb"
-  - filename: '\.rb$'
+  - match:
+      filename: '\.rb$'
     command: 'rspec {{filename}}'
 
   # Here we define how to run just the test at the given line
   # in a file with extension ".feature"
-  - filename: '\.rb$'
-    line: '\d+'
+  - match:
+      filename: '\.rb$'
+      line: '\d+'
     command: 'rspec {{filename}}:{{line}}'

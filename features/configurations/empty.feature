@@ -14,7 +14,8 @@ Feature: configuring the commands
     Given Tertestrial runs with the configuration:
       """
       actions:
-        - command: 'echo Running the command!'
+        - match:
+          command: 'echo Running the command!'
       """
 
 

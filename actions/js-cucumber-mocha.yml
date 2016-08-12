@@ -5,26 +5,31 @@ name: 'JS: Cucumber + Mocha'
 actions:
 
   # Here we define what to do with files that have the extension ".feature"
-  - filename: '\.feature$'
+  - match:
+      filename: '\.feature$'
     command: 'cucumber-js {{filename}}'
 
     # Here we define how to run just the test at the given line
     # in a file with extension ".feature"
-  - filename: '\.feature$'
-    line: '\d+'
+  - match:
+      filename: '\.feature$'
+      line: '\d+'
     command: 'cucumber-js {{filename}}:{{line}}'
 
 
   # Here we define what to do with files that have the extension ".js"
-  - filename: '\.js$'
+  - match:
+      filename: '\.js$'
     command: 'mocha {{filename}}'
 
 
   # Here we define what to do with CoffeeScript files
-  - filename: '\.coffee$'
+  - match:
+      filename: '\.coffee$'
     command: 'mocha --compilers coffee:coffee-script {{filename}}'
 
 
   # Here we define what to do with Livescript files
-  - filename: '\.ls$'
+  - match:
+      filename: '\.ls$'
     command: 'mocha --compilers ls:livescript {{filename}}'
