@@ -98,20 +98,15 @@ As an example, here are the messages sent by
   {"filename": "foo.js", "line": 3}
   ```
 
-- when the user wants to switch to a different set of actions:
-
-  ```json
-  {"actionSet": 2}
-  ```
-
-Tertestrial's configuration file (tertestrial.yml)
-contains data structures with a comparable structure.
-They describe the actions to perform
-in response to incoming messages.
-Actions contain the same fields as messages,
-but their values are regular expressions.
-The action that most specifically matches an incoming message gets executed
-by running the command specified in the action's `command` field.
+Tertestrial's configuration file (`tertestrial.yml`)
+defines how Tertestrial should handle these messages.
+To do that, it defines a number of actions.
+These actions consist of:
+- a `match` block that has a structure comparable to commands,
+  but with regular expressions as placeholders.
+  An action must match an incoming message precisely in order to be run.
+  Only the most specifically matching action is executed.
+- a `command` block that contains the console command that this action performs
 
 Below is an example configuration file
 for JavaScript developers
@@ -230,30 +225,22 @@ then press __ctrl-c__.
 
 Making your own editor plugin is super easy.
 All your plugin has to do is be triggered somehow (ideally via hotkeys)
-and write the command to execute as a JSON string into the file `.tertestrial.tmp`:
+and write (append) the command to execute
+as a JSON string into the existing file `.tertestrial.tmp`:
 
-* to test a whole file:
+In addition to your [application-specific commands](#custom-configurations),
+your editor plugin needs to support these built-in infrastructure messages:
 
-  ```json
-  {"operation": "testFile", "filename": "test/foo.rb"}
-  ```
-
-* to test just the current line of a file:
-
-  ```json
-  {"operation": "testLine", "filename": "test/foo.rb", "line": 12}
-  ```
-
-* to repeat the last run test
-
-  ```json
-  {"operation": "repeatLastTest"}
-  ```
-
-* to switch to a different action set:
+- switching to a different [action set](#multiple-action-sets) (for example action set #2):
 
   ```json
   {"actionSet": 2}
+  ```
+
+- re-run the last test:
+
+  ```json
+  {"repeatLastTest": true}
   ```
 
 
