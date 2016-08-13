@@ -7,11 +7,13 @@ require! {
   './helpers/run-mode-checker' : runs-in-foreground
   'interpret'
   'liftoff' : Liftoff
-  '../package.json' : {version}
+  '../package.json' : pkg
   './pipe-listener' : PipeListener
   './setup-wizard'
+  'update-notifier'
 }
 
+update-notifier({pkg}).notify!
 
 Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', extensions: interpret.extensions
   ..launch {}, (env) ->
@@ -21,7 +23,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       return
 
     reset-terminal!
-    console.log dim "Tertestrial server #{version}\n"
+    console.log dim "Tertestrial server #{pkg.version}\n"
     if runs-in-foreground!
       console.log "#{bold 'ctrl-c'} to exit"
     else
