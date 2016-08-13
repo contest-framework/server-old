@@ -77,11 +77,7 @@ Feature: multiple action sets
       {"actionSet": 2}
       """
     Then I see "Activating action set CLI"
-    And sending the command:
-      """
-      {"operation": "repeatLastTest"}
-      """
-    Then I see "Running Mocha for foo_spec.js in CLI mode!"
+    And I see "Running Mocha for foo_spec.js in CLI mode!"
     And the process is still running
 
 
@@ -105,11 +101,7 @@ Feature: multiple action sets
       {"actionSet": "CLI"}
       """
     Then I see "Activating action set CLI"
-    And sending the command:
-      """
-      {"operation": "repeatLastTest"}
-      """
-    Then I see "Running Mocha for foo_spec.js in CLI mode!"
+    And I see "Running Mocha for foo_spec.js in CLI mode!"
     And the process is still running
 
 
