@@ -1,5 +1,12 @@
 # Tertestrial Release Notes
 
+## Master
+
+- more robust behavior when installed as a global module
+- allow configuration file to be in any format
+- update notification when new versions are available
+
+
 ## 0.0.6
 
 - links to [Atom package](https://github.com/charlierudolph/tertestrial-atom)

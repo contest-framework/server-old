@@ -23,6 +23,12 @@ module.exports = ->
     @start-process '../bin/tertestrial', done
 
 
+  @Given /^Tertestrial runs with the configuration file "([^"]*)":$/ (filename, content, done) ->
+    @root-dir = 'tmp'
+    @create-file filename, content
+    @start-process '../bin/tertestrial', done
+
+
   @When /^entering '\[ENTER\]'$/ ->
     @process.stdin.write "\n"
 

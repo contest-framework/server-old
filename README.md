@@ -143,6 +143,19 @@ it sets up the config file pre-populated with a built-in configuration of your c
 as a starting point for your customizations.
 
 
+### Configuration file languages
+
+The default format for configuration files is [YAML](http://yaml.org).
+Tertestrial accepts configuration files in any format
+that transpiles into JavaScript or JSON,
+for example [JSON](http://www.json.org), [CSON](https://github.com/bevry/cson),
+[CoffeeScript](http://coffeescript.org), or [LiveScript](http://livescript.net).
+You need to have the respective transpiler installed on your system.
+Please keep in mind that if you write the configuration file in a programming language,
+you need to export the configuration setting via `module.exports`.
+See the [feature specs](features/configurations/language.feature) for some readable examples.
+
+
 ### Multiple action sets
 
 Tertestrial allows to define several sets of actions

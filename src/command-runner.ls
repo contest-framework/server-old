@@ -27,17 +27,43 @@ class CommandRunner
 
     if command.action-set
       @set-actionset command.action-set
+      @re-run-last-test command if @current-command
       return
 
     if command.operation is 'repeatLastTest'
       if @current-command?.length is 0 then return error "No previous test run"
-      unless template = @_get-template(@current-command) then return error "cannot find a template for '#{command}'"
-      @_run-test fill-template(template, @current-command)
-      return
+      return @re-run-last-test command
 
     unless template = @_get-template(command) then return error "no matching action found for #{JSON.stringify command}"
     @current-command = command
     @_run-test fill-template(template, command)
+
+
+  re-run-last-test: (command) ->
+    unless template = @_get-template(@current-command) then return error "cannot find a template for '#{command}'"
+    @_run-test fill-template(template, @current-command)
+
+
+  set-actionset: (action-set-id) ->
+    switch type = typeof! action-set-id
+
+      case 'Number'
+        unless new-actionset = @config.actions[action-set-id - 1]
+          return error "action set #{cyan action-set-id} does not exist"
+        console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}\n"
+        @current-action-set = new-actionset
+
+      case 'String'
+        console.log @config.actions
+        console.log find
+        new-actionset = @config.actions |> find (action-set) -> Object.keys(action-set)[0] is action-set-id
+        unless new-actionset
+          return error "action set #{cyan action-set-id} does not exist"
+        console.log "Activating action set #{cyan action-set-id}\n"
+        @current-action-set = new-actionset
+
+      default
+        error "unsupported action-set id type: #{type}"
 
 
   # Returns the actions in the current action set
@@ -83,28 +109,6 @@ class CommandRunner
   _run-test: (command) ->
     console.log bold "#{command}\n"
     spawn 'sh' ['-c', command], stdio: 'inherit'
-
-
-  set-actionset: (action-set-id) ->
-    switch type = typeof! action-set-id
-
-      case 'Number'
-        unless new-actionset = @config.actions[action-set-id - 1]
-          return error "action set #{cyan action-set-id} does not exist"
-        console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}"
-        @current-action-set = new-actionset
-
-      case 'String'
-        console.log @config.actions
-        console.log find
-        new-actionset = @config.actions |> find (action-set) -> Object.keys(action-set)[0] is action-set-id
-        unless new-actionset
-          return error "action set #{cyan action-set-id} does not exist"
-        console.log "Activating action set #{cyan action-set-id}"
-        @current-action-set = new-actionset
-
-      default
-        error "unsupported action-set id type: #{type}"
 
 
 
