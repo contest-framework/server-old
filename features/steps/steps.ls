@@ -55,6 +55,10 @@ module.exports = ->
     @send-command JSON.stringify(data), done
 
 
+  @When /^updating the configuration to:$/ (configuration) ->
+     @create-file 'tertestrial.yml', configuration
+
+
   @Then /^I see "([^"]*)"$/ (expected-text, done) ->
     @process.wait expected-text, done
 

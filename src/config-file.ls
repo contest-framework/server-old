@@ -28,6 +28,7 @@ class ConfigFile
 
 
   content: ->
+    delete require.cache[require.resolve @config-path]
     require @config-path
 
 

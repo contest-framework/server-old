@@ -1,5 +1,6 @@
 require! {
   'chalk' : {bold, cyan, dim}
+  'chokidar'
   './command-runner' : CommandRunner
   './config-file' : ConfigFile
   'fs'
@@ -12,6 +13,7 @@ require! {
   './setup-wizard'
   'update-notifier'
 }
+
 
 update-notifier({pkg}).notify!
 
@@ -35,3 +37,8 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       ..on 'command-received', command-runner.run-command
       ..listen ->
         console.log '\nrunning'
+
+    chokidar.watch(env.config-path).on 'change', (path) ->
+      console.log 'Reloading configuration\n'
+      config := new ConfigFile env.config-path
+      command-runner.update-config config
