@@ -2,9 +2,9 @@ require! {
   'chalk' : {bold, cyan, green}
   'fs'
   'inquirer'
-  'js-yaml' : yaml
   'path'
   'prelude-ls' : {map, sort}
+  'require-yaml'
   'shelljs/global'
 }
 
@@ -14,7 +14,7 @@ function built-in-action-sets
     |> map -> path.basename it, path.extname(it)
     |> sort
   for file in files
-    content = yaml.safe-load fs.read-file-sync(path.join __dirname, '..' 'actions' "#{file}.yml")
+    content = require path.join(__dirname, '..' 'actions' "#{file}.yml")
     { name: content.name, value: file }
 
 

@@ -2,11 +2,11 @@ require! {
   './helpers/error-message' : {abort}
   './helpers/file-type'
   'fs'
-  'js-yaml' : yaml
   'object-depth' : object-depth
   'path'
   'prelude-ls' : {capitalize}
   'remove-value'
+  'require-yaml'
 }
 
 
@@ -16,7 +16,7 @@ require! {
 # like JavaScript, CoffeeScript, LiveScript, etc
 class ConfigFile
 
-  ->
+  (@config-path) ->
     | !@exists!  =>  abort 'cannot find configuration file'
     @actions = @content!.actions |> @_standardize-actions
     @_convert-regex @actions
@@ -24,11 +24,11 @@ class ConfigFile
 
   exists: ->
     try
-      fs.stat-sync 'tertestrial.yml'
+      fs.stat-sync @config-path
 
 
   content: ->
-    yaml.safe-load fs.read-file-sync('tertestrial.yml', 'utf8')
+    require @config-path
 
 
   _convert-regex: (action-sets) !->
@@ -40,9 +40,7 @@ class ConfigFile
 
 
   _load-internal-action: (filename) ->
-    path.join __dirname, '..', 'actions', "#{filename}.yml"
-      |> fs.read-file-sync _, 'utf8'
-      |> yaml.safe-load
+    require path.join(__dirname, '..', 'actions', "#{filename}.yml")
 
 
   _standardize-actions: (actions) ->
