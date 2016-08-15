@@ -18,6 +18,8 @@ class CommandRunner
     # the currently activated action set
     @current-action-set = @config.actions[0]
 
+    @current-action-set-id = 1
+
     # the last test command that was sent from the editor
     @current-command = ''
 
@@ -44,26 +46,29 @@ class CommandRunner
     @_run-test fill-template(template, @current-command)
 
 
-  set-actionset: (action-set-id) ->
-    switch type = typeof! action-set-id
+  set-actionset: (@current-action-set-id) ->
+    switch type = typeof! @current-action-set-id
 
       case 'Number'
-        unless new-actionset = @config.actions[action-set-id - 1]
-          return error "action set #{cyan action-set-id} does not exist"
+        unless new-actionset = @config.actions[@current-action-set-id - 1]
+          return error "action set #{cyan @current-action-set-id} does not exist"
         console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}\n"
         @current-action-set = new-actionset
 
       case 'String'
-        console.log @config.actions
-        console.log find
-        new-actionset = @config.actions |> find (action-set) -> Object.keys(action-set)[0] is action-set-id
+        new-actionset = @config.actions |> find (action-set) ~> Object.keys(action-set)[0] is @current-action-set-id
         unless new-actionset
-          return error "action set #{cyan action-set-id} does not exist"
-        console.log "Activating action set #{cyan action-set-id}\n"
+          return error "action set #{cyan @current-action-set-id} does not exist"
+        console.log "Activating action set #{cyan @current-action-set-id}\n"
         @current-action-set = new-actionset
 
       default
         error "unsupported action-set id type: #{type}"
+
+
+  update-config: (@config) ->
+    @set-actionset @current-action-set-id
+    @re-run-last-test! if @current-command
 
 
   # Returns the actions in the current action set
