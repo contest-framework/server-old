@@ -7,6 +7,7 @@ require! {
   'prelude-ls' : {capitalize}
   'remove-value'
   'require-yaml'
+  'util'
 }
 
 
@@ -52,7 +53,7 @@ class ConfigFile
       | type is 'String'                 =>  @_load-internal-action(actions).actions |> @_standardize-actions
       | type is 'Array' and depth is 3   =>  [default: actions]
       | type is 'Array' and depth is 5   =>  actions
-      | _                                =>  abort "unknown action type: #{actions}"
+      | _                                =>  abort "unknown action type: #{util.inspect actions, depth: null}"
 
 
 
