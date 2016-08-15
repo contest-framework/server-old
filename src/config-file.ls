@@ -28,6 +28,7 @@ class ConfigFile
 
 
   content: ->
+    # delete the require-cache, so that the next require loads a fresh copy from disk
     delete require.cache[require.resolve @config-path]
     require @config-path
 

@@ -39,6 +39,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
         console.log '\nrunning'
 
     chokidar.watch(env.config-path).on 'change', (path) ->
+      reset-terminal!
       console.log 'Reloading configuration\n'
       config := new ConfigFile env.config-path
       command-runner.update-config config
