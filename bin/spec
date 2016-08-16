@@ -2,4 +2,4 @@
 set -e
 
 node_modules/dependency-lint/bin/dependency-lint.js
-cucumber-js $*
+cucumber-js "$@"
