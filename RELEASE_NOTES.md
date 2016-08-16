@@ -1,5 +1,10 @@
 # Tertestrial Release Notes
 
+## Master
+
+- update "repeatLastTest" command to new format
+
+
 ## 0.0.7
 
 - more robust behavior when installed as a global module
