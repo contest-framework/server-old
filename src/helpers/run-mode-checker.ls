@@ -5,4 +5,4 @@ require! {
 
 # Returns whether the current script runs in the background
 module.exports = function runs-in-foreground
-  exec-sync("ps -o stat= -p #{process.pid}").includes '+'
+  exec-sync("ps -o stat= -p #{process.pid}", encoding: 'utf8').includes '+'
