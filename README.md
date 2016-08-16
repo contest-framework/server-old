@@ -1,6 +1,6 @@
 # Tertestrial Server
 
-[![CircleCI](https://circleci.com/gh/Originate/tertestrial-server.svg?style=shield)](https://circleci.com/gh/Originate/tertestrial-server)
+[![Build Status](https://travis-ci.org/Originate/tertestrial-server.svg?branch=master)](https://travis-ci.org/Originate/tertestrial-server)
 [![Dependency Status](https://david-dm.org/Originate/tertestrial-server.svg)](https://david-dm.org/Originate/tertestrial-server)
 [![devDependency Status](https://david-dm.org/Originate/tertestrial-server/dev-status.svg)](https://david-dm.org/Originate/tertestrial-server#info=devDependencies)
 
@@ -40,7 +40,7 @@ Tertestrial removes this pipe when stopping.
 
 ## Installation
 
-* install [Node.js](https://nodejs.org/en)
+* install [Node.js](https://nodejs.org/en) version 4, 5, or 6
 
 * install the Tertestrial server:
 
