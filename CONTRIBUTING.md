@@ -5,7 +5,8 @@
   - `npm i`
 
 - development
-  - the tests run against the transpiled output in `lib`
+  - the source code is in `src`
+  - the tests run against the transpiled code in `lib`
   - transpilation happens automatically when running `cucumber-js`
 
 - testing
