@@ -1,5 +1,6 @@
 require! {
   'chai' : {expect}
+  'fs'
   'path'
   'wait' : {wait, wait-until}
 }
@@ -13,8 +14,16 @@ module.exports = ->
 
   @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 20_000, (app-name, done) ->
     @root-dir = path.join 'example-applications', app-name
-    @run-process 'npm i'
-    @start-process '../../bin/tertestrial', done
+    fs.unlink path.join(@root-dir, '.tertestrial.tmp'), ~>
+      @run-process 'npm i'
+      @start-process '../../bin/tertestrial', done
+
+
+  @Given /^Tertestrial is starting in a directory containing the file "([^"]*)"$/ (filename, done) ->
+    @root-dir = 'tmp'
+    @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
+    @create-file filename, ''
+    @start-process '../bin/tertestrial', done
 
 
   @Given /^Tertestrial runs with the configuration:$/, timeout: 20_000, (config, done) ->
@@ -30,6 +39,10 @@ module.exports = ->
 
 
   @When /^entering '\[ENTER\]'$/ ->
+    @process.stdin.write "\n"
+
+
+  @When /^I hit the Enter key$/ ->
     @process.stdin.write "\n"
 
 

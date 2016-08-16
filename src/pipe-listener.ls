@@ -1,4 +1,5 @@
 require! {
+  'chalk' : {bold, green, red}
   'child_process'
   'events' : EventEmitter
   'fs'
@@ -15,6 +16,34 @@ class PipeListener extends EventEmitter
   ->
     @pipe-name = '.tertestrial.tmp'
 
+    # indicates whether the process has completely started up yet,
+    # or we abort in the middle of the startup process
+    @started = no
+
+
+  verify-overwrite-pipe: (done) ->
+    | !@exists-named-pipe!  =>  return done!
+
+    console.log """
+      I have found a named pipe in this directory.
+      This indicates Tertestrial is either already running,
+      or has crashed before.
+
+      If Tertestrial is running for this project already,
+      please hit #{bold red 'Ctrl-C'} to exit this process.
+      Otherwise hit #{bold green 'Enter'} to continue.
+
+      """
+    process.stdin
+      ..resume!
+      ..on 'data', ->
+        done!
+
+
+  cleanup: ->
+    @delete-named-pipe! if @started
+
+
   create-named-pipe: ->
     child_process.exec-sync "mkfifo #{@pipe-name}"
 
@@ -25,7 +54,8 @@ class PipeListener extends EventEmitter
 
 
   empty-named-pipe: (done) ->
-    | !@exists-named-pipe  =>  return done!
+    | !@exists-named-pipe!  =>  return done!
+
     done-called = no
     exit = ->
       | done-called  =>  return
@@ -38,12 +68,18 @@ class PipeListener extends EventEmitter
   exists-named-pipe: ->
     try
       fs.stat-sync @pipe-name
+      yes
+    catch
+      no
 
 
   listen: (done) ->
-    @reset-named-pipe ~>
-      @open-read-stream!
-      done!
+    @verify-overwrite-pipe ~>
+      @reset-named-pipe ~>
+        @create-named-pipe!
+        @open-read-stream!
+        @started = yes
+        done!
 
 
   open-read-stream: ->
@@ -58,9 +94,9 @@ class PipeListener extends EventEmitter
 
 
   reset-named-pipe: (done) ->
+    | !@exists-named-pipe!  =>  return done!
     @empty-named-pipe ~>
       @delete-named-pipe!
-      @create-named-pipe!
       done!
 
 

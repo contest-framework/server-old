@@ -26,10 +26,6 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
 
     reset-terminal!
     console.log dim "Tertestrial server #{pkg.version}\n"
-    if runs-in-foreground!
-      console.log "#{bold 'ctrl-c'} to exit"
-    else
-      console.log "to exit, run #{cyan 'fg'}, then hit #{bold '[ctrl-c]'}\n"
 
     config = new ConfigFile env.config-path
     command-runner = new CommandRunner config
@@ -37,6 +33,10 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       ..on 'command-received', command-runner.run-command
       ..on 'error', (err) -> throw new Error err
       ..listen ->
+        if runs-in-foreground!
+          console.log "#{bold 'ctrl-c'} to exit"
+        else
+          console.log "to exit, run #{cyan 'fg'}, then hit #{bold '[ctrl-c]'}\n"
         console.log '\nrunning'
 
     chokidar.watch(env.config-path).on 'change', (path) ->
@@ -47,5 +47,5 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
 
     process.on 'SIGINT', ->
       console.log '\n\nSee you next time! :)\n'
-      pipe-listener.delete-named-pipe!
+      pipe-listener.cleanup!
       process.exit!
