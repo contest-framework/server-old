@@ -13,6 +13,6 @@
 - testing
   - run all tests: `bin/spec`
   - run linter: `dependency-lint`
-  - run Cucumber: `cucumber-js`
+  - run feature specs: `bin/features`
 
 - publish a new version: `publish <[patch|minor|major]>`
