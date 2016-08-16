@@ -48,7 +48,6 @@
     "url": "git://github.com/Originate/tertestrial-server.git"
   },
   "scripts": {
-    "pretest": "node_modules/o-tools-livescript/bin/build",
     "test": "bin/spec"
   }
 }
