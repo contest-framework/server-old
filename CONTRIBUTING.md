@@ -5,11 +5,8 @@
   - `npm i`
 
 - development
-  - the source needs to be transpiled into JavaScript in order for the tests to run
-  - this happens automatically when using `bin/spec`
-  - if you call `cucumber-js` directly,
-    please call `node_modules/.bin/build` before,
-    or have `node_modules/.bin/watch` running in the background to do this automatically
+  - the tests run against the transpiled output in `lib`
+  - transpilation happens automatically when running `cucumber-js`
 
 - testing
   - run all tests: `bin/spec`
