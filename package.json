@@ -14,6 +14,7 @@
     "object-depth": "0.0.3",
     "prelude-ls": "1.1.2",
     "remove-value": "1.0.0",
+    "require-new": "1.1.0",
     "require-yaml": "0.0.1",
     "shelljs": "0.7.3",
     "update-notifier": "1.0.2",
