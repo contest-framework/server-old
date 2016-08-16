@@ -1,5 +1,10 @@
 # Tertestrial Release Notes
 
+## Master
+
+- update command which triggers a re-run of the last test to match documentation
+
+
 ## 0.0.7
 
 - more robust behavior when installed as a global module
