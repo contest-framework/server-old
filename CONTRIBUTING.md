@@ -6,7 +6,7 @@
 
 - development
   - the source code is in `src`
-  - the tests run against the transpiled code in `lib`
+  - the tests run against the transpiled code in `dist`
   - transpilation happens automatically when running `bin/spec [<filename>]`
   - you can also run `node_modules/.bin/watch` to start a continuously running auto-compiler
 
