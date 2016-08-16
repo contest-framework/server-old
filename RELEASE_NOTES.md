@@ -2,7 +2,7 @@
 
 ## Master
 
-- update command which triggers a re-run of the last test to match documentation
+- update "repeatLastTest" command to new format
 
 
 ## 0.0.7
