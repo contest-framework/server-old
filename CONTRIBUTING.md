@@ -15,4 +15,4 @@
   - run linter: `dependency-lint`
   - run feature specs: `bin/features`
 
-- publish a new version: `publish <[patch|minor|major]>`
+- publish a new version: `publish [patch|minor|major]`
