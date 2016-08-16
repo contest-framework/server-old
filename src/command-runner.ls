@@ -32,7 +32,7 @@ class CommandRunner
       @re-run-last-test command if @current-command
       return
 
-    if command.repeatLastTest
+    if command.repeat-last-test
       if @current-command?.length is 0 then return error "No previous test run"
       return @re-run-last-test command
 
