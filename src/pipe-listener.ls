@@ -31,7 +31,7 @@ class PipeListener extends EventEmitter
       | done-called  =>  return
       done-called := yes
       done!
-    fs.read-file @pipe-name, exit
+    child_process.exec 'cat .tertestrial.tmp', exit
     wait 0, exit
 
 
@@ -46,22 +46,11 @@ class PipeListener extends EventEmitter
       done!
 
 
-  # Called when a new command is received from the pipe
-  on-stream-data: (command) ~>
-    @emit 'command-received', JSON.parse command
-
-
-  # Called when the read stream from the pipe accidentally ends
-  #
-  # This shouldn't happen, but does on OS X.
-  on-stream-end: ~>
-    @open-read-stream!
-
-
   open-read-stream: ->
-    @read-stream = fs.create-read-stream @pipe-name, auto-close: no, encoding: 'utf8'
-      ..on 'data', @on-stream-data
-      ..on 'end', @on-stream-end
+    child_process.exec 'cat .tertestrial.tmp', (err, stdout, stderr) ~>
+      | err  =>  return @emit 'error', err
+      @emit 'command-received', JSON.parse(stdout)
+      @open-read-stream!
 
 
   reset-named-pipe: (done) ->

@@ -35,6 +35,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
     command-runner = new CommandRunner config
     pipe-listener = new PipeListener
       ..on 'command-received', command-runner.run-command
+      ..on 'error', (err) -> throw new Error err
       ..listen ->
         console.log '\nrunning'
 
@@ -43,3 +44,8 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       console.log 'Reloading configuration\n'
       config := new ConfigFile env.config-path
       command-runner.update-config config
+
+    process.on 'SIGINT', ->
+      console.log '\n\nSee you next time! :)\n'
+      pipe-listener.delete-named-pipe!
+      process.exit!
