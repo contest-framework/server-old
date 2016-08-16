@@ -47,6 +47,10 @@ class PipeListener extends EventEmitter
 
 
   open-read-stream: ->
+    # Node has seriously issues with named pipes.
+    # When reading from one, it is impossible to terminate Node manually
+    # using process.exit.
+    # Hence we do the pipe reading in a subprocess here.
     child_process.exec 'cat .tertestrial.tmp', (err, stdout, stderr) ~>
       | err  =>  return @emit 'error', err
       @emit 'command-received', JSON.parse(stdout)

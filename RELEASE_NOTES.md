@@ -7,6 +7,7 @@
 - update notification when new versions are available
 - automatically re-runs the last test when switching action sets
 - automatically reloads configuration file when it is updated
+- removes the named pipe when the program ends
 
 
 ## 0.0.6
