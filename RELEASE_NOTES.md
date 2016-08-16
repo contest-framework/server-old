@@ -1,6 +1,6 @@
 # Tertestrial Release Notes
 
-## Master
+## 0.0.7
 
 - more robust behavior when installed as a global module
 - allow configuration file to be in any format
@@ -8,6 +8,7 @@
 - automatically re-runs the last test when switching action sets
 - automatically reloads configuration file when it is updated
 - removes the named pipe when the program ends
+- shows warning when running in directory with existing named pipe
 
 
 ## 0.0.6
