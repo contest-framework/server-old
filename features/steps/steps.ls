@@ -94,8 +94,18 @@ module.exports = ->
     @file-exists filename
 
 
+  @Then /^the long\-running test is (no longer )?running$/ (!expect-running, done) ->
+    check = ~>
+      try
+        fs.stat-sync path.join(@root-dir, 'test_is_running')
+        expect-running
+      catch
+        !expect-running
+    wait-until check, 1, done
+
+
   @Then /^the process ends$/ (done) ->
-    wait-until (~> @process.ended), done
+    wait-until (~> @process.ended), 1, done
 
 
   @Then /^the process is still running$/ (done) ->

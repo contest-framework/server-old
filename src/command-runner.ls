@@ -130,7 +130,7 @@ class CommandRunner
     | @process?.killed      =>  return done!
     @process
       ..on 'exit', -> done!
-      ..kill 'SIGINT'
+      ..kill!
 
 
 module.exports = CommandRunner

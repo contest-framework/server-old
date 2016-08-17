@@ -14,11 +14,10 @@ Feature: interrupting long-running tests
       """
       {}
       """
-    Then I see "Testing everything"
-    And I don't see "Testing foo"
+    Then the long-running test is running
     When sending the command:
       """
       {"filename": "foo"}
       """
-    Then I see "exiting the long-running test"
+    Then the long-running test is no longer running
     And I see "Testing foo"
