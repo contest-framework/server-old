@@ -1,8 +1,8 @@
-Feature: interrupting long-running tests
+Feature: always run only one test
 
-  As a user accidentally starting a long-running test that I didn't mean to
-  I want to be able to stop it and start a shorter test without having to wait for the long test to finish
-  So that I don't get slowed down by the test runner when I do mistakes.
+  As a developer kicking off a test
+  I want that it starts right away without waiting for the current test to finish
+  So that I don't get slowed down by currently running tests I no longer need.
 
   - when Tertestrial receives the signal to run a test,
     it terminates the currently running test and starts the new one right away
