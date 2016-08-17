@@ -86,7 +86,7 @@ module.exports = ->
     @process.wait expected-text, done
 
 
-  @Then /^I see:$/ (expected-text, done) ->
+  @Then /^I see:$/, timeout: 3000, (expected-text, done) ->
     @process.wait expected-text, done
 
 
