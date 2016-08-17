@@ -3,7 +3,7 @@ require! {
   'fs'
   'path'
   'request'
-  'wait' : {wait}
+  'wait'
   'wait-until'
 }
 
@@ -73,13 +73,13 @@ module.exports = ->
   @When /^updating the configuration to:$/ (configuration) ->
     # wait a bit here to make sure the server is fully running and settled in
     # before expecting it to respond properly to file changes
-    wait 100, ~>
+    wait.wait 100, ~>
       @create-file 'tertestrial.yml', configuration
 
 
 
   @Then /^I don't see "([^"]*)"$/ (not-expected-text, done) ->
-    wait 100, ~>
+    wait.wait 100, ~>
       expect(@process.full-output!).to.not.include not-expected-text
       done!
 
@@ -107,11 +107,11 @@ module.exports = ->
                .done -> done!
 
   @Then /^the process ends$/ (done) ->
-    wait-until (~> @process.ended), 1, done
+    wait.wait-until (~> @process.ended), 1, done
 
 
   @Then /^the process is still running$/ (done) ->
     # Note: if the process doesn't crash within 100ms, we consider it remains running
-    wait 100, ~>
+    wait.wait 100, ~>
       expect(@process.ended).to.be.false
       done!
