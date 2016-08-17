@@ -78,12 +78,6 @@ module.exports = ->
 
 
 
-  @Then /^I don't see "([^"]*)"$/ (not-expected-text, done) ->
-    wait.wait 100, ~>
-      expect(@process.full-output!).to.not.include not-expected-text
-      done!
-
-
   @Then /^I see "([^"]*)"$/ (expected-text, done) ->
     @process.wait expected-text, done
 

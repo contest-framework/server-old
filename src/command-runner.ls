@@ -33,25 +33,25 @@ class CommandRunner
 
     if command.action-set
       @set-actionset command.action-set
-      @re-run-last-test done if @current-command
+      if @current-command
+        @re-run-last-test done
+      else
+        done?!
       return
 
     if command.repeat-last-test
       if @current-command?.length is 0 then return error "No previous test run"
-      return @re-run-last-test done
+      @re-run-last-test done
+      return
 
     unless template = @_get-template(command) then return error "no matching action found for #{JSON.stringify command}"
     @current-command = command
-    @_stop-running-test ~>
-      @_run-test fill-template(template, command)
-      done?!
+    @_run-test fill-template(template, command), done
 
 
   re-run-last-test: (done) ->
     unless template = @_get-template(@current-command) then return error "cannot find a template for '#{@current-command}'"
-    @_stop-running-test ~>
-      @_run-test fill-template(template, @current-command)
-      done?!
+    @_run-test fill-template(template, @current-command), done
 
 
   set-actionset: (@current-action-set-id) ->
@@ -119,9 +119,11 @@ class CommandRunner
     Object.keys(command).length > 0
 
 
-  _run-test: (command) ->
-    console.log bold "#{command}\n"
-    @process = spawn 'sh' ['-c', command], stdio: 'inherit'
+  _run-test: (command, done) ->
+    @_stop-running-test ~>
+      console.log bold "#{command}\n"
+      @process = spawn 'sh' ['-c', command], stdio: 'inherit'
+      done?!
 
 
   _stop-running-test: (done) ->
