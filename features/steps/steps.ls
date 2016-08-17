@@ -2,7 +2,9 @@ require! {
   'chai' : {expect}
   'fs'
   'path'
-  'wait' : {wait, wait-until}
+  'request'
+  'wait' : {wait}
+  'wait-until'
 }
 
 
@@ -95,14 +97,14 @@ module.exports = ->
 
 
   @Then /^the long\-running test is (no longer )?running$/ (!expect-running, done) ->
-    check = ~>
-      try
-        fs.stat-sync path.join(@root-dir, 'test_is_running')
-        expect-running
-      catch
-        !expect-running
-    wait-until check, 1, done
+    checker = (cb) ->
+      request 'http://localhost:3000', (err) ->
+        cb expect-running and !error
 
+    wait-until!.condition checker
+               .interval 10
+               .times 100
+               .done -> done!
 
   @Then /^the process ends$/ (done) ->
     wait-until (~> @process.ended), 1, done

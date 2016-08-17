@@ -1,15 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/env node
 
-echo "Testing everything"
-touch test_is_running
+const http = require('http')
 
-function exit_handler {
-  rm test_is_running
-  exit 0
-}
-trap exit_handler SIGTERM SIGINT
+const server = http.createServer((req, res) => {
+  res.end('hello world\n')
+})
 
-while :
-do
-  sleep 1
-done
+server.listen(3000, '127.0.0.1', () => {
+  console.log('Server running')
+})
