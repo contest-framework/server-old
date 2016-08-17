@@ -7,7 +7,6 @@ require! {
   './helpers/reset-terminal'
   'prelude-ls' : {filter, find, sort-by}
   'util'
-  'wait' : {wait}
 }
 
 
