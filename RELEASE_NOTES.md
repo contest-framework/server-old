@@ -4,6 +4,7 @@
 
 - update "repeatLastTest" command to new format
 - compatibility with Node 4 in addition to 5 and 6
+- terminates the currently running test before starting a new one
 
 
 ## 0.0.7
