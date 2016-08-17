@@ -125,8 +125,9 @@ class CommandRunner
 
 
   _stop-running-test: (done) ->
-    | !@process         =>  return done!
-    | @process?.killed  =>  return done!
+    | !@process             =>  return done!
+    | @process?.exit-code?  =>  return done!
+    | @process?.killed      =>  return done!
     @process
       ..on 'exit', -> done!
       ..kill 'SIGINT'
