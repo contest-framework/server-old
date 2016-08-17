@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo "Testing everything"
+
+function exit_handler {
+  echo "exiting the long-running test"
+  exit 0
+}
+trap exit_handler SIGINT
+
+while :
+do
+  sleep 1
+done

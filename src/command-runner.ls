@@ -7,6 +7,7 @@ require! {
   './helpers/reset-terminal'
   'prelude-ls' : {filter, find, sort-by}
   'util'
+  'wait' : {wait}
 }
 
 
@@ -23,27 +24,34 @@ class CommandRunner
     # the last test command that was sent from the editor
     @current-command = ''
 
+    # the currently running test process
+    @process = null
 
-  run-command: (command) ~>
+
+  run-command: (command, done) ~>
     reset-terminal!
 
     if command.action-set
       @set-actionset command.action-set
-      @re-run-last-test command if @current-command
+      @re-run-last-test done if @current-command
       return
 
     if command.repeat-last-test
       if @current-command?.length is 0 then return error "No previous test run"
-      return @re-run-last-test command
+      return @re-run-last-test done
 
     unless template = @_get-template(command) then return error "no matching action found for #{JSON.stringify command}"
     @current-command = command
-    @_run-test fill-template(template, command)
+    @_stop-running-test ~>
+      @_run-test fill-template(template, command)
+      done?!
 
 
-  re-run-last-test: (command) ->
-    unless template = @_get-template(@current-command) then return error "cannot find a template for '#{command}'"
-    @_run-test fill-template(template, @current-command)
+  re-run-last-test: (done) ->
+    unless template = @_get-template(@current-command) then return error "cannot find a template for '#{@current-command}'"
+    @_stop-running-test ~>
+      @_run-test fill-template(template, @current-command)
+      done?!
 
 
   set-actionset: (@current-action-set-id) ->
@@ -113,8 +121,15 @@ class CommandRunner
 
   _run-test: (command) ->
     console.log bold "#{command}\n"
-    spawn 'sh' ['-c', command], stdio: 'inherit'
+    @process = spawn 'sh' ['-c', command], stdio: 'inherit'
 
+
+  _stop-running-test: (done) ->
+    | !@process         =>  return done!
+    | @process?.killed  =>  return done!
+    @process
+      ..on 'exit', -> done!
+      ..kill 'SIGINT'
 
 
 module.exports = CommandRunner

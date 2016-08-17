@@ -75,6 +75,13 @@ module.exports = ->
       @create-file 'tertestrial.yml', configuration
 
 
+
+  @Then /^I don't see "([^"]*)"$/ (not-expected-text, done) ->
+    wait 100, ~>
+      expect(@process.full-output!).to.not.include not-expected-text
+      done!
+
+
   @Then /^I see "([^"]*)"$/ (expected-text, done) ->
     @process.wait expected-text, done
 
