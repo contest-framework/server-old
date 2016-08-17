@@ -1,4 +1,4 @@
-Feature: always run only one test
+Feature: tests start immediately
 
   As a developer kicking off a test
   I want that it starts right away without waiting for the current test to finish
