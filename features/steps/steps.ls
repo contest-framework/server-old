@@ -3,8 +3,8 @@ require! {
   'fs'
   'path'
   'request'
-  'wait'
-  'wait-until'
+  'wait' : {wait}
+  'wait-until' : wait-until-async
 }
 
 
@@ -73,7 +73,7 @@ module.exports = ->
   @When /^updating the configuration to:$/ (configuration) ->
     # wait a bit here to make sure the server is fully running and settled in
     # before expecting it to respond properly to file changes
-    wait.wait 100, ~>
+    wait 100, ~>
       @create-file 'tertestrial.yml', configuration
 
 
@@ -95,17 +95,17 @@ module.exports = ->
       request 'http://localhost:3000', (err) ->
         cb expect-running and !error
 
-    wait-until!.condition checker
-               .interval 10
-               .times 100
-               .done -> done!
+    wait-until-async!.condition checker
+                     .interval 10
+                     .times 100
+                     .done -> done!
 
   @Then /^the process ends$/ (done) ->
-    wait.wait-until (~> @process.ended), 1, done
+    wait (~> @process.ended), done
 
 
   @Then /^the process is still running$/ (done) ->
     # Note: if the process doesn't crash within 100ms, we consider it remains running
-    wait.wait 100, ~>
+    wait 100, ~>
       expect(@process.ended).to.be.false
       done!
