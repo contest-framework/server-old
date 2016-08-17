@@ -41,7 +41,7 @@ Tertestrial removes this pipe when stopping.
 
 ## Installation
 
-* install [Node.js](https://nodejs.org/en) version 4, 5, or 6
+* install [Node.js](https://nodejs.org/en) version 4 or above
 
 * install the Tertestrial server:
 
