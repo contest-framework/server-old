@@ -4,6 +4,11 @@
   - install Node.js
   - `npm i`
 
+- development
+  - the source code is in `src`
+  - the tests run against the transpiled code in `lib`
+  - transpilation happens automatically when running `cucumber-js`
+
 - testing
   - run all tests: `bin/spec`
   - run linter: `dependency-lint`
