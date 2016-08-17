@@ -12,7 +12,7 @@
 
 - testing
   - run all tests: `bin/spec`
-  - run linter: `node_modules/.bin/lint` or `dependency-lint`
-  - run feature specs: `bin/features` or `cucumber-js` with auto-compiler running
+  - run linter: `node_modules/.bin/lint` or `node_modules/.bin/dependency-lint`
+  - run feature specs: `bin/features` or `node_modules/.bin/cucumber-js` with auto-compiler running
 
-- publish a new version: `publish [patch|minor|major]`
+- publish a new version: `node_modules/.bin/publish [patch|minor|major]`
