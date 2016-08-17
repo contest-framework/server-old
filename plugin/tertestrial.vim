@@ -20,7 +20,7 @@ endfunction
 
 
 function! g:TertestrialRepeat(...)
-  let command = '{"operation": "repeatLastTest"}'
+  let command = '{"repeatLastTest": true}'
   if a:0 == 1
     let message = ''
   else
