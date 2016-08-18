@@ -3,7 +3,7 @@ require! {
   'fs'
   'path'
   'request'
-  'wait' : {wait}
+  'wait' : {wait, wait-until}
   'wait-until' : wait-until-async
 }
 
@@ -101,7 +101,7 @@ module.exports = ->
                      .done -> done!
 
   @Then /^the process ends$/ (done) ->
-    wait (~> @process.ended), done
+    wait-until (~> @process.ended), done
 
 
   @Then /^the process is still running$/ (done) ->
