@@ -3,8 +3,8 @@ set -e
 
 node_modules/o-tools-livescript/bin/build
 if [ "$#" != "1" ]; then
-  node_modules/dependency-lint/bin/dependency-lint.js
-  cucumber-js "$@"
+  node_modules/.bin/dependency-lint
+  node_modules/.bin/cucumber-js "$@"
 else
-  cucumber-js "$@"
+  node_modules/.bin/cucumber-js "$@"
 fi
