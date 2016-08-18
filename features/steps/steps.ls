@@ -90,10 +90,10 @@ module.exports = ->
     @file-exists filename
 
 
-  @Then /^the long\-running test is (no longer )?running$/ (!expect-running, done) ->
+  @Then /^the long-running test is (no longer )?running$/ (!expect-running, done) ->
     checker = (cb) ->
       request 'http://localhost:3000', (err) ->
-        cb expect-running and !error
+        cb expect-running and !err
 
     wait-until-async!.condition checker
                      .interval 10
