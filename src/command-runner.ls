@@ -24,7 +24,7 @@ class CommandRunner
     @current-command = ''
 
     # the currently running test process
-    @process = null
+    @current-process = null
 
 
   run-command: (command, done) ~>
@@ -121,15 +121,15 @@ class CommandRunner
   _run-test: (command, done) ->
     @_stop-running-test ~>
       console.log bold "#{command}\n"
-      @process = spawn 'sh' ['-c', command], stdio: 'inherit'
+      @current-process = spawn 'sh' ['-c', command], stdio: 'inherit'
       done?!
 
 
   _stop-running-test: (done) ->
-    | !@process             =>  return done!
-    | @process?.exit-code?  =>  return done!
-    | @process?.killed      =>  return done!
-    @process
+    | !@current-process             =>  return done!
+    | @current-process?.exit-code?  =>  return done!
+    | @current-process?.killed      =>  return done!
+    @current-process
       ..on 'exit', -> done!
       ..kill!
 
