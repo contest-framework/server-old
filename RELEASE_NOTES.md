@@ -1,6 +1,6 @@
 # Tertestrial Release Notes
 
-## Master
+## 0.1
 
 - update "repeatLastTest" command to new format
 - compatibility with Node 4 in addition to 5 and 6
