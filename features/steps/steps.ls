@@ -93,7 +93,10 @@ module.exports = ->
   @Then /^the long-running test is (no longer )?running$/ (!expect-running, done) ->
     checker = (cb) ->
       request 'http://localhost:3000', (err) ->
-        cb expect-running and !err
+        if expect-running
+          cb err
+        else
+          cb !err
 
     wait-until-async!.condition checker
                      .interval 10
