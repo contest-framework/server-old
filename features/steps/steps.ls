@@ -2,7 +2,9 @@ require! {
   'chai' : {expect}
   'fs'
   'path'
+  'request'
   'wait' : {wait, wait-until}
+  'wait-until' : wait-until-async
 }
 
 
@@ -75,6 +77,7 @@ module.exports = ->
       @create-file 'tertestrial.yml', configuration
 
 
+
   @Then /^I see "([^"]*)"$/ (expected-text, done) ->
     @process.wait expected-text, done
 
@@ -86,6 +89,19 @@ module.exports = ->
   @Then /^it creates a file "([^"]*)"$/ (filename) ->
     @file-exists filename
 
+
+  @Then /^the long-running test is (no longer )?running$/ (!expect-running, done) ->
+    checker = (cb) ->
+      request 'http://localhost:3000', (err) ->
+        if expect-running
+          cb err
+        else
+          cb !err
+
+    wait-until-async!.condition checker
+                     .interval 10
+                     .times 100
+                     .done -> done!
 
   @Then /^the process ends$/ (done) ->
     wait-until (~> @process.ended), done

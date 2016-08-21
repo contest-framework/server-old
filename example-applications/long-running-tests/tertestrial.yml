@@ -1,0 +1,8 @@
+actions:
+
+  - match:
+    command: 'bin/run-long-test'
+
+  - match:
+      filename: 'foo'
+    command: 'bin/run-test foo'
