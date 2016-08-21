@@ -1,6 +1,6 @@
 {
   "name": "tertestrial",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "author": "Kevin Goslar",
   "bin": {
     "tertestrial": "bin/tertestrial"
