@@ -1,6 +1,6 @@
 # Tertestrial Server
 
-[![Build Status](https://travis-ci.org/Originate/tertestrial-server.svg?branch=master)](https://travis-ci.org/Originate/tertestrial-server)
+[![Build Status](https://img.shields.io/travis/Originate/tertestrial-server/master.svg?label=travisci)](https://travis-ci.org/Originate/tertestrial-server)
 [![CircleCI](https://circleci.com/gh/Originate/tertestrial-server.svg?style=shield)](https://circleci.com/gh/Originate/tertestrial-server)
 [![Dependency Status](https://david-dm.org/Originate/tertestrial-server.svg)](https://david-dm.org/Originate/tertestrial-server)
 [![devDependency Status](https://david-dm.org/Originate/tertestrial-server/dev-status.svg)](https://david-dm.org/Originate/tertestrial-server#info=devDependencies)
