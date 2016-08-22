@@ -257,6 +257,8 @@ your editor plugin needs to support these built-in infrastructure messages:
   {"repeatLastTest": true}
   ```
 
+Ideally your editor plugin should also implement "auto-test". A mode the user can toggle on and off, which triggers a re-run of the last test when any file is saved.
+
 
 ## Credits
 
