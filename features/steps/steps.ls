@@ -1,4 +1,5 @@
 require! {
+  '../../package.json' : pkg
   'chai' : {expect}
   'fs'
   'path'
@@ -61,6 +62,11 @@ module.exports = ->
       done!
 
 
+  @When /^running 'tertestrial ([^']*)'$/ (args) ->
+    @root-dir = 'tmp'
+    @stdout = @run-process "../bin/tertestrial #{args}"
+
+
   @When /^starting 'tertestrial setup'$/ ->
     @root-dir = 'tmp'
     @start-process '../bin/tertestrial setup'
@@ -89,7 +95,15 @@ module.exports = ->
 
 
   @Then /^I see:$/, timeout: 3000, (expected-text, done) ->
-    @process.wait expected-text, done
+    if @process
+      @process.wait expected-text, done
+    else
+      expect(@stdout).to.contain expected-text
+      done()
+
+
+  @Then /^I see the version$/ ->
+    expect(@stdout).to.contain pkg.version
 
 
   @Then /^it creates a file "([^"]*)"$/ (filename) ->

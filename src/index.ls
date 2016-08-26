@@ -2,6 +2,7 @@ require! {
   'chalk' : {bold, cyan, dim}
   'chokidar'
   './command-runner' : CommandRunner
+  'docopt': {docopt}
   './config-file' : ConfigFile
   'fs'
   './helpers/error-message' : {abort}
@@ -22,9 +23,23 @@ update-notifier({pkg}).notify!
 Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', extensions: interpret.extensions
   ..launch {}, (env) ->
 
-    if process.argv.length is 3 and process.argv[2] is 'setup'
-      setup-wizard!
-      return
+    doc = """
+      Usage:
+        tertestrial
+        tertestrial (help | setup | version)
+
+      Subcommands:
+        help      Show this screen
+        setup     Run a setup wizard to generate a config file
+        version   Show version
+      """
+
+    options = docopt doc, help: false, version: pkg.version
+
+    switch
+      | options.help     =>  return console.log doc
+      | options.setup    =>  return setup-wizard!
+      | options.version  =>  return console.log pkg.version
 
     if is-duplicate!
       abort 'Tertestrial is already running in the current directory.'
