@@ -8,7 +8,6 @@ Feature: generating the configuration file
   - the configuration wizard asks a number of questions and generates a configuration file
 
 
-  @verbose
   Scenario: generating a custom configuration file
     When starting 'tertestrial setup'
     And entering '[ENTER]'

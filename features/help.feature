@@ -2,9 +2,9 @@ Feature: Help screen
 
   As a developer forgetting how to use tertestrial
   I want quick access to a help screen
-  So that I canbe reminded how the command works
+  So that I can be reminded how the command works
 
-  - run "tertestrial -h" or "tertestrial --help" to see a help screen
+  - run "tertestrial -h" or "tertestrial --help" to display a help screen
 
 
   Scenario Outline: displaying the help screen

@@ -21,8 +21,6 @@ update-notifier({pkg}).notify!
 Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', extensions: interpret.extensions
   ..launch {}, (env) ->
 
-    console.log process.argv
-
     doc = """
       Usage:
         tertestrial [options]
