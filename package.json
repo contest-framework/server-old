@@ -16,7 +16,7 @@
     "remove-value": "1.0.0",
     "require-new": "1.1.0",
     "require-yaml": "0.0.1",
-    "shelljs": "0.7.3",
+    "shelljs": "0.7.4",
     "update-notifier": "1.0.2",
     "wait": "0.1.0"
   },
@@ -25,7 +25,7 @@
     "chai": "3.5.0",
     "cucumber": "1.2.2",
     "cucumber-snippets-livescript": "1.0.1",
-    "dependency-lint": "4.1.0",
+    "dependency-lint": "4.1.1",
     "dim-console": "0.4.4",
     "livescript": "1.5.0",
     "o-tools": "0.5.1",
