@@ -23,18 +23,27 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
 
     doc = """
       Usage:
-        tertestrial [options]
+        tertestrial
+        tertestrial help
         tertestrial setup
+        tertestrial version
 
-      Options:
-        -h, --help   Show this screen
-        --version    Show version
+      Subcommands:
+        help      Show this screen
+        setup     Run a setup wizard to generate a config file
+        version   Show version
       """
 
-    options = docopt doc, version: pkg.version
+    options = docopt doc, help: false, version: pkg.version
 
-    if options.setup
+    if options.help
+      console.log doc
+      return
+    else if options.setup
       setup-wizard!
+      return
+    else if options.version
+      console.log pkg.version
       return
 
     reset-terminal!

@@ -1,26 +1,24 @@
 Feature: Help screen
 
-  As a developer forgetting how to use tertestrial
+  As a developer forgetting how to use Tertestrial
   I want quick access to a help screen
-  So that I can be reminded how the command works
+  So that I can be reminded how the command works.
 
-  - run "tertestrial -h" or "tertestrial --help" to display a help screen
+  - run "tertestrial help" to display a help screen
 
-
-  Scenario Outline: displaying the help screen
-    When I run 'tertestrial <flag>'
+  @verbose
+  Scenario: displaying the help screen
+    When running 'tertestrial help'
     Then I see:
       """
       Usage:
-        tertestrial [options]
+        tertestrial
+        tertestrial help
         tertestrial setup
+        tertestrial version
 
-      Options:
-        -h, --help   Show this screen
-        --version    Show version
+      Subcommands:
+        help      Show this screen
+        setup     Run a setup wizard to generate a config file
+        version   Show version
       """
-
-    Examples:
-      | flag   |
-      | -h     |
-      | --help |

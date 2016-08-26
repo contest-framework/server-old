@@ -1,12 +1,12 @@
 Feature: repeating the last test
 
-  As a developer forgetting what version of tertestrial I have installed
-  I want quick access to the version
-  So that I can find out what version I have installed
+  As a Tertestrial user unsure what version is installed on the current machine
+  I want to have a quick way to check the version
+  So that I can decide whether to upgrade Tertestrial.
 
-  - run "tertestrial --version" to print the version
+  - run "tertestrial version" to print the version
 
 
   Scenario: with a test that succeeds
-    When I run 'tertestrial --version'
+    When running 'tertestrial version'
     Then I see the version

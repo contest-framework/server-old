@@ -56,7 +56,7 @@ module.exports = ->
       done!
 
 
-  @When /^I run 'tertestrial ([^']*)'$/ (args) ->
+  @When /^running 'tertestrial ([^']*)'$/ (args) ->
     @root-dir = 'tmp'
     @stdout = @run-process "../bin/tertestrial #{args}"
 
