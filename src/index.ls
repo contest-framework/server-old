@@ -37,10 +37,10 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
     if options.help
       console.log doc
       return
-    else if options.setup
+    if options.setup
       setup-wizard!
       return
-    else if options.version
+    if options.version
       console.log pkg.version
       return
 
