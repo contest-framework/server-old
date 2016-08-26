@@ -96,6 +96,10 @@ module.exports = ->
     @file-exists filename
 
 
+  @Then /^the initial process is still running$/, ->
+    expect(@processesToKill[0].ended).to.be.false
+
+
   @Then /^the long-running test is (no longer )?running$/ (!expect-running, done) ->
     checker = (cb) ->
       request 'http://localhost:3000', (err) ->
@@ -118,7 +122,3 @@ module.exports = ->
     wait 100, ~>
       expect(@process.ended).to.be.false
       done!
-
-
-  @Then /^the initial process is still running$/, ->
-    expect(@processesToKill[0].ended).to.be.false
