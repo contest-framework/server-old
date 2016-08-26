@@ -13,16 +13,14 @@ Feature: repeating the last test
   Scenario: with a test that succeeds
     When sending the command:
       """
-      {"filename": "foo"}
+      {"filename": "success"}
       """
-    Then I see "run-test-success"
-    And I see "Exit Code: 0"
+    Then I see "exit code: 0"
 
 
   Scenario: without a previous test
     When sending the command:
       """
-      {"filename": "bar"}
+      {"filename": "failure"}
       """
-    Then I see "run-test-failure"
-    And I see "Exit Code: 1"
+    Then I see "exit code: 1"

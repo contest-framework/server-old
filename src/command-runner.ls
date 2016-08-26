@@ -124,7 +124,7 @@ class CommandRunner
       @current-process = spawn 'sh' ['-c', command], stdio: 'inherit'
         ..on 'exit', (code) ->
           style = if code is 0 then green else red
-          console.log style "\nExit Code: #{code}"
+          console.log style "\nexit code: #{code}"
       done?!
 
 
