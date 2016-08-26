@@ -1,5 +1,5 @@
 require! {
-  'chalk' : {bold, cyan, red}
+  'chalk' : {bold, cyan, green, red}
   'child_process' : {spawn}
   './helpers/error-message' : {error}
   './helpers/file-type'
@@ -122,6 +122,9 @@ class CommandRunner
     @_stop-running-test ~>
       console.log bold "#{command}\n"
       @current-process = spawn 'sh' ['-c', command], stdio: 'inherit'
+        ..on 'exit', (code) ->
+          style = if code is 0 then green else red
+          console.log style "\nexit code: #{code}"
       done?!
 
 
