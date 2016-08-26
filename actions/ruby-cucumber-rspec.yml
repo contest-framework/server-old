@@ -7,24 +7,24 @@ actions:
   # Here we define what to do with files that have the extension ".feature"
   - match:
       filename: '\.feature$'
-    command: 'cucumber {{filename}}'
+    command: 'bundle exec cucumber {{filename}}'
 
   # Here we define how to run just the test at the given line
   # in a file with extension ".feature"
   - match:
       filename: '\.feature$'
       line: '\d+'
-    command: 'cucumber {{filename}}:{{line}}'
+    command: 'bundle exec cucumber {{filename}}:{{line}}'
 
 
   # Here we define what to do with files that have the extension ".rb"
   - match:
       filename: '\.rb$'
-    command: 'rspec {{filename}}'
+    command: 'bundle exec rspec {{filename}}'
 
   # Here we define how to run just the test at the given line
   # in a file with extension ".feature"
   - match:
       filename: '\.rb$'
       line: '\d+'
-    command: 'rspec {{filename}}:{{line}}'
+    command: 'bundle exec rspec {{filename}}:{{line}}'

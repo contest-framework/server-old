@@ -15,8 +15,8 @@ Feature: built-in configurations with multiple action sets
 
     Examples:
       | FILENAME             | LINE | TEST-COMMAND                                                         |
-      | features/one.feature |      | cuc-api features/one.feature && cuc-cli features/one.feature         |
-      | features/one.feature | 123  | cuc-api features/one.feature:123 && cuc-cli features/one.feature:123 |
-      | spec/one_spec.js     |      | mocha spec/one_spec.js                                               |
-      | spec/one_spec.coffee |      | mocha --compilers coffee:coffee-script spec/one_spec.coffee          |
-      | spec/one_spec.ls     |      | mocha --compilers ls:livescript spec/one_spec.ls                     |
+      | features/one.feature |      | bin/cuc-api features/one.feature && bin/cuc-cli features/one.feature         |
+      | features/one.feature | 123  | bin/cuc-api features/one.feature:123 && bin/cuc-cli features/one.feature:123 |
+      | spec/one_spec.js     |      | node_modules/.bin/mocha spec/one_spec.js                                               |
+      | spec/one_spec.coffee |      | node_modules/.bin/mocha --compilers coffee:coffee-script spec/one_spec.coffee          |
+      | spec/one_spec.ls     |      | node_modules/.bin/mocha --compilers ls:livescript spec/one_spec.ls                     |
