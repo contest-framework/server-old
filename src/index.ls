@@ -5,6 +5,8 @@ require! {
   'docopt': {docopt}
   './config-file' : ConfigFile
   'fs'
+  './helpers/error-message' : {abort}
+  './helpers/is-duplicate-checker' : is-duplicate
   './helpers/reset-terminal'
   './helpers/run-mode-checker' : runs-in-foreground
   'interpret'
@@ -38,6 +40,9 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       | options.help     =>  return console.log doc
       | options.setup    =>  return setup-wizard!
       | options.version  =>  return console.log pkg.version
+
+    if is-duplicate!
+      abort 'Tertestrial is already running in the current directory.'
 
     reset-terminal!
     console.log dim "Tertestrial server #{pkg.version}\n"

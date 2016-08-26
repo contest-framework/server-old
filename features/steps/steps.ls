@@ -15,6 +15,12 @@ module.exports = ->
     @create-file file-name, content
 
 
+  @Given /^Tertestrial is running$/, (done) ->
+    @root-dir = 'tmp'
+    @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
+    @start-process '../bin/tertestrial', done
+
+
   @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 20_000, (app-name, done) ->
     @root-dir = path.join 'example-applications', app-name
     fs.unlink path.join(@root-dir, '.tertestrial.tmp'), ~>
@@ -63,7 +69,7 @@ module.exports = ->
 
   @When /^starting 'tertestrial setup'$/ ->
     @root-dir = 'tmp'
-    @process = @start-process '../bin/tertestrial setup'
+    @start-process '../bin/tertestrial setup'
 
 
   @When /^sending the command:$/ (command, done) ->
@@ -102,6 +108,10 @@ module.exports = ->
 
   @Then /^it creates a file "([^"]*)"$/ (filename) ->
     @file-exists filename
+
+
+  @Then /^the initial process is still running$/, ->
+    expect(@processes-to-kill[0].ended).to.be.false
 
 
   @Then /^the long-running test is (no longer )?running$/ (!expect-running, done) ->
