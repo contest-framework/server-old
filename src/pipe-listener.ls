@@ -21,25 +21,6 @@ class PipeListener extends EventEmitter
     @started = no
 
 
-  verify-overwrite-pipe: (done) ->
-    | !@exists-named-pipe!  =>  return done!
-
-    console.log """
-      I have found a named pipe in this directory.
-      This indicates Tertestrial is either already running,
-      or has crashed before.
-
-      If Tertestrial is running for this project already,
-      please hit #{bold red 'Ctrl-C'} to exit this process.
-      Otherwise hit #{bold green 'Enter'} to continue.
-
-      """
-    process.stdin
-      ..resume!
-      ..on 'data', ->
-        done!
-
-
   cleanup: ->
     @delete-named-pipe! if @started
 
@@ -74,12 +55,11 @@ class PipeListener extends EventEmitter
 
 
   listen: (done) ->
-    @verify-overwrite-pipe ~>
-      @reset-named-pipe ~>
-        @create-named-pipe!
-        @open-read-stream!
-        @started = yes
-        done!
+    @reset-named-pipe ~>
+      @create-named-pipe!
+      @open-read-stream!
+      @started = yes
+      done!
 
 
   open-read-stream: ->
