@@ -34,15 +34,10 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
 
     options = docopt doc, help: false, version: pkg.version
 
-    if options.help
-      console.log doc
-      return
-    if options.setup
-      setup-wizard!
-      return
-    if options.version
-      console.log pkg.version
-      return
+    switch
+      | options.help     =>  return console.log doc
+      | options.setup    =>  return setup-wizard!
+      | options.version  =>  return console.log pkg.version
 
     reset-terminal!
     console.log dim "Tertestrial server #{pkg.version}\n"
