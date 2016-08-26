@@ -4,26 +4,26 @@ require! {
 
 
 function get-process-cwd process-id
-  result = exec-sync "lsof -p #{process-id} -d cwd -a -Fn", encoding: 'utf8'
-  result.split('\n')[1].slice(1)
+  exec-sync "lsof -p #{process-id} -d cwd -a -Fn", encoding: 'utf8'
+    .split('\n')[1]
+    .slice 1
 
 
 function get-tertestrial-process-ids
   exec-sync 'ps -o command,pid', encoding: 'utf8'
     .split '\n'
     .slice 1
-    .map (str) ->
-      [command, pid] = str.split /\s+(?=\S*$)/
-      {command, pid}
-    .filter ({command, pid}) -> command is 'tertestrial'
-    .map ({pid}) -> pid
+    .map (.split /\s+(?=\S*$)/)
+    .map ([command, pid]) -> {command, pid}
+    .filter (.command is 'tertestrial')
+    .map (.pid)
 
 
 module.exports = function is-duplicate
-  pid = process.pid.toString()
-  cwd = process.cwd()
-  duplicates = get-tertestrial-process-ids!
-    .filter (duplicatePid) -> pid isnt duplicatePid
+  my-pid = process.pid.toString!
+  my-cwd = process.cwd!
+  get-tertestrial-process-ids!
+    .filter (pid) -> pid isnt my-pid
     .map get-process-cwd
-    .filter (duplicateCwd) -> cwd is duplicateCwd
-  duplicates.length > 0
+    .filter (cwd) -> cwd is my-cwd
+    .length > 0
