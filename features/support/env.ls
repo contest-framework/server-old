@@ -11,10 +11,10 @@ module.exports = ->
   @Before ->
     rimraf.sync 'tmp'
     fs.mkdir-sync 'tmp'
+    @processesToKill = []
 
   @After ->
-    if @process
-      @process.kill!
+    @processesToKill.forEach (process) -> process.kill!
 
   @Before tags: ['@verbose'], ->
     @verbose = on

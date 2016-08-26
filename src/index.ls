@@ -4,6 +4,8 @@ require! {
   './command-runner' : CommandRunner
   './config-file' : ConfigFile
   'fs'
+  './helpers/error-message' : {abort}
+  './helpers/is-duplicate-checker' : is-duplicate
   './helpers/reset-terminal'
   './helpers/run-mode-checker' : runs-in-foreground
   'interpret'
@@ -23,6 +25,9 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
     if process.argv.length is 3 and process.argv[2] is 'setup'
       setup-wizard!
       return
+
+    if is-duplicate!
+      abort 'Tertestrial is already running in the current directory.'
 
     reset-terminal!
     console.log dim "Tertestrial server #{pkg.version}\n"

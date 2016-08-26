@@ -35,9 +35,11 @@ World = !->
     if @verbose
       args.stdout = dim-console.process.stdout
       args.stderr = dim-console.process.stderr
-    @process = new ObservableProcess command, args
-      ..wait 'running', done
-      ..on 'ended', (@exit-code) ~> done "App crashed with code #{@exit-code}!\n\n#{@process.full-output!}"
+    process = new ObservableProcess command, args
+      ..wait '\nrunning\n', done
+      ..on 'ended', (@exit-code) ~> done "App crashed with code #{@exit-code}!\n\n#{process.full-output!}"
+    @processesToKill.push process
+    @process = process
 
 
 
