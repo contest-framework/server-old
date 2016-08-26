@@ -24,9 +24,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
     doc = """
       Usage:
         tertestrial
-        tertestrial help
-        tertestrial setup
-        tertestrial version
+        tertestrial (help | setup | version)
 
       Subcommands:
         help      Show this screen

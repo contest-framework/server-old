@@ -13,9 +13,7 @@ Feature: Help screen
       """
       Usage:
         tertestrial
-        tertestrial help
-        tertestrial setup
-        tertestrial version
+        tertestrial (help | setup | version)
 
       Subcommands:
         help      Show this screen
