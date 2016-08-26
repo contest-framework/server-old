@@ -18,7 +18,7 @@ World = !->
     fs.stat-sync path.join(@root-dir, name)
 
   @run-process = (command) ->
-    child_process.exec-sync command, cwd: @root-dir
+    child_process.exec-sync(command, cwd: @root-dir).toString!
 
 
   @send-command = (command, done) ->

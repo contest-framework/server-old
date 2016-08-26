@@ -2,6 +2,7 @@ require! {
   'chalk' : {bold, cyan, dim}
   'chokidar'
   './command-runner' : CommandRunner
+  'docopt': {docopt}
   './config-file' : ConfigFile
   'fs'
   './helpers/reset-terminal'
@@ -20,7 +21,19 @@ update-notifier({pkg}).notify!
 Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', extensions: interpret.extensions
   ..launch {}, (env) ->
 
-    if process.argv.length is 3 and process.argv[2] is 'setup'
+    doc = """
+      Usage:
+        tertestrial [options]
+        tertestrial setup
+
+      Options:
+        -h, --help   Show this screen
+        --version    Show version
+      """
+
+    options = docopt doc, argv: process.argv, version: pkg.version
+
+    if options.setup
       setup-wizard!
       return
 
