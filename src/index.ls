@@ -21,6 +21,8 @@ update-notifier({pkg}).notify!
 Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', extensions: interpret.extensions
   ..launch {}, (env) ->
 
+    console.log process.argv
+
     doc = """
       Usage:
         tertestrial [options]
@@ -31,7 +33,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
         --version    Show version
       """
 
-    options = docopt doc, argv: process.argv, version: pkg.version
+    options = docopt doc, version: pkg.version
 
     if options.setup
       setup-wizard!
