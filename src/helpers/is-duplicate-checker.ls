@@ -23,7 +23,7 @@ module.exports = function is-duplicate
   my-pid = process.pid.toString!
   my-cwd = process.cwd!
   get-tertestrial-process-ids!
-    .filter (pid) -> pid isnt my-pid
+    .filter (isnt my-pid)
     .map get-process-cwd
-    .filter (cwd) -> cwd is my-cwd
+    .filter (is my-cwd)
     .length > 0
