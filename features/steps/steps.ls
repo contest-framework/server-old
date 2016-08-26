@@ -97,7 +97,7 @@ module.exports = ->
 
 
   @Then /^the initial process is still running$/, ->
-    expect(@processesToKill[0].ended).to.be.false
+    expect(@processes-to-kill[0].ended).to.be.false
 
 
   @Then /^the long-running test is (no longer )?running$/ (!expect-running, done) ->
