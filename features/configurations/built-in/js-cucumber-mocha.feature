@@ -1,7 +1,7 @@
 Feature: built-in configurations with simple action sets
 
   As a developer working on an application tested using Cucumber-JS and Mocha
-  I want to be able to run them via Ternestrial without much explicit configuration
+  I want to be able to run them via Tertestrial without much explicit configuration
   So that I don't waste time with redundant environment setup.
 
   - set the actions to "js-cucumber-mocha" to configure Tertestrial for that setup
