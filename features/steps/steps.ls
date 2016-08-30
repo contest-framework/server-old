@@ -82,6 +82,11 @@ module.exports = ->
     @send-command JSON.stringify(data), done
 
 
+  @When /^sending the filename as the absolute path of "([^"]*)"$/ (filename, done) ->
+    data = filename: path.resolve(@root-dir, filename)
+    @send-command JSON.stringify(data), done
+
+
   @When /^updating the configuration to:$/ (configuration) ->
     # wait a bit here to make sure the server is fully running and settled in
     # before expecting it to respond properly to file changes

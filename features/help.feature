@@ -6,7 +6,7 @@ Feature: Help screen
 
   - run "tertestrial help" to display a help screen
 
-  @verbose
+
   Scenario: displaying the help screen
     When running 'tertestrial help'
     Then I see:

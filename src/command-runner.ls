@@ -5,6 +5,7 @@ require! {
   './helpers/file-type'
   './helpers/fill-template'
   './helpers/reset-terminal'
+  path: 'path'
   'prelude-ls' : {filter, find, sort-by}
   'util'
 }
@@ -42,6 +43,9 @@ class CommandRunner
       if @current-command?.length is 0 then return error "No previous test run"
       @re-run-last-test done
       return
+
+    if command.filename
+      command.filename = path.relative process.cwd(), command.filename
 
     unless template = @_get-template(command) then return error "no matching action found for #{JSON.stringify command}"
     @current-command = command
