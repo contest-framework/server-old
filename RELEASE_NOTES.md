@@ -1,5 +1,18 @@
 # Tertestrial Release Notes
 
+## 0.1.2
+
+- uses `bundle exec` in Ruby templates
+- built-in templates provide the path to commands run
+- aborts when detecting a currently running process
+- add `help` and `version` command-line commands
+
+
+## 0.1.1
+
+- output the exit code of tests
+
+
 ## 0.1
 
 - update "repeatLastTest" command to new format
