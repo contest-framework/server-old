@@ -5,7 +5,7 @@ require! {
   './helpers/file-type'
   './helpers/fill-template'
   './helpers/reset-terminal'
-  path: 'path'
+  'path'
   'prelude-ls' : {filter, find, sort-by}
   'util'
 }
