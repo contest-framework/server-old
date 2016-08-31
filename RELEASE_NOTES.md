@@ -1,5 +1,9 @@
 # Tertestrial Release Notes
 
+## 0.1.3
+
+- convert absolute path filenames to relative paths 
+
 ## 0.1.2
 
 - uses `bundle exec` in Ruby templates
