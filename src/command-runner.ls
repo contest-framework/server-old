@@ -60,7 +60,7 @@ class CommandRunner
 
 
   set-actionset: (done) ->
-    return unless @current-action-set-index?
+    | !@current-action-set-id => return
     new-actionset = @config.actions[@current-action-set-index]
     console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}\n"
     @current-action-set = new-actionset
