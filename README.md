@@ -262,7 +262,7 @@ your editor plugin needs to support these built-in infrastructure messages:
   - cycle through action sets
 
     ```json
-    {"cycleActionSet": true}
+    {"cycleActionSet": "next"}
     ```
 
 - re-run the last test:
