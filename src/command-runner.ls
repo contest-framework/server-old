@@ -6,7 +6,7 @@ require! {
   './helpers/fill-template'
   './helpers/reset-terminal'
   'path'
-  'prelude-ls' : {filter, find, sort-by}
+  'prelude-ls' : {filter, find-index, sort-by}
   'util'
 }
 
@@ -19,7 +19,7 @@ class CommandRunner
     # the currently activated action set
     @current-action-set = @config.actions[0]
 
-    @current-action-set-id = 1
+    @current-action-set-index = 0
 
     # the last test command that was sent from the editor
     @current-command = ''
@@ -32,11 +32,13 @@ class CommandRunner
     reset-terminal!
 
     if command.action-set
-      @set-actionset command.action-set
-      if @current-command
-        @re-run-last-test done
-      else
-        done?!
+      @current-action-set-index = @standardize-action-set-index command.action-set
+      @set-actionset done
+      return
+
+    if command.cycle-action-set is 'next'
+      @current-action-set-index = (@current-action-set-index + 1) % @config.actions.length
+      @set-actionset done
       return
 
     if command.repeat-last-test
@@ -57,21 +59,31 @@ class CommandRunner
     @_run-test fill-template(template, @current-command), done
 
 
-  set-actionset: (@current-action-set-id) ->
-    switch type = typeof! @current-action-set-id
+  set-actionset: (done) ->
+    | !@current-action-set-index? => return
+    @current-action-set = @config.actions[@current-action-set-index]
+    console.log "Activating action set #{cyan Object.keys(@current-action-set)[0]}\n"
+    if @current-command
+      @re-run-last-test done
+    else
+      done?!
+
+
+  standardize-action-set-index: (action-set-id) ->
+    switch type = typeof! action-set-id
 
       case 'Number'
-        unless new-actionset = @config.actions[@current-action-set-id - 1]
-          return error "action set #{cyan @current-action-set-id} does not exist"
-        console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}\n"
-        @current-action-set = new-actionset
+        if action-set-id < 1 or action-set-id > @config.actions.length
+          error "action set #{cyan action-set-id} does not exist"
+        else
+          action-set-id - 1
 
       case 'String'
-        new-actionset = @config.actions |> find (action-set) ~> Object.keys(action-set)[0] is @current-action-set-id
-        unless new-actionset
-          return error "action set #{cyan @current-action-set-id} does not exist"
-        console.log "Activating action set #{cyan @current-action-set-id}\n"
-        @current-action-set = new-actionset
+        index = @config.actions |> find-index -> Object.keys(it)[0] is action-set-id
+        if index?
+          index
+        else
+          error "action set #{cyan action-set-id} does not exist"
 
       default
         error "unsupported action-set id type: #{type}"
@@ -79,7 +91,6 @@ class CommandRunner
 
   update-config: (@config) ->
     @set-actionset @current-action-set-id
-    @re-run-last-test! if @current-command
 
 
   # Returns the actions in the current action set

@@ -245,11 +245,25 @@ as a JSON string into the existing file `.tertestrial.tmp`:
 In addition to your [application-specific commands](#custom-configurations),
 your editor plugin needs to support these built-in infrastructure messages:
 
-- switching to a different [action set](#multiple-action-sets) (for example action set #2):
+- switching to a different [action set](#multiple-action-sets):
 
-  ```json
-  {"actionSet": 2}
-  ```
+  - by index (1 based)
+
+    ```json
+    {"actionSet": 2}
+    ```
+
+  - by name
+
+    ```json
+    {"actionSet": "headless"}
+    ```
+
+  - cycle through action sets
+
+    ```json
+    {"cycleActionSet": "next"}
+    ```
 
 - re-run the last test:
 
