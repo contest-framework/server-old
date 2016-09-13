@@ -61,9 +61,8 @@ class CommandRunner
 
   set-actionset: (done) ->
     | !@current-action-set-id => return
-    new-actionset = @config.actions[@current-action-set-index]
-    console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}\n"
-    @current-action-set = new-actionset
+    @current-action-set = @config.actions[@current-action-set-index]
+    console.log "Activating action set #{cyan Object.keys(@current-action-set)[0]}\n"
     if @current-command
       @re-run-last-test done
     else
