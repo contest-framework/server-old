@@ -60,7 +60,7 @@ class CommandRunner
 
 
   set-actionset: (done) ->
-    | !@current-action-set-id => return
+    | !@current-action-set-index? => return
     @current-action-set = @config.actions[@current-action-set-index]
     console.log "Activating action set #{cyan Object.keys(@current-action-set)[0]}\n"
     if @current-command
@@ -71,17 +71,20 @@ class CommandRunner
 
   standardize-action-set-index: (action-set-id) ->
     switch type = typeof! action-set-id
+
       case 'Number'
         if action-set-id < 1 or action-set-id > @config.actions.length
           error "action set #{cyan action-set-id} does not exist"
         else
           action-set-id - 1
+
       case 'String'
-        index = @config.actions |> find-index (action-set) -> Object.keys(action-set)[0] is action-set-id
+        index = @config.actions |> find-index -> Object.keys(it)[0] is action-set-id
         if index?
           index
         else
           error "action set #{cyan action-set-id} does not exist"
+
       default
         error "unsupported action-set id type: #{type}"
 
