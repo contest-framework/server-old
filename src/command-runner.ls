@@ -19,7 +19,7 @@ class CommandRunner
     # the currently activated action set
     @current-action-set = @config.actions[0]
 
-    @current-action-set-id = 0
+    @current-action-set-index = 0
 
     # the last test command that was sent from the editor
     @current-command = ''
@@ -32,12 +32,12 @@ class CommandRunner
     reset-terminal!
 
     if command.action-set
-      @current-action-set-id = @standardize-action-set-id command.action-set
+      @current-action-set-index = @standardize-action-set-index command.action-set
       @set-actionset done
       return
 
     if command.cycle-action-set
-      @current-action-set-id = (@current-action-set-id + 1) % @config.actions.length
+      @current-action-set-index = (@current-action-set-index + 1) % @config.actions.length
       @set-actionset done
       return
 
@@ -60,8 +60,8 @@ class CommandRunner
 
 
   set-actionset: (done) ->
-    return unless @current-action-set-id?
-    new-actionset = @config.actions[@current-action-set-id]
+    return unless @current-action-set-index?
+    new-actionset = @config.actions[@current-action-set-index]
     console.log "Activating action set #{cyan Object.keys(new-actionset)[0]}\n"
     @current-action-set = new-actionset
     if @current-command
@@ -70,7 +70,7 @@ class CommandRunner
       done?!
 
 
-  standardize-action-set-id: (action-set-id) ->
+  standardize-action-set-index: (action-set-id) ->
     switch type = typeof! action-set-id
       case 'Number'
         if action-set-id < 1 or action-set-id > @config.actions.length
@@ -78,7 +78,7 @@ class CommandRunner
         else
           action-set-id - 1
       case 'String'
-        index = @config.actions |> find-index (action-set) ~> Object.keys(action-set)[0] is action-set-id
+        index = @config.actions |> find-index (action-set) -> Object.keys(action-set)[0] is action-set-id
         if index?
           index
         else
