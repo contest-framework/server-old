@@ -121,3 +121,20 @@ Feature: multiple action sets
       """
     Then I see "Error: unsupported action-set id type: Array"
     And the process is still running
+
+  Scenario: cycling through action sets
+    When sending the command:
+      """
+      {"cycleActionSet": true}
+      """
+    Then I see "Activating action set CLI"
+    When sending the command:
+      """
+      {"cycleActionSet": true}
+      """
+    Then I see "Activating action set API"
+    When sending the command:
+      """
+      {"cycleActionSet": true}
+      """
+    Then I see "Activating action set CLI"
