@@ -36,7 +36,7 @@ class CommandRunner
       @set-actionset done
       return
 
-    if command.cycle-action-set
+    if command.cycle-action-set is 'next'
       @current-action-set-index = (@current-action-set-index + 1) % @config.actions.length
       @set-actionset done
       return
