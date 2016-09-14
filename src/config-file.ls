@@ -2,7 +2,6 @@ require! {
   './helpers/error-message' : {abort}
   './helpers/file-type'
   'fs'
-  'object-depth' : object-depth
   'path'
   'prelude-ls' : {capitalize, map, obj-to-pairs}
   'remove-value'
@@ -48,7 +47,6 @@ class ConfigFile
 
   _standardize-actions: (actions) ->
     type = typeof! actions
-    depth = object-depth actions
     switch
       | type is 'String' =>  @_load-internal-action(actions).actions |> @_standardize-actions
       | type is 'Array'  =>  [name: 'default', matches: actions]
