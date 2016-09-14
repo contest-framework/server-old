@@ -169,7 +169,7 @@ __tertestrial.yml__
 ```yml
 actions:
 
-  - headless:
+  headless:
 
       - match:
           filename: '\.feature$'
@@ -180,7 +180,7 @@ actions:
           line: '\d+'
         command: 'TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}'
 
-  - firefox:
+  firefox:
 
       - match:
           filename: '\.feature$'
