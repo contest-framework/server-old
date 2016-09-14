@@ -4,7 +4,7 @@ require! {
   'fs'
   'object-depth' : object-depth
   'path'
-  'prelude-ls' : {capitalize}
+  'prelude-ls' : {capitalize, map, obj-to-pairs}
   'remove-value'
   'require-new'
   'require-yaml'
@@ -50,10 +50,10 @@ class ConfigFile
     type = typeof! actions
     depth = object-depth actions
     switch
-      | type is 'String'                 =>  @_load-internal-action(actions).actions |> @_standardize-actions
-      | type is 'Array' and depth is 3   =>  [default: actions]
-      | type is 'Array' and depth is 5   =>  actions
-      | _                                =>  abort "unknown action type: #{util.inspect actions, depth: null}"
+      | type is 'String' =>  @_load-internal-action(actions).actions |> @_standardize-actions
+      | type is 'Array'  =>  [name: 'default', matches: actions]
+      | type is 'Object' =>  map (([name, matches]) -> {name, matches}), obj-to-pairs(actions)
+      | _                =>  abort "unknown action type: #{util.inspect actions, depth: null}"
 
 
 

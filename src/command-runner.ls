@@ -62,7 +62,7 @@ class CommandRunner
   set-actionset: (done) ->
     | !@current-action-set-index? => return
     @current-action-set = @config.actions[@current-action-set-index]
-    console.log "Activating action set #{cyan Object.keys(@current-action-set)[0]}\n"
+    console.log "Activating action set #{cyan @current-action-set.name}\n"
     if @current-command
       @re-run-last-test done
     else
@@ -79,7 +79,7 @@ class CommandRunner
           action-set-id - 1
 
       case 'String'
-        index = @config.actions |> find-index -> Object.keys(it)[0] is action-set-id
+        index = @config.actions |> find-index (.name is action-set-id)
         if index?
           index
         else
@@ -93,13 +93,6 @@ class CommandRunner
     @set-actionset @current-action-set-id
 
 
-  # Returns the actions in the current action set
-  _current-actions: ->
-    for key, value of @current-action-set
-      return value
-
-
-
   # Returns the string template for the given command
   _get-template: (command) ~>
     if (matching-actions = @_get-matching-actions command).length is 0
@@ -109,7 +102,7 @@ class CommandRunner
 
   # Returns all actions that match the given command
   _get-matching-actions: (command) ->
-    @_current-actions!
+    @current-action-set.matches
       |> filter @_is-match(_, command)
       |> sort-by (.length)
 

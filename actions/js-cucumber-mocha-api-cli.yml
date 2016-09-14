@@ -6,7 +6,7 @@ actions:
 
   # Our first action set, called "all".
   # It runs both the "API" and "CLI" tests.
-  - ALL:
+  ALL:
 
       # Here we define what to do when the user wants to run all tests
       # and the "all" action set is active.
@@ -38,7 +38,7 @@ actions:
 
 
   # The next action set, called "API". It runs only the API tests
-  - API:
+  API:
 
       # Here we define what to do when the user wants to run all tests
       # and the "api" action set is active.
@@ -70,7 +70,7 @@ actions:
 
 
   # The next action set, called "CLI". It runs only the CLI tests
-  - CLI:
+  CLI:
 
       - match:
         command: 'bin/cuc-cli'
