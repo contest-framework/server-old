@@ -49,7 +49,7 @@ class ConfigFile
     switch typeof! actions
       | 'String' =>  @_load-internal-action(actions).actions |> @_standardize-actions
       | 'Array'  =>  [name: 'default', matches: actions]
-      | 'Object' =>  obj-to-pairs(actions) |> map (([name, matches]) -> {name, matches})
+      | 'Object' =>  obj-to-pairs(actions) |> map ([name, matches]) -> {name, matches}
       | _        =>  abort "unknown action type: #{util.inspect actions, depth: null}"
 
 
