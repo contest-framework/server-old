@@ -46,12 +46,11 @@ class ConfigFile
 
 
   _standardize-actions: (actions) ->
-    type = typeof! actions
-    switch
-      | type is 'String' =>  @_load-internal-action(actions).actions |> @_standardize-actions
-      | type is 'Array'  =>  [name: 'default', matches: actions]
-      | type is 'Object' =>  map (([name, matches]) -> {name, matches}), obj-to-pairs(actions)
-      | _                =>  abort "unknown action type: #{util.inspect actions, depth: null}"
+    switch typeof! actions
+      | 'String' =>  @_load-internal-action(actions).actions |> @_standardize-actions
+      | 'Array'  =>  [name: 'default', matches: actions]
+      | 'Object' =>  obj-to-pairs(actions) |> map (([name, matches]) -> {name, matches})
+      | _        =>  abort "unknown action type: #{util.inspect actions, depth: null}"
 
 
 
