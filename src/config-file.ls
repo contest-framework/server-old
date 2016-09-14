@@ -2,9 +2,8 @@ require! {
   './helpers/error-message' : {abort}
   './helpers/file-type'
   'fs'
-  'object-depth' : object-depth
   'path'
-  'prelude-ls' : {capitalize}
+  'prelude-ls' : {capitalize, map, obj-to-pairs}
   'remove-value'
   'require-new'
   'require-yaml'
@@ -47,13 +46,11 @@ class ConfigFile
 
 
   _standardize-actions: (actions) ->
-    type = typeof! actions
-    depth = object-depth actions
-    switch
-      | type is 'String'                 =>  @_load-internal-action(actions).actions |> @_standardize-actions
-      | type is 'Array' and depth is 3   =>  [default: actions]
-      | type is 'Array' and depth is 5   =>  actions
-      | _                                =>  abort "unknown action type: #{util.inspect actions, depth: null}"
+    switch typeof! actions
+      | 'String' =>  @_load-internal-action(actions).actions |> @_standardize-actions
+      | 'Array'  =>  [name: 'default', matches: actions]
+      | 'Object' =>  obj-to-pairs(actions) |> map ([name, matches]) -> {name, matches}
+      | _        =>  abort "unknown action type: #{util.inspect actions, depth: null}"
 
 
 

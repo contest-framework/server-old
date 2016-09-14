@@ -15,7 +15,7 @@ Feature: multiple action sets
       """
       actions:
 
-        - 'API':
+        'API':
 
           - match:
               filename: '\.feature$'
@@ -35,7 +35,7 @@ Feature: multiple action sets
               line: '\d+'
             command: "echo Running Mocha for {{filename}}:{{line}} in API mode!"
 
-        - 'CLI':
+        'CLI':
 
           - match:
               filename: '\.feature$'
