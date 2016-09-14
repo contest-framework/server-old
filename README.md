@@ -171,25 +171,25 @@ actions:
 
   headless:
 
-      - match:
-          filename: '\.feature$'
-        command: 'TEST_PLATFORM=headless cucumber-js {{filename}}'
+    - match:
+        filename: '\.feature$'
+      command: 'TEST_PLATFORM=headless cucumber-js {{filename}}'
 
-      - match:
-          filename: '\.feature$'
-          line: '\d+'
-        command: 'TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}'
+    - match:
+        filename: '\.feature$'
+        line: '\d+'
+      command: 'TEST_PLATFORM=headless cucumber-js {{filename}}:{{line}}'
 
   firefox:
 
-      - match:
-          filename: '\.feature$'
-        command: 'TEST_PLATFORM=firefox cucumber-js {{filename}}'
+    - match:
+        filename: '\.feature$'
+      command: 'TEST_PLATFORM=firefox cucumber-js {{filename}}'
 
-      - match:
-          filename: '\.feature$'
-          line: '\d+'
-        command: 'TEST_PLATFORM=firefox cucumber-js {{filename}}:{{line}}'
+    - match:
+        filename: '\.feature$'
+        line: '\d+'
+      command: 'TEST_PLATFORM=firefox cucumber-js {{filename}}:{{line}}'
 ```
 
 When Tertestrial starts, in activates the first action set.
