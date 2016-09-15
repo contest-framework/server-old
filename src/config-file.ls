@@ -1,13 +1,13 @@
 require! {
   './helpers/error-message' : {abort}
   './helpers/file-type'
-  'fs'
-  'path'
+  fs
+  path
   'prelude-ls' : {capitalize, map, obj-to-pairs}
   'remove-value'
   'require-new'
   'require-yaml'
-  'util'
+  util
 }
 
 

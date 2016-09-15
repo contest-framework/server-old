@@ -1,5 +1,5 @@
 require! {
-  'chalk' : {red}
+  chalk : {red}
 }
 
 
