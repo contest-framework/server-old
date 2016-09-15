@@ -3,7 +3,6 @@ require! {
   'child_process'
   'events' : EventEmitter
   'fs'
-  'path'
   'prelude-ls': {last}
   'wait' : {wait}
 }
@@ -15,9 +14,7 @@ require! {
 # Emits a 'command-received' event when it receives a new command
 class PipeListener extends EventEmitter
 
-  (@cwd) ->
-    @pipe-path = path.join @cwd, '.tertestrial.tmp'
-
+  (@pipe-path) ->
     # indicates whether the process has completely started up yet,
     # or we abort in the middle of the startup process
     @started = no

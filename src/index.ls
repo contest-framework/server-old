@@ -12,6 +12,7 @@ require! {
   'interpret'
   'liftoff' : Liftoff
   '../package.json' : pkg
+  'path'
   './pipe-listener' : PipeListener
   './setup-wizard'
   'update-notifier'
@@ -49,7 +50,8 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
 
     config = new ConfigFile env.config-path
     command-runner = new CommandRunner config
-    pipe-listener = new PipeListener process.cwd()
+    pipe-path = path.join process.cwd!, '.tertestrial.tmp'
+    pipe-listener = new PipeListener pipe-path
       ..on 'command-received', command-runner.run-command
       ..on 'command-parse-error', error
       ..on 'error', (err) -> throw new Error err

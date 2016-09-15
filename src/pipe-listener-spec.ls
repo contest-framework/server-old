@@ -10,7 +10,7 @@ describe 'PipeListener' ->
     before-each (done) ->
       rimraf.sync 'tmp'
       fs.mkdir-sync 'tmp'
-      @pipe-listener = new PipeListener 'tmp'
+      @pipe-listener = new PipeListener 'tmp/.tertestrial.tmp'
         ..listen done
 
     after-each ->
