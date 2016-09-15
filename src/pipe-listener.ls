@@ -73,9 +73,8 @@ class PipeListener extends EventEmitter
         @emit 'command-received', JSON.parse(stdout)
       catch error
         @emit 'command-parse-error', """
-          Invalid command:
-            Command: #{stdout}
-            #{error}
+          Invalid command: #{stdout}
+          #{error}
           """
       @open-read-stream!
 
