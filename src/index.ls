@@ -49,7 +49,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
 
     config = new ConfigFile env.config-path
     command-runner = new CommandRunner config
-    pipe-listener = new PipeListener
+    pipe-listener = new PipeListener process.cwd()
       ..on 'command-received', command-runner.run-command
       ..on 'command-parse-error', error
       ..on 'error', (err) -> throw new Error err

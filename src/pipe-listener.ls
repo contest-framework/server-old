@@ -3,6 +3,8 @@ require! {
   'child_process'
   'events' : EventEmitter
   'fs'
+  'path'
+  'prelude-ls': {last}
   'wait' : {wait}
 }
 
@@ -13,8 +15,8 @@ require! {
 # Emits a 'command-received' event when it receives a new command
 class PipeListener extends EventEmitter
 
-  ->
-    @pipe-name = '.tertestrial.tmp'
+  (@cwd) ->
+    @pipe-path = path.join @cwd, '.tertestrial.tmp'
 
     # indicates whether the process has completely started up yet,
     # or we abort in the middle of the startup process
@@ -22,16 +24,19 @@ class PipeListener extends EventEmitter
 
 
   cleanup: ->
-    @delete-named-pipe! if @started
+    return unless @started
+    @killed = true
+    @listener.kill?!
+    @delete-named-pipe!
 
 
   create-named-pipe: ->
-    child_process.exec-sync "mkfifo #{@pipe-name}"
+    child_process.exec-sync "mkfifo #{@pipe-path}"
 
 
   delete-named-pipe: ->
     try
-      fs.unlink-sync @pipe-name
+      fs.unlink-sync @pipe-path
 
 
   empty-named-pipe: (done) ->
@@ -42,13 +47,13 @@ class PipeListener extends EventEmitter
       | done-called  =>  return
       done-called := yes
       done!
-    child_process.exec 'cat .tertestrial.tmp', exit
+    child_process.exec "cat #{@pipe-path}", exit
     wait 0, exit
 
 
   exists-named-pipe: ->
     try
-      fs.stat-sync @pipe-name
+      fs.stat-sync @pipe-path
       yes
     catch
       no
@@ -67,15 +72,20 @@ class PipeListener extends EventEmitter
     # When reading from one, it is impossible to terminate Node manually
     # using process.exit.
     # Hence we do the pipe reading in a subprocess here.
-    child_process.exec 'cat .tertestrial.tmp', (err, stdout, stderr) ~>
-      | err  =>  return @emit 'error', err
+    @listener = child_process.exec "cat #{@pipe-path}", (err, stdout, stderr) ~>
+      | @killed  =>  return
+      | err      =>  return @emit 'error', err
+      commandString = stdout.split('\n') |> last
       try
-        @emit 'command-received', JSON.parse(stdout)
+        command = JSON.parse commandString
       catch error
         @emit 'command-parse-error', """
           Invalid command: #{stdout}
           #{error}
           """
+        @open-read-stream!
+        return
+      @emit 'command-received', command
       @open-read-stream!
 
 
