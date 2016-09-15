@@ -1,4 +1,3 @@
-@verbose
 Feature: invalid json
 
   As a developer accidentally starting another copy of Tertestrial in a repo
@@ -20,6 +19,6 @@ Feature: invalid json
       """
       Error: Invalid command:
         Command: {"repeatLastTest": true}{"repeatLastTest": true}
-        SyntaxError: Unexpected token { in JSON at position 24
+        SyntaxError: Unexpected token {
       """
     And the process is still running
