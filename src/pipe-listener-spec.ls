@@ -1,12 +1,15 @@
 require! {
   'fs'
   './pipe-listener': PipeListener
+  'rimraf'
 }
 
 
 describe 'PipeListener', ->
   describe 'listen', ->
     before-each (done) ->
+      rimraf.sync 'tmp'
+      fs.mkdir-sync 'tmp'
       @pipe-listener = new PipeListener 'tmp'
       @pipe-listener.listen done
 
