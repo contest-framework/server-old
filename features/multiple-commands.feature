@@ -14,8 +14,8 @@ Feature: multiple commands
   Scenario:
     When sending the command:
       """
-      {"filename": "features/two.feature"}
       {"filename": "features/one.feature"}
+      {"filename": "features/two.feature"}
       """
-    Then I see "cucumber-js features/one.feature"
+    Then I see "cucumber-js features/two.feature"
     And the process is still running
