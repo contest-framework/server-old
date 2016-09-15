@@ -26,7 +26,7 @@ describe 'PipeListener', ->
       specify 'triggers a command-parse-error', ->
         expect(@error).to.eql """
           Invalid command: {
-          SyntaxError: Unexpected end of JSON input
+          SyntaxError:
           """
 
 
