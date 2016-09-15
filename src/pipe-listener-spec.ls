@@ -24,7 +24,7 @@ describe 'PipeListener', ->
         fs.appendFile 'tmp/.tertestrial.tmp', '{'
 
       specify 'triggers a command-parse-error', ->
-        expect(@error).to.eql """
+        expect(@error).to.include """
           Invalid command: {
           SyntaxError:
           """
