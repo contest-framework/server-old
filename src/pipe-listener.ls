@@ -69,7 +69,13 @@ class PipeListener extends EventEmitter
     # Hence we do the pipe reading in a subprocess here.
     child_process.exec 'cat .tertestrial.tmp', (err, stdout, stderr) ~>
       | err  =>  return @emit 'error', err
-      @emit 'command-received', JSON.parse(stdout)
+      try
+        @emit 'command-received', JSON.parse(stdout)
+      catch error
+        @emit 'command-parse-error', """
+          Invalid command: #{stdout}
+          #{error}
+          """
       @open-read-stream!
 
 

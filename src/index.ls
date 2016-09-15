@@ -5,7 +5,7 @@ require! {
   'docopt': {docopt}
   './config-file' : ConfigFile
   'fs'
-  './helpers/error-message' : {abort}
+  './helpers/error-message' : {abort, error}
   './helpers/is-duplicate-checker' : is-duplicate
   './helpers/reset-terminal'
   './helpers/run-mode-checker' : runs-in-foreground
@@ -51,6 +51,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
     command-runner = new CommandRunner config
     pipe-listener = new PipeListener
       ..on 'command-received', command-runner.run-command
+      ..on 'command-parse-error', error
       ..on 'error', (err) -> throw new Error err
       ..listen ->
         if runs-in-foreground!
