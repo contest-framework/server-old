@@ -5,14 +5,14 @@
 - **BREAKING CHANGE**: update configuration structure for multiple action sets
   - the named action sets should now just be keys on the actions object instead of nested arrays
       ```yml
+      # 0.2.0
       actions:
         - headless:
           # ...
         - firefox:
           # ...
 
-      # changed to
-
+      # 0.3.0
       actions:
         headless:
           # ...
