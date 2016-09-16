@@ -1,4 +1,4 @@
-require! 'path'
+require! path
 
 
 # Returns the extension of the given file path

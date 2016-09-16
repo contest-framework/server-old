@@ -1,10 +1,10 @@
 require! {
-  'chalk' : {bold, green, red}
-  'child_process'
-  'events' : EventEmitter
-  'fs'
+  chalk : {bold, green, red}
+  child_process
+  events : EventEmitter
+  fs
   'prelude-ls': {last}
-  'wait' : {wait}
+  wait : {wait}
 }
 
 

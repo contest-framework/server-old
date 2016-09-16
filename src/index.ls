@@ -1,18 +1,18 @@
 require! {
-  'chalk' : {bold, cyan, dim}
-  'chokidar'
+  chalk : {bold, cyan, dim}
+  chokidar
   './command-runner' : CommandRunner
-  'docopt': {docopt}
+  docopt: {docopt}
   './config-file' : ConfigFile
-  'fs'
+  fs
   './helpers/error-message' : {abort, error}
   './helpers/is-duplicate-checker' : is-duplicate
   './helpers/reset-terminal'
   './helpers/run-mode-checker' : runs-in-foreground
-  'interpret'
-  'liftoff' : Liftoff
+  interpret
+  liftoff : Liftoff
   '../package.json' : pkg
-  'path'
+  path
   './pipe-listener' : PipeListener
   './setup-wizard'
   'update-notifier'

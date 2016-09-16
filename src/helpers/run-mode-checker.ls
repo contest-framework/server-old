@@ -1,5 +1,5 @@
 require! {
-  'child_process' : {exec-sync}
+  child_process : {exec-sync}
 }
 
 
