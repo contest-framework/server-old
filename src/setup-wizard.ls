@@ -1,8 +1,8 @@
 require! {
-  'chalk' : {bold, cyan, green}
-  'fs'
-  'inquirer'
-  'path'
+  chalk : {bold, cyan, green}
+  fs
+  inquirer
+  path
   'prelude-ls' : {map, sort}
   'require-yaml'
   'shelljs' : {cp}

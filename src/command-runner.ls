@@ -1,13 +1,13 @@
 require! {
-  'chalk' : {bold, cyan, green, red}
-  'child_process' : {spawn}
+  chalk : {bold, cyan, green, red}
+  child_process : {spawn}
   './helpers/error-message' : {error}
   './helpers/file-type'
   './helpers/fill-template'
   './helpers/reset-terminal'
-  'path'
+  path
   'prelude-ls' : {filter, find-index, sort-by}
-  'util'
+  util
 }
 
 
