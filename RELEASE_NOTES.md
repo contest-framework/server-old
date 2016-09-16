@@ -1,8 +1,17 @@
 # Tertestrial Release Notes
 
+## 0.3.0
+
+- update configuration structure for multiple action sets
+- gracefully handle invalid json and multiple lines of json
+
+## 0.2.0
+
+- add support for new command, `{"cycleActionSet": "next"}`, to cycle through action sets
+
 ## 0.1.3
 
-- convert absolute path filenames to relative paths 
+- convert absolute path filenames to relative paths
 
 ## 0.1.2
 
