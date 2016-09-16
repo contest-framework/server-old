@@ -2,7 +2,23 @@
 
 ## 0.3.0
 
-- update configuration structure for multiple action sets
+- **BREAKING CHANGE**: update configuration structure for multiple action sets
+  - the named action sets should now just be keys on the actions object instead of nested arrays
+      ```
+      actions:
+        - headless:
+          # ...
+        - firefox:
+          # ...
+
+      # changed to
+
+      actions:
+        headless:
+          # ...
+        firefox:
+          # ...
+      ```
 - gracefully handle invalid json and multiple lines of json
 
 ## 0.2.0
@@ -28,7 +44,8 @@
 
 ## 0.1
 
-- update "repeatLastTest" command to new format
+- **BREAKING CHANGE**: update "repeatLastTest" command to new format
+  - changed from `{"operation": "repeatLastTest"}` to `{"repeatLastTest": true}`
 - compatibility with Node 4 in addition to 5 and 6
 - terminates the currently running test before starting a new one
 
