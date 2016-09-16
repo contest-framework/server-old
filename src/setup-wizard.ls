@@ -5,7 +5,7 @@ require! {
   'path'
   'prelude-ls' : {map, sort}
   'require-yaml'
-  'shelljs/global'
+  'shelljs' : {cp}
 }
 
 
