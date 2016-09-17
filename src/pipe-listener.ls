@@ -3,7 +3,7 @@ require! {
   child_process
   events : EventEmitter
   fs
-  'prelude-ls': {last}
+  'prelude-ls': {compact, last}
   wait : {wait}
 }
 
@@ -72,7 +72,7 @@ class PipeListener extends EventEmitter
     @listener = child_process.exec "cat #{@pipe-path}", (err, stdout, stderr) ~>
       | @killed  =>  return
       | err      =>  return @emit 'error', err
-      commandString = stdout.split('\n') |> last
+      commandString = stdout.split('\n') |> compact |> last
       try
         command = JSON.parse commandString
       catch error
