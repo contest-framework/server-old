@@ -1,5 +1,9 @@
 # Tertestrial Release Notes
 
+## 0.3.1
+
+- support commands with leading / trailing newlines
+
 ## 0.3.0
 
 - **BREAKING CHANGE**: update configuration structure for multiple action sets
