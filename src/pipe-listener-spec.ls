@@ -40,6 +40,26 @@ describe 'PipeListener' ->
         expect(@command).to.eql a: 1
 
 
+    context 'leading newline' ->
+      before-each (done) ->
+        @pipe-listener.on 'command-received', (@command) ~> done!
+        @pipe-listener.on 'error', done
+        fs.appendFile 'tmp/.tertestrial.tmp', '\n{"a":1}'
+
+      specify 'triggers a command-received event' ->
+        expect(@command).to.eql a: 1
+
+
+    context 'trailing newline' ->
+      before-each (done) ->
+        @pipe-listener.on 'command-received', (@command) ~> done!
+        @pipe-listener.on 'error', done
+        fs.appendFile 'tmp/.tertestrial.tmp', '{"a":1}\n'
+
+      specify 'triggers a command-received event' ->
+        expect(@command).to.eql a: 1
+
+
     context 'multiple json commands' ->
       before-each (done) ->
         @pipe-listener.on 'command-received', (@command) ~> done!
