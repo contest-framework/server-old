@@ -49,13 +49,12 @@ class CommandRunner
     if command.filename
       command.filename = path.relative process.cwd(), command.filename
 
-    unless template = @_get-template(command) then return error "no matching action found for #{JSON.stringify command}"
     @current-command = command
-    @_run-test fill-template(template, command), done
+    @re-run-last-test done
 
 
   re-run-last-test: (done) ->
-    unless template = @_get-template(@current-command) then return error "cannot find a template for '#{@current-command}'"
+    unless template = @_get-template(@current-command) then return error "no matching action found for #{JSON.stringify @current-command}"
     @_run-test fill-template(template, @current-command), done
 
 
