@@ -96,12 +96,16 @@ module.exports = ->
 
 
   @Then /^I see "([^"]*)"$/ (expected-text, done) ->
-    @process.wait expected-text, done
+    @process.wait expected-text, (err) ~>
+      @process.reset-output-streams!
+      done err
 
 
   @Then /^I see:$/, timeout: 3000, (expected-text, done) ->
     if @process
-      @process.wait expected-text, done
+      @process.wait expected-text, (err) ~>
+        @process.reset-output-streams!
+        done err
     else
       expect(@stdout).to.contain expected-text
       done()
