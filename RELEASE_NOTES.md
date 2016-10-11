@@ -1,5 +1,9 @@
 # Tertestrial Release Notes
 
+## 0.3.2
+
+- store command even if there is no matching action
+
 ## 0.3.1
 
 - support commands with leading / trailing newlines
