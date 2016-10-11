@@ -25,6 +25,20 @@ Feature: repeating the last test
     And the process is still running
 
 
+  Scenario: with a previous test that didn't match any actions
+    When sending the command:
+      """
+      {"filename": "README.md"}
+      """
+    Then I see "Error: no matching action"
+    When sending the command:
+      """
+      {"repeatLastTest": true}
+      """
+    Then I see "Error: no matching action"
+    And the process is still running
+
+
   Scenario: without a previous test
     When sending the command:
       """
