@@ -25,7 +25,7 @@ Feature: repeating the last test
     And the process is still running
 
 
-  Scenario: unmatched previous test
+  Scenario: with a previous test that didn't match any actions
     When sending the command:
       """
       {"filename": "README.md"}
