@@ -1,4 +1,4 @@
-<img src="documentation/logo.png" width="646" height="109" alt="Tertestrial Server - an intelligent test auto-runner">
+<img src="documentation/logo.png" width="646" height="100" alt="Tertestrial Server - an intelligent test auto-runner">
 <hr>
 <a href="https://travis-ci.org/Originate/tertestrial-server">
   <img src="https://img.shields.io/travis/Originate/tertestrial-server/master.svg?label=travisci" alt="build status">
