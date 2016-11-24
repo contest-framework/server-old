@@ -1,11 +1,17 @@
-# Tertestrial Server
-
-[![Build Status](https://img.shields.io/travis/Originate/tertestrial-server/master.svg?label=travisci)](https://travis-ci.org/Originate/tertestrial-server)
-[![CircleCI](https://circleci.com/gh/Originate/tertestrial-server.svg?style=shield)](https://circleci.com/gh/Originate/tertestrial-server)
-[![Dependency Status](https://david-dm.org/Originate/tertestrial-server.svg)](https://david-dm.org/Originate/tertestrial-server)
-[![devDependency Status](https://david-dm.org/Originate/tertestrial-server/dev-status.svg)](https://david-dm.org/Originate/tertestrial-server#info=devDependencies)
-
-_Runs the currently relevant test while coding._
+<img src="documentation/logo.png" width="646" height="109" alt="Tertestrial Server - an intelligent test auto-runner">
+<hr>
+<a href="https://travis-ci.org/Originate/tertestrial-server">
+  <img src="https://img.shields.io/travis/Originate/tertestrial-server/master.svg?label=travisci" alt="build status">
+</a>
+<a href="https://circleci.com/gh/Originate/tertestrial-server">
+  <img src="https://circleci.com/gh/Originate/tertestrial-server.svg?style=shield">
+</a>
+<a href="https://david-dm.org/Originate/tertestrial-server">
+  <img src="https://david-dm.org/Originate/tertestrial-server.svg" alt="dependency status">
+</a>
+<a href="https://david-dm.org/Originate/tertestrial-server#info=devDependencies">
+  <img src="https://david-dm.org/Originate/tertestrial-server/dev-status.svg" alt="dev-dependency status">
+</a>
 
 Tertestrial runs configurable tasks on files or parts of files.
 Tasks are triggered by hotkeys from within your code editor,
