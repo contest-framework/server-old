@@ -6,7 +6,9 @@ require! {
 
 
 describe 'PipeListener' ->
+
   describe 'listen' ->
+
     before-each (done) ->
       rimraf.sync 'tmp'
       fs.mkdir-sync 'tmp'
@@ -18,6 +20,7 @@ describe 'PipeListener' ->
 
 
     context 'invalid json' ->
+
       before-each (done) ->
         @pipe-listener.on 'command-parse-error', (@error) ~> done!
         @pipe-listener.on 'error', done
@@ -31,6 +34,7 @@ describe 'PipeListener' ->
 
 
     context 'single json command' ->
+
       before-each (done) ->
         @pipe-listener.on 'command-received', (@command) ~> done!
         @pipe-listener.on 'error', done
@@ -41,6 +45,7 @@ describe 'PipeListener' ->
 
 
     context 'leading newline' ->
+
       before-each (done) ->
         @pipe-listener.on 'command-received', (@command) ~> done!
         @pipe-listener.on 'error', done
@@ -51,6 +56,7 @@ describe 'PipeListener' ->
 
 
     context 'trailing newline' ->
+
       before-each (done) ->
         @pipe-listener.on 'command-received', (@command) ~> done!
         @pipe-listener.on 'error', done
@@ -61,6 +67,7 @@ describe 'PipeListener' ->
 
 
     context 'multiple json commands' ->
+
       before-each (done) ->
         @pipe-listener.on 'command-received', (@command) ~> done!
         @pipe-listener.on 'error', done
