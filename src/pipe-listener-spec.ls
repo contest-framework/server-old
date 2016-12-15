@@ -1,6 +1,7 @@
 require! {
   fs
   './pipe-listener': PipeListener
+  '../spec/spec_helper'
   rimraf
 }
 

@@ -12,6 +12,7 @@ executedModules:
     dev:
       - bin/spec
       - bin/features
+      - bin/tests
     ignore: []
     root: 'bin/*'
 
