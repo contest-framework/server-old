@@ -4,14 +4,11 @@
 executedModules:
   npmScripts:
     dev:
-      - lint
-      - publish
       - test
-      - version
   shellScripts:
     dev:
-      - bin/spec
       - bin/features
+      - bin/spec
     ignore: []
     root: 'bin/*'
 
