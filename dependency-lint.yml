@@ -7,8 +7,8 @@ executedModules:
       - test
   shellScripts:
     dev:
-      - bin/spec
       - bin/features
+      - bin/spec
     ignore: []
     root: 'bin/*'
 
