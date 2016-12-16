@@ -1,0 +1,4 @@
+--colors
+--compilers ls:livescript
+--reporter dot
+test/test_helper.ls

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e
 
-node_modules/.bin/mocha --compilers ls:livescript -- spec/spec_helper.ls  **/*-spec.ls
+node_modules/.bin/mocha **/*-test.ls
