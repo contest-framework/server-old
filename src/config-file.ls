@@ -5,7 +5,7 @@ require! {
   path
   'prelude-ls' : {capitalize, map, obj-to-pairs}
   'remove-value'
-  'require-new'
+  'require-uncached'
   'require-yaml'
   util
 }
@@ -29,8 +29,7 @@ class ConfigFile
 
 
   content: ->
-    # delete the require-cache, so that the next require loads a fresh copy from disk
-    require-new @config-path
+    require-uncached @config-path
 
 
   _convert-regex: (action-sets) !->
