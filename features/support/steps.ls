@@ -21,7 +21,7 @@ module.exports = ->
     @start-process '../bin/tertestrial', done
 
 
-  @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 20_000, (app-name, done) ->
+  @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 40_000, (app-name, done) ->
     @root-dir = path.join 'example-applications', app-name
     fs.unlink path.join(@root-dir, '.tertestrial.tmp'), ~>
       @run-process 'npm i'
@@ -35,7 +35,7 @@ module.exports = ->
     @start-process '../bin/tertestrial', done
 
 
-  @Given /^Tertestrial runs with the configuration:$/, timeout: 20_000, (config, done) ->
+  @Given /^Tertestrial runs with the configuration:$/, timeout: 40_000, (config, done) ->
     @root-dir = 'tmp'
     @create-file 'tertestrial.yml', config
     @start-process '../bin/tertestrial', done
