@@ -4,7 +4,7 @@ set -e
 node_modules/o-tools-livescript/bin/build
 if [ "$#" != "1" ]; then
   node_modules/.bin/dependency-lint
-  node_modules/.bin/mycha
+  bin/tests
   node_modules/.bin/cucumber-js
 else
   node_modules/.bin/cucumber-js "$@"
