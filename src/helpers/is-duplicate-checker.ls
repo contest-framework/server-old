@@ -5,7 +5,7 @@ require! {
 
 function get-process-cwd process-id
   exec-sync "lsof -p #{process-id} -d cwd -a -Fn", encoding: 'utf8'
-    .split('\n')[1]
+    .split('\n')[*-2]
     .slice 1
 
 
