@@ -15,6 +15,7 @@ require! {
   path
   './pipe-listener' : PipeListener
   './setup-wizard'
+  './spinner' : Spinner
   'update-notifier'
 }
 
@@ -48,6 +49,8 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
     reset-terminal!
     console.log dim "Tertestrial server #{pkg.version}\n"
 
+    spinner = new Spinner!
+
     config = new ConfigFile env.config-path
     command-runner = new CommandRunner config
     pipe-path = path.join process.cwd!, '.tertestrial.tmp'
@@ -63,12 +66,18 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
         console.log '\nrunning'
 
     chokidar.watch(env.config-path).on 'change', (path) ->
+      spinner.stop!
       reset-terminal!
       console.log 'Reloading configuration\n'
       config := new ConfigFile env.config-path
       command-runner.update-config config
+      if config.content!.prevent-app-nap
+        spinner.start!
 
     process.on 'SIGINT', ->
       console.log '\n\nSee you next time! :)\n'
       pipe-listener.cleanup!
       process.exit!
+
+    if config.content!.prevent-app-nap
+      spinner.start!
