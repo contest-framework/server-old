@@ -1,3 +1,5 @@
+preventAppNap: true
+
 actions:
 
   - match:
