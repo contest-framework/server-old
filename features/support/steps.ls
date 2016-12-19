@@ -43,7 +43,7 @@ module.exports = ->
 
 
   @Given /^Tertestrial runs with the configuration file "([^"]*)":$/ (filename, content, done) ->
-    @root-dir = tmp.dir-sync!.name
+    @root-dir = 'tmp'
     @create-file filename, content
     @start-process 'bin/tertestrial', done
 
@@ -65,11 +65,11 @@ module.exports = ->
 
   @When /^running 'tertestrial ([^']*)'$/ (args) ->
     @root-dir = tmp.dir-sync!.name
-    @stdout = @run-process "../bin/tertestrial #{args}"
+    @stdout = @run-process path.join(process.cwd!, "bin/tertestrial #{args}")
 
 
   @When /^starting 'tertestrial setup'$/ ->
-    @root-dir = @tmp.dir-sync!.name
+    @root-dir = tmp.dir-sync!.name
     @start-process 'bin/tertestrial setup'
 
 
