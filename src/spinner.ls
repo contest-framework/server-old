@@ -1,12 +1,7 @@
-require! {
-  'wait' : {repeat, wait}
-}
-
-
 class Spinner
 
   start: ->
-    @interval = repeat 1000, @_print
+    @interval = set-timeout @_print, 1000
 
 
   stop: ->
