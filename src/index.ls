@@ -49,8 +49,6 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
     reset-terminal!
     console.log dim "Tertestrial server #{pkg.version}\n"
 
-    spinner = new Spinner!
-
     config = new ConfigFile env.config-path
     command-runner = new CommandRunner config
     pipe-path = path.join process.cwd!, '.tertestrial.tmp'
@@ -79,5 +77,6 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       pipe-listener.cleanup!
       process.exit!
 
+    spinner = new Spinner!
     if process.env.TERTESTRIAL_PREVENT_APP_NAP
       spinner.start!
