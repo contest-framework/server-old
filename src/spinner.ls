@@ -10,6 +10,7 @@ class Spinner
 
 
   _print: ->
+    # Print a space, then moves the cursor 1 position to the left
     process.stdout.write " \u001B[1D"
 
 
