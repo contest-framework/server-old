@@ -14,7 +14,7 @@ Feature: Killing the currently running test
       """
       {"stopCurrentTest": true}
       """
-    Then I see "stopping bin/spec"
+    Then I see "stopping bin/run-long-test"
     And the process is still running
 
 

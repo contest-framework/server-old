@@ -46,6 +46,11 @@ class CommandRunner
       @re-run-last-test done
       return
 
+    if command.stop-current-test
+      console.log bold "stopping #{@_get-template(@current-command)}"
+      @_stop-running-test done
+      return
+
     if command.filename
       command.filename = path.relative process.cwd(), command.filename
 
@@ -140,7 +145,7 @@ class CommandRunner
     | @current-process?.exit-code?  =>  return done!
     | @current-process?.killed      =>  return done!
     @current-process
-      ..on 'exit', -> done!
+      ..on 'exit', -> done?!
       ..kill!
 
 
