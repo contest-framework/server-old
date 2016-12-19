@@ -1,6 +1,7 @@
 class Spinner
 
   start: ->
+    console.log 'preventing app nap'
     @interval = set-timeout @_print, 1000
 
 
