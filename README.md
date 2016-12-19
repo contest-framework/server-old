@@ -234,7 +234,9 @@ To exit the Tertestrial server in this case,
 run `fg` to bring tertestrial back into the foreground,
 then press __ctrl-c__.
 
-__Tip for macOS users:__
+
+### Preventing App Nap on macOS
+
 macOS features sophisticated power saving features.
 One of them is _app nap_,
 which temporarily pauses processes that are not visible to the user
