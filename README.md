@@ -224,7 +224,8 @@ matching the structure of the other files there.
 
 To end the server, press __ctrl-c__ in the terminal.
 
-__Pro tip:__ if you start tertestrial in the background by running `tertestrial &`,
+__Pro tip:__
+if you start tertestrial in the background by running `tertestrial &`,
 you can see all test output,
 and your terminal remains interactive,
 i.e. you can keep running other commands there as well.
@@ -232,6 +233,32 @@ Just start typing in the terminal to see your command prompt.
 To exit the Tertestrial server in this case,
 run `fg` to bring tertestrial back into the foreground,
 then press __ctrl-c__.
+
+__Tip for macOS users:__
+macOS features sophisticated power saving features.
+One of them is _app nap_,
+which temporarily pauses processes that are not visible to the user
+and don't interact with the screen.
+Once paused by app nap,
+Tertestrial is unable to pick up and execute command from your editor.
+This problem goes away if you disable app nap completely,
+but that affects your battery life.
+As a work-around,
+when the environment variable `TERTESTRIAL_PREVENT_APP_NAP` is present,
+Tertestrial occasionally prints and deletes a character to your terminal,
+thereby preventing app nap.
+Configuration for:
+- _fish shell_: in `~/.config/fish/config.fish`:
+
+  ```
+  set -x TERTESTRIAL_PREVENT_APP_NAP 1
+  ```
+
+- _bash_: in `~/.bashrc`:
+
+  ```
+  export TERTESTRIAL_PREVENT_APP_NAP=1
+  ```
 
 
 ## Editor plugins

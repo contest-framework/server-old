@@ -71,7 +71,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       console.log 'Reloading configuration\n'
       config := new ConfigFile env.config-path
       command-runner.update-config config
-      if process.env.PREVENT_APP_NAP
+      if process.env.TERTESTRIAL_PREVENT_APP_NAP
         spinner.start!
 
     process.on 'SIGINT', ->
@@ -79,5 +79,5 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       pipe-listener.cleanup!
       process.exit!
 
-    if process.env.PREVENT_APP_NAP
+      if process.env.TERTESTRIAL_PREVENT_APP_NAP
       spinner.start!
