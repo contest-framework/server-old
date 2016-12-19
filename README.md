@@ -239,9 +239,9 @@ then press __ctrl-c__.
 
 macOS features sophisticated power saving features.
 One of them is _app nap_,
-which after a while pauses processes that are not visible to the user
+which pauses processes that run in the background
 and don't interact with the screen.
-Once paused by app nap,
+Once paused,
 Tertestrial is unable to pick up and execute command from your editor.
 This problem goes away if you disable app nap completely,
 but that affects your battery life.
