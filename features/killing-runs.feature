@@ -1,4 +1,4 @@
-Feature: Killing the currently running test
+Feature: Stopping the currently running test
 
   As a Tertestrial user having accidentally started a long test run
   I want to be able to kill the currently running test
