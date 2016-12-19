@@ -250,14 +250,13 @@ When it is present,
 Tertestrial occasionally prints and deletes a character to your terminal,
 thereby preventing app nap.
 
-Configuration for:
-- _fish shell_: in `~/.config/fish/config.fish`:
+- configure _Fish shell_: in `~/.config/fish/config.fish`:
 
   ```
   set -x TERTESTRIAL_PREVENT_APP_NAP 1
   ```
 
-- _bash_: in `~/.bashrc`:
+- configure _Bash_: in `~/.bashrc`:
 
   ```
   export TERTESTRIAL_PREVENT_APP_NAP=1
