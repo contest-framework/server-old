@@ -19,7 +19,7 @@ Feature: Stopping the currently running test
 
 
   Scenario: test is no longer running
-    Given Tertestrial was running a short test
+    Given Tertestrial had been running a test
     When sending the command:
       """
       {"stopCurrentTest": true}

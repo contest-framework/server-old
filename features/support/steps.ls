@@ -50,7 +50,7 @@ module.exports = ->
     @start-process 'bin/tertestrial', done
 
 
-  @Given /^Tertestrial was running a short test$/ (done) ->
+  @Given /^Tertestrial had been running a test$/ (done) ->
     @root-dir = path.join 'example-applications', 'js-cucumber-mocha'
     @start-process 'bin/tertestrial', ~>
       @send-command '{"filename": "features/one.feature"}', ~>
