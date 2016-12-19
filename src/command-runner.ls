@@ -141,9 +141,9 @@ class CommandRunner
 
 
   _stop-running-test: (done) ->
-    | !@current-process             =>  return done!
-    | @current-process?.exit-code?  =>  return done!
-    | @current-process?.killed      =>  return done!
+    | !@current-process             =>  return done?!
+    | @current-process?.exit-code?  =>  return done?!
+    | @current-process?.killed      =>  return done?!
     @current-process
       ..on 'exit', -> done?!
       ..kill!

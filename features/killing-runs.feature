@@ -18,4 +18,19 @@ Feature: Killing the currently running test
     And the process is still running
 
 
-  Scenario: no test is running
+  Scenario: test is no longer running
+    Given Tertestrial was running a short test
+    When sending the command:
+      """
+      {"stopCurrentTest": true}
+      """
+    Then the process is still running
+
+
+  Scenario: no previous test
+    Given Tertestrial is running
+    When sending the command:
+      """
+      {"stopCurrentTest": true}
+      """
+    Then the process is still running
