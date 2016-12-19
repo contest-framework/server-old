@@ -79,5 +79,5 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
       pipe-listener.cleanup!
       process.exit!
 
-      if process.env.TERTESTRIAL_PREVENT_APP_NAP
+    if process.env.TERTESTRIAL_PREVENT_APP_NAP
       spinner.start!
