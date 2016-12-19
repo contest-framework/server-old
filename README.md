@@ -237,7 +237,7 @@ then press __ctrl-c__.
 
 ### Preventing App Nap on macOS
 
-macOS features sophisticated power saving features.
+MacOS features sophisticated power saving features.
 One of them is _app nap_,
 which pauses processes that run in the background
 and don't interact with the screen.
