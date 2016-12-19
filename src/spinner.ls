@@ -10,7 +10,7 @@ class Spinner
 
 
   _print: ->
-    process.stdout.write " \u001B[1D"
+    process.stdout.write "\u001B[1C\u001B[1D"
 
 
 
