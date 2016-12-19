@@ -15,6 +15,8 @@ module.exports = ->
 
   @After ->
     @processes-to-kill.for-each (.kill!)
+    rimraf.sync @root-dir unless @root-dir.includes 'example-applications'
+
 
   @Before tags: ['@verbose'], ->
     @verbose = on
