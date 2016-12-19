@@ -2,7 +2,7 @@ class Spinner
 
   start: ->
     console.log 'preventing app nap'
-    @interval = set-interval @_print, 5_000
+    @interval = set-interval @_print, 10_000
 
 
   stop: ->
