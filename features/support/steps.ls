@@ -4,7 +4,6 @@ require! {
   'fs'
   'path'
   'request'
-  'tmp'
   'wait' : {wait, wait-until}
   'wait-until' : wait-until-async
 }
@@ -17,7 +16,6 @@ module.exports = ->
 
 
   @Given /^Tertestrial is running$/, (done) ->
-    @root-dir = tmp.dir-sync!.name
     @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
     @start-process 'bin/tertestrial', done
 
@@ -30,14 +28,12 @@ module.exports = ->
 
 
   @Given /^Tertestrial is starting in a directory containing the file "([^"]*)"$/ (filename, done) ->
-    @root-dir = tmp.dir-sync!.name
     @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
     @create-file filename, ''
     @start-process 'bin/tertestrial', done
 
 
   @Given /^Tertestrial runs with the configuration:$/, timeout: 40_000, (config, done) ->
-    @root-dir = tmp.dir-sync!.name
     @create-file 'tertestrial.yml', config
     @start-process 'bin/tertestrial', done
 
@@ -57,19 +53,16 @@ module.exports = ->
 
 
   @When /^trying to start tertestrial$/ (done) ->
-    @root-dir ?= tmp.dir-sync!.name
     @start-process 'bin/tertestrial', (err) ->
       expect(err).to.exist
       done!
 
 
   @When /^running 'tertestrial ([^']*)'$/ (args) ->
-    @root-dir ?= tmp.dir-sync!.name
     @stdout = @run-process path.join(process.cwd!, "bin/tertestrial #{args}")
 
 
   @When /^starting 'tertestrial setup'$/ ->
-    @root-dir ?= tmp.dir-sync!.name
     @start-process 'bin/tertestrial setup'
 
 

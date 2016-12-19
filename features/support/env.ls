@@ -1,6 +1,7 @@
 require! {
   'fs'
   'rimraf'
+  'tmp'
 }
 
 
@@ -12,6 +13,7 @@ module.exports = ->
     rimraf.sync 'tmp'
     fs.mkdir-sync 'tmp'
     @processes-to-kill = []
+    @root-dir = tmp.dir-sync!.name
 
   @After ->
     @processes-to-kill.for-each (.kill!)
