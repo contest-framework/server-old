@@ -64,12 +64,12 @@ module.exports = ->
 
 
   @When /^running 'tertestrial ([^']*)'$/ (args) ->
-    @root-dir = tmp.dir-sync!.name
+    @root-dir ?= tmp.dir-sync!.name
     @stdout = @run-process path.join(process.cwd!, "bin/tertestrial #{args}")
 
 
   @When /^starting 'tertestrial setup'$/ ->
-    @root-dir = tmp.dir-sync!.name
+    @root-dir ?= tmp.dir-sync!.name
     @start-process 'bin/tertestrial setup'
 
 
