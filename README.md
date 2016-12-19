@@ -224,7 +224,8 @@ matching the structure of the other files there.
 
 To end the server, press __ctrl-c__ in the terminal.
 
-__Pro tip:__ if you start tertestrial in the background by running `tertestrial &`,
+__Pro tip:__
+if you start tertestrial in the background by running `tertestrial &`,
 you can see all test output,
 and your terminal remains interactive,
 i.e. you can keep running other commands there as well.
