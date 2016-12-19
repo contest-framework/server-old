@@ -20,6 +20,13 @@ module.exports = ->
     @start-process 'bin/tertestrial', done
 
 
+  @Given /^Tertestrial is running a long\-running test$/ (done) ->
+    @root-dir = path.join 'example-applications', 'long-running-tests'
+    @start-process 'bin/tertestrial', ~>
+      @send-command '{}', done
+
+
+
   @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 40_000, (app-name, done) ->
     @root-dir = path.join 'example-applications', app-name
     fs.unlink path.join(@root-dir, '.tertestrial.tmp'), ~>
