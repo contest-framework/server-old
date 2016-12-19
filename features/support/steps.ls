@@ -54,8 +54,7 @@ module.exports = ->
     @root-dir = path.join 'example-applications', 'js-cucumber-mocha'
     @start-process 'bin/tertestrial', ~>
       @send-command '{"filename": "features/one.feature"}', ~>
-        wait 100, ~>
-          done!
+        wait 100, done
 
 
 
