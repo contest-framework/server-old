@@ -50,26 +50,3 @@ Feature: flexible configuration file languages
       """
     Then I see "Running Mocha with one.js"
     And the process is still running
-
-
-  Scenario: LiveScript config file
-    Given Tertestrial runs with the configuration file "tertestrial.ls":
-      """
-      module.exports =
-        actions:
-
-          * match:
-              filename: '\.js$'
-            command: "echo Running Mocha with {{filename}}"
-
-          * match:
-              filename: '\.js$'
-              line: '\d+'
-            command: "echo Running Mocha with {{filename}}:{{line}}"
-      """
-    When sending the command:
-      """
-      {"filename": "one.js"}
-      """
-    Then I see "Running Mocha with one.js"
-    And the process is still running
