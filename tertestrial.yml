@@ -12,7 +12,6 @@ actions:
       line: '\d+'
     command: 'bin/features {{filename}}:{{line}}'
 
-
   - match:
-      filename: 'test\.ls$'
-    command: 'unit {{filename}}'
+      filename: '-spec\.ls$'
+    command: 'bin/unit {{filename}}'
