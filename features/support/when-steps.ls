@@ -17,17 +17,17 @@ module.exports = ->
 
 
   @When /^trying to start tertestrial$/ (done) ->
-    @start-process 'bin/tertestrial', (err) ->
+    @start-process @tertestrial-path, (err) ->
       expect(err).to.exist
       done!
 
 
   @When /^running 'tertestrial ([^']*)'$/ (args) ->
-    @stdout = @run-process path.join(process.cwd!, "bin/tertestrial #{args}")
+    @stdout = @run-process "#{@tertestrial-path} #{args}"
 
 
   @When /^starting 'tertestrial setup'$/ ->
-    @start-process 'bin/tertestrial setup'
+    @start-process "#{@tertestrial-path} setup"
 
 
   @When /^sending the command:$/ (command, done) ->
