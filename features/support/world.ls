@@ -42,7 +42,7 @@ World = !->
     @process = new-process
 
 
-  @tertestrial-path = path.join process.cwd!, 'bin' 'tertestrial'
+  @tertestrial-path = path.join __dirname, '..' '..' 'bin' 'tertestrial'
 
 
 module.exports = ->
