@@ -34,4 +34,5 @@ Feature: Stopping the currently running test
       """
       {"stopCurrentTest": true}
       """
-    Then the process is still running
+    Then I see "No test run so far"
+    And the process is still running
