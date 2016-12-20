@@ -36,3 +36,17 @@ Feature: Stopping the currently running test
       """
     Then I see "No test run so far"
     And the process is still running
+
+
+  Scenario: process was killed already
+    Given Tertestrial is running a long-running test
+    When sending the command:
+      """
+      {"stopCurrentTest": true}
+      """
+    And sending the command:
+      """
+      {"stopCurrentTest": true}
+      """
+    Then I see "You have already killed bin/run-long-test"
+    And the process is still running
