@@ -67,12 +67,10 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
         console.log '\nrunning'
 
     chokidar.watch(env.config-path).on 'change', (path) ->
-      spinner.stop!
       reset-terminal!
       console.log 'Reloading configuration\n'
       config := new ConfigFile env.config-path
       command-runner.update-config config
-      spinner.start! if process.env.TERTESTRIAL_PREVENT_APP_NAP
 
     process.on 'SIGINT', ->
       console.log '\n\nSee you next time! :)\n'
