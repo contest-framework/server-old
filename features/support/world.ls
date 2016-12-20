@@ -35,12 +35,14 @@ World = !->
     if @verbose
       args.stdout = dim-console.process.stdout
       args.stderr = dim-console.process.stderr
-    new-process = new ObservableProcess path.join(process.cwd!, command), args
+    new-process = new ObservableProcess command, args
       ..wait '\nrunning\n', done
       ..on 'ended', (@exit-code) ~> done "App crashed with code #{@exit-code}!\n\n#{new-process.full-output!}"
     @processes-to-kill.push new-process
     @process = new-process
 
+
+  @tertestrial-path = path.join process.cwd!, 'bin' 'tertestrial'
 
 
 module.exports = ->
