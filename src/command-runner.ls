@@ -47,8 +47,7 @@ class CommandRunner
       return
 
     if command.stop-current-test
-      console.log bold "stopping #{@_get-template(@current-command)}"
-      @_stop-running-test done
+      @_stop-running-test yes, done
       return
 
     if command.filename
@@ -131,7 +130,7 @@ class CommandRunner
 
 
   _run-test: (command, done) ->
-    @_stop-running-test ~>
+    @_stop-running-test no, ~>
       console.log bold "#{command}\n"
       @current-process = spawn 'sh' ['-c', command], stdio: 'inherit'
         ..on 'exit', (code) ->
@@ -140,10 +139,13 @@ class CommandRunner
       done?!
 
 
-  _stop-running-test: (done) ->
-    | !@current-process             =>  return done?!
-    | @current-process?.exit-code?  =>  return done?!
-    | @current-process?.killed      =>  return done?!
+  _stop-running-test: (warn, done) ->
+    command = @_get-template(@current-command) if @current-command
+    switch
+    | !@current-process             =>  warn and console.log 'No test run so far' ; return done?!
+    | @current-process?.exit-code?  =>  warn and console.log "#{command} has finished already" ; return done?!
+    | @current-process?.killed      =>  warn and console.log "You have already killed #{command}" ; return done?!
+    console.log bold "stopping #{command}"
     @current-process
       ..on 'exit', -> done?!
       ..kill!

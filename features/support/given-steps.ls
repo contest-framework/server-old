@@ -11,6 +11,17 @@ module.exports = ->
     @create-file file-name, content
 
 
+  @Given /^Tertestrial had been running a test$/ (done) ->
+    @root-dir = path.join 'example-applications', 'simple'
+    @start-process 'bin/tertestrial', ~>
+      @process.wait 'running', ~>
+        @process.reset-output-streams!
+        @send-command '{}', ~>
+          @process.wait 'Running simple tests', ~>
+            @process.reset-output-streams!
+            done!
+
+
   @Given /^Tertestrial is running$/, (done) ->
     @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
     @start-process 'bin/tertestrial', done
@@ -44,10 +55,3 @@ module.exports = ->
   @Given /^Tertestrial runs with the configuration file "([^"]*)":$/ (filename, content, done) ->
     @create-file filename, content
     @start-process 'bin/tertestrial', done
-
-
-  @Given /^Tertestrial had been running a test$/ (done) ->
-    @root-dir = path.join 'example-applications', 'js-cucumber-mocha'
-    @start-process 'bin/tertestrial', ~>
-      @send-command '{"filename": "features/one.feature"}', ~>
-        wait 100, done
