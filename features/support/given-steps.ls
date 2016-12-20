@@ -24,7 +24,6 @@ module.exports = ->
 
   @Given /^Tertestrial is running$/, (done) ->
     @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
-    console.log @tertestrial-path
     @start-process @tertestrial-path, done
 
 
