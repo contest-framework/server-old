@@ -16,35 +16,31 @@ module.exports = ->
 
 
   @Given /^Tertestrial is running$/, (done) ->
-    @root-dir = 'tmp'
     @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
-    @start-process '../bin/tertestrial', done
+    @start-process 'bin/tertestrial', done
 
 
   @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 40_000, (app-name, done) ->
     @root-dir = path.join 'example-applications', app-name
     fs.unlink path.join(@root-dir, '.tertestrial.tmp'), ~>
       @run-process 'npm i'
-      @start-process '../../bin/tertestrial', done
+      @start-process 'bin/tertestrial', done
 
 
   @Given /^Tertestrial is starting in a directory containing the file "([^"]*)"$/ (filename, done) ->
-    @root-dir = 'tmp'
     @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
     @create-file filename, ''
-    @start-process '../bin/tertestrial', done
+    @start-process 'bin/tertestrial', done
 
 
   @Given /^Tertestrial runs with the configuration:$/, timeout: 40_000, (config, done) ->
-    @root-dir = 'tmp'
     @create-file 'tertestrial.yml', config
-    @start-process '../bin/tertestrial', done
+    @start-process 'bin/tertestrial', done
 
 
   @Given /^Tertestrial runs with the configuration file "([^"]*)":$/ (filename, content, done) ->
-    @root-dir = 'tmp'
     @create-file filename, content
-    @start-process '../bin/tertestrial', done
+    @start-process 'bin/tertestrial', done
 
 
   @When /^entering '\[ENTER\]'$/ ->
@@ -56,20 +52,17 @@ module.exports = ->
 
 
   @When /^trying to start tertestrial$/ (done) ->
-    @root-dir = 'tmp'
-    @start-process '../bin/tertestrial', (err) ->
+    @start-process 'bin/tertestrial', (err) ->
       expect(err).to.exist
       done!
 
 
   @When /^running 'tertestrial ([^']*)'$/ (args) ->
-    @root-dir = 'tmp'
-    @stdout = @run-process "../bin/tertestrial #{args}"
+    @stdout = @run-process path.join(process.cwd!, "bin/tertestrial #{args}")
 
 
   @When /^starting 'tertestrial setup'$/ ->
-    @root-dir = 'tmp'
-    @start-process '../bin/tertestrial setup'
+    @start-process 'bin/tertestrial setup'
 
 
   @When /^sending the command:$/ (command, done) ->
