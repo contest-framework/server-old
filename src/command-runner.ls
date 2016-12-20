@@ -147,7 +147,7 @@ class CommandRunner
     | @current-process?.killed      =>  warn and error "You have already killed #{command}" ; return done?!
     console.log bold "stopping #{command}"
     @current-process
-      ..on 'exit', -> done!
+      ..on 'exit', -> done?!
       ..kill!
 
 
