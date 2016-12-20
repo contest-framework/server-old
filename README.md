@@ -235,6 +235,36 @@ run `fg` to bring tertestrial back into the foreground,
 then press __ctrl-c__.
 
 
+### Preventing App Nap on macOS
+
+MacOS features sophisticated power saving features.
+One of them is _app nap_,
+which pauses processes that run in the background
+and don't interact with the screen.
+Once paused,
+Tertestrial is unable to pick up and execute command from your editor.
+
+One possible solution would be to disable app nap completely,
+but that affects your battery life.
+Instead, you can also set the environment variable `TERTESTRIAL_PREVENT_APP_NAP`
+to 1.
+When it is present,
+Tertestrial occasionally prints and deletes a space character to your terminal,
+thereby preventing the app from being suspended.
+
+- _Fish shell_ users: in `~/.config/fish/config.fish`:
+
+  ```
+  set -x TERTESTRIAL_PREVENT_APP_NAP 1
+  ```
+
+- _Bash_ users: in `~/.bashrc`:
+
+  ```
+  export TERTESTRIAL_PREVENT_APP_NAP=1
+  ```
+
+
 ## Editor plugins
 
 * [Vim](https://github.com/Originate/tertestrial-vim)
