@@ -63,16 +63,14 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
           console.log "#{bold 'ctrl-c'} to exit"
         else
           console.log "to exit, run #{cyan 'fg'}, then hit #{bold '[ctrl-c]'}\n"
+          spinner.start! if process.env.TERTESTRIAL_PREVENT_APP_NAP
         console.log '\nrunning'
-        spinner.start! if process.env.TERTESTRIAL_PREVENT_APP_NAP
 
     chokidar.watch(env.config-path).on 'change', (path) ->
-      spinner.stop!
       reset-terminal!
       console.log 'Reloading configuration\n'
       config := new ConfigFile env.config-path
       command-runner.update-config config
-      spinner.start! if process.env.TERTESTRIAL_PREVENT_APP_NAP
 
     process.on 'SIGINT', ->
       console.log '\n\nSee you next time! :)\n'
