@@ -15,6 +15,7 @@ require! {
   path
   './pipe-listener' : PipeListener
   './setup-wizard'
+  './spinner' : Spinner
   'update-notifier'
 }
 
@@ -48,6 +49,8 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
     reset-terminal!
     console.log dim "Tertestrial server #{pkg.version}\n"
 
+    spinner = new Spinner!
+
     config = new ConfigFile env.config-path
     command-runner = new CommandRunner config
     pipe-path = path.join process.cwd!, '.tertestrial.tmp'
@@ -60,6 +63,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
           console.log "#{bold 'ctrl-c'} to exit"
         else
           console.log "to exit, run #{cyan 'fg'}, then hit #{bold '[ctrl-c]'}\n"
+          spinner.start! if process.env.TERTESTRIAL_PREVENT_APP_NAP
         console.log '\nrunning'
 
     chokidar.watch(env.config-path).on 'change', (path) ->
