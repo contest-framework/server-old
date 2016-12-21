@@ -14,7 +14,7 @@ Feature: Stopping the currently running test
       """
       {"stopCurrentTest": true}
       """
-    Then I see "stopping bin/run-long-test"
+    Then I see "stopping the currently running command"
     And the process is still running
 
 
@@ -24,7 +24,7 @@ Feature: Stopping the currently running test
       """
       {"stopCurrentTest": true}
       """
-    Then I see "bin/tests has finished already"
+    Then I see "the last command has finished already"
     And the process is still running
 
 
@@ -34,7 +34,7 @@ Feature: Stopping the currently running test
       """
       {"stopCurrentTest": true}
       """
-    Then I see "No test run so far"
+    Then I see "no command run so far"
     And the process is still running
 
 
@@ -48,5 +48,5 @@ Feature: Stopping the currently running test
       """
       {"stopCurrentTest": true}
       """
-    Then I see "You have already killed bin/run-long-test"
+    Then I see "you have already stopped the last command"
     And the process is still running

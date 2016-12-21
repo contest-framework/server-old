@@ -141,7 +141,7 @@ class CommandRunner
 
   _stop-running-test: (warn, done) ->
     switch
-    | !@current-process             =>  warn and error 'no test run so far' ; return done?!
+    | !@current-process             =>  warn and error 'no command run so far' ; return done?!
     | @current-process?.exit-code?  =>  warn and error "the last command has finished already" ; return done?!
     | @current-process?.killed      =>  warn and error "you have already stopped the last command" ; return done?!
     console.log bold "stopping the currently running command"
