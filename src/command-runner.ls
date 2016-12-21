@@ -142,9 +142,9 @@ class CommandRunner
   _stop-running-test: (warn, done) ->
     command = @_get-template(@current-command) if @current-command
     switch
-    | !@current-process             =>  warn and console.log 'No test run so far' ; return done?!
-    | @current-process?.exit-code?  =>  warn and console.log "#{command} has finished already" ; return done?!
-    | @current-process?.killed      =>  warn and console.log "You have already killed #{command}" ; return done?!
+    | !@current-process             =>  warn and error 'No test run so far' ; return done?!
+    | @current-process?.exit-code?  =>  warn and error "#{command} has finished already" ; return done?!
+    | @current-process?.killed      =>  warn and error "You have already killed #{command}" ; return done?!
     console.log bold "stopping #{command}"
     @current-process
       ..on 'exit', -> done?!
