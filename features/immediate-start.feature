@@ -9,7 +9,7 @@ Feature: tests start immediately
 
 
   Scenario: Tertestrial receives a test command while another test is still running
-    Given Tertestrial is running inside the "long-running-tests" example application
+    Given Tertestrial is running inside the "long-running-test" example application
     When sending the command:
       """
       {}
