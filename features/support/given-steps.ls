@@ -28,7 +28,7 @@ module.exports = ->
 
 
   @Given /^Tertestrial is running a long\-running test$/ (done) ->
-    @root-dir = path.join 'example-applications', 'long-running-tests'
+    @root-dir = path.join 'example-applications', 'long-running-test'
     @start-process @tertestrial-path, ~>
       @send-command '{}', done
 
