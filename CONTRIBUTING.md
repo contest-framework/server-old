@@ -2,7 +2,8 @@
 
 - set up your developer machine:
   - install Node.js
-  - `npm i`
+  - install [yarn](https://yarnpkg.com/en/)
+  - `yarn install`
 
 - development
   - the source code is in `src`
