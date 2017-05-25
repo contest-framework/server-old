@@ -40,13 +40,8 @@ class ConfigFile
             action.match[key] = new RegExp value
 
 
-  _load-internal-action: (filename) ->
-    require path.join(__dirname, '..', 'actions', "#{filename}.yml")
-
-
   _standardize-actions: (actions) ->
     switch typeof! actions
-      | 'String' =>  @_load-internal-action(actions).actions |> @_standardize-actions
       | 'Array'  =>  [name: 'default', matches: actions]
       | 'Object' =>  obj-to-pairs(actions) |> map ([name, matches]) -> {name, matches}
       | _        =>  abort "unknown action type: #{util.inspect actions, depth: null}"
