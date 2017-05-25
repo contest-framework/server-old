@@ -45,5 +45,4 @@ World = !->
   @tertestrial-path = path.join __dirname, '..' '..' 'bin' 'tertestrial'
 
 
-module.exports = ->
-  @World = World
+module.exports = World
