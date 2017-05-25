@@ -1,14 +1,14 @@
 var formatOptions = {
-  'snippetSyntax': 'node_modules/cucumber-snippets-livescript'
+  snippetSyntax: 'node_modules/cucumber-snippets-livescript'
 };
 
 var common = [
   '--compiler ls:livescript',
   '--fail-fast',
-  '--require features',
-  '--format-options \'' + JSON.stringify(formatOptions) + "\'"
+  '--format-options \'' + JSON.stringify(formatOptions) + "\'",
+  '--require features'
 ].join(' ');
 
 module.exports = {
-  "default": common
+  default: common
 };
