@@ -118,11 +118,11 @@ class CommandRunner
   _is-match: (action, command) ->
 
     # Make sure non-empty commands don't match generic actions
-    if @_is-non-empty-command(command) and @_action-has-empty-match(action) then return false
+    if @_is-non-empty-command(command) and @_action-has-empty-match(action) then return no
 
     for key, value of action.match
-      if !action.match[key]?.exec command[key] then return false
-    true
+      if !action.match[key]?.exec command[key] then return no
+    yes
 
 
   _is-non-empty-command: (command) ->

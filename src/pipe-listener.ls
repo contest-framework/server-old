@@ -22,7 +22,7 @@ class PipeListener extends EventEmitter
 
   cleanup: ->
     | !@started  =>  return
-    @killed = true
+    @killed = yes
     @listener?.kill!
     @delete-named-pipe!
 

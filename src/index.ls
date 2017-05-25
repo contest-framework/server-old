@@ -36,7 +36,7 @@ Tertestrial = new Liftoff name: 'tertestrial', config-name: 'tertestrial', exten
         version   Show version
       """
 
-    options = docopt doc, help: false, version: pkg.version
+    options = docopt doc, help: no, version: pkg.version
 
     switch
       | options.help     =>  return console.log doc
