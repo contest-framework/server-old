@@ -7,7 +7,6 @@ executedModules:
       - test
   shellScripts:
     dev:
-      - bin/docs
       - bin/features
       - bin/spec
       - bin/unit
