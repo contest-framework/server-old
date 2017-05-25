@@ -37,7 +37,7 @@ module.exports = ->
   @Given /^Tertestrial is running inside the "([^"]*)" example application$/, timeout: 40_000, (app-name, done) ->
     @root-dir = path.join 'example-applications', app-name
     fs.unlink path.join(@root-dir, '.tertestrial.tmp'), ~>
-      @run-process 'npm i'
+      @run-process 'yarn install'
       @start-process @tertestrial-path, done
 
 
