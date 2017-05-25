@@ -122,7 +122,7 @@ class CommandRunner
 
     for key, value of action.match
       if !action.match[key]?.exec command[key] then return no
-    true
+    yes
 
 
   _is-non-empty-command: (command) ->
