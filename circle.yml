@@ -1,14 +1,21 @@
 machine:
+  environment:
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
   node:
     version: 6.1.0
 
 
-test:
+dependencies:
+  override:
+    - yarn
+  cache_directories:
+    - ~/.cache/yarn
 
+
+test:
   pre:
     - node_modules/o-tools-livescript/bin/build
     - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
-
   override:
     - node_modules/dependency-lint/bin/dependency-lint.js
     - cucumber-js --format json:$CIRCLE_TEST_REPORTS/cucumber/tests.cucumber --format pretty

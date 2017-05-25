@@ -53,6 +53,8 @@ Tertestrial removes this pipe when stopping.
 
   ```
   npm i -g tertestrial
+  # or
+  yarn global add tertestrial
   ```
 
 * install the [Tertestrial plugin for your editor](#editor-plugins)
