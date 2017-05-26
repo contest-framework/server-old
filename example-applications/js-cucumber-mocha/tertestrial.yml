@@ -1,1 +1,14 @@
-actions: js-cucumber-mocha
+actions:
+
+  - match:
+      filename: '\.feature$'
+    command: 'cucumber-js {{filename}}'
+
+  - match:
+      filename: '\.feature$'
+      line: '\d+'
+    command: 'cucumber-js {{filename}}:{{line}}'
+
+  - match:
+      filename: '\.js$'
+    command: 'mocha {{filename}}'

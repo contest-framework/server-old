@@ -24,7 +24,7 @@ defineSupportCode ({Given}) ->
 
 
   Given /^Tertestrial is running$/, (done) ->
-    @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
+    @create-file 'tertestrial.yml', 'actions: {}'
     @start-process @tertestrial-path, done
 
 
@@ -43,7 +43,7 @@ defineSupportCode ({Given}) ->
 
 
   Given /^Tertestrial is starting in a directory containing the file "([^"]*)"$/ (filename, done) ->
-    @create-file 'tertestrial.yml', 'actions: js-cucumber-mocha'
+    @create-file 'tertestrial.yml', 'actions: {}'
     @create-file filename, ''
     @start-process @tertestrial-path, done
 
