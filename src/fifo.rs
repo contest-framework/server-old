@@ -1,3 +1,5 @@
+// This file contains code to manage the FIFO pipe and read from it.
+
 use super::signal;
 use std::io::prelude::*;
 
@@ -40,7 +42,7 @@ pub fn listen(pipe: &Arc<Pipe>, sender: std::sync::mpsc::Sender<signal::Signal>)
           Ok(text) => sender.send(signal::Signal::Line(text)).unwrap(),
           Err(err) => {
             println!("error reading line: {}", err);
-            sender.send(signal::Signal::Finish).unwrap();
+            sender.send(signal::Signal::Exit).unwrap();
             break;
           }
         };

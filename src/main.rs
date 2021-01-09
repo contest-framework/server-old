@@ -1,9 +1,8 @@
-mod pipe;
+mod fifo;
 mod sigint;
 mod signal;
 
 use signal::*;
-use std::env;
 use std::sync::mpsc::channel;
 use std::sync::Arc;
 
@@ -14,21 +13,21 @@ fn main() {
     // handle Ctrl-C
     sigint::handle(sender.clone());
 
-    // create the named pipe and listen on it
-    let pipe = Arc::new(pipe::in_dir(env::current_dir().unwrap()));
+    // create the fifo pipe and listen on it
+    let pipe = Arc::new(fifo::in_dir(std::env::current_dir().unwrap()));
     pipe.create();
-    pipe::listen(&pipe, sender);
+    fifo::listen(&pipe, sender);
 
-    // process the signals from the worker threads
+    // process the signals from the worker threads in an event loop
     println!("Tertestrial is online");
     for signal in receiver {
         match signal {
             Signal::Line(line) => println!("received line: {}", line),
-            Signal::Finish => break,
+            Signal::Exit => break,
         }
     }
 
-    // cleanup
+    // cleanup after Ctrl-C
     pipe.delete();
     println!("\nSee you later!");
 }
