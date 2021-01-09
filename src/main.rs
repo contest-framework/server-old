@@ -5,7 +5,8 @@ use std::fs;
 use std::io::{prelude::*, BufReader};
 use std::sync::mpsc::channel;
 use std::thread;
-// use std::time::Duration;
+
+const PIPE_FILENAME: &str = "foo.pipe";
 
 #[derive(Debug)]
 enum Signal {
@@ -20,14 +21,13 @@ fn main() {
 
     // spawn the SIGINT listener
     ctrlc::set_handler(move || {
-        println!("received Ctrl-C");
         ctrlc_sender.send(Signal::Finish).unwrap();
     })
     .expect("cannot spawn SIGINT handler thread");
 
     // create new named pipe
     let current_dir = env::current_dir().expect("Cannot get current dir");
-    let fifo_path = current_dir.join("foo.pipe");
+    let fifo_path = current_dir.join(PIPE_FILENAME);
     unistd::mkfifo(&fifo_path, stat::Mode::S_IRWXU).expect("cannot create pipe");
 
     // spawn the pipe reader thread
@@ -51,23 +51,18 @@ fn main() {
         }
     });
 
-    println!("starting the listener loop");
     loop {
-        println!("listening for signals ...");
         let signal = receiver.recv().expect("error receiving");
-        println!("received signal: {:?}", signal);
         match signal {
-            Signal::Line(text) => println!("received line: {}", text),
-            Signal::Finish => {
-                println!("received SIGINT");
-                break;
-            }
+            Signal::Line(line) => println!("received line: {}", line),
+            Signal::Finish => break,
         }
     }
 
     // delete the named pipe
-    let fifo_path = current_dir.join("foo.pipe");
-    fs::remove_file(fifo_path).expect("cannot delete pipe")
+    let fifo_path = current_dir.join(PIPE_FILENAME);
+    fs::remove_file(fifo_path).expect("cannot delete pipe");
+    println!("\nThanks for using Tertestrial!")
 }
 
 // // Patterns are sent from the client.
@@ -79,45 +74,6 @@ fn main() {
 // struct Action {
 //     pattern: Pattern,
 //     command: String,
-// }
-
-// fn main() -> io::Result<()> {
-//     unsafe { libc::mkfifo(cstr.as_ptr(), mode.bits() as mode_t) }
-//     let file = File::open("")?;
-//     let reader = BufReader::new(file);
-
-//     for line in reader.lines() {
-//         println!("{}", line?);
-//     }
-
-//     Ok(())
-// }
-
-// fn main() {
-//     let contents = fs::read_(filename).expect("Something went wrong reading the file");
-
-//     // println!("Guess the number!");
-//     // let secret_number = rand::thread_rng().gen_range(1, 101);
-//     // loop {
-//     //     println!("Please input your guess.");
-//     //     let mut guess = String::new();
-//     //     io::stdin()
-//     //         .read_line(&mut guess)
-//     //         .expect("Failed to read line");
-//     //     let guess: u32 = match guess.trim().parse() {
-//     //         Ok(num) => num,
-//     //         Err(_) => continue,
-//     //     };
-//     //     println!("You guessed: {}", guess);
-//     //     match guess.cmp(&secret_number) {
-//     //         Ordering::Less => println!("Too small!"),
-//     //         Ordering::Greater => println!("Too big!"),
-//     //         Ordering::Equal => {
-//     //             println!("You win!");
-//     //             break;
-//     //         }
-//     //     }
-//     // }
 // }
 
 // fn load_config() -> String {
