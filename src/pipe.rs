@@ -1,3 +1,8 @@
+use super::signal;
+use std::io::prelude::*;
+
+use std::sync::Arc;
+
 // A fifo pipe
 pub struct Pipe {
   filepath: std::path::PathBuf,
@@ -23,4 +28,23 @@ pub fn in_dir(dirpath: std::path::PathBuf) -> Pipe {
   Pipe {
     filepath: dirpath.join("foo.pipe"),
   }
+}
+
+pub fn listen(pipe: &Arc<Pipe>, sender: std::sync::mpsc::Sender<signal::Signal>) {
+  let pipe = Arc::clone(&pipe);
+  std::thread::spawn(move || {
+    loop {
+      // TODO: don't create a new BufReader for each line
+      for line in pipe.open().lines() {
+        match line {
+          Ok(text) => sender.send(signal::Signal::Line(text)).unwrap(),
+          Err(err) => {
+            println!("error reading line: {}", err);
+            sender.send(signal::Signal::Finish).unwrap();
+            break;
+          }
+        };
+      }
+    }
+  });
 }
