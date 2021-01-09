@@ -1,9 +1,16 @@
-// A fifo pipe that auto-deletes itself when going out of scope.
+// A fifo pipe
 pub struct Pipe {
   filepath: std::path::PathBuf,
 }
 
 impl Pipe {
+  // constructs a fifo pipe in the current directory
+  pub fn in_dir(dirpath: std::path::PathBuf) -> Pipe {
+    Pipe {
+      filepath: dirpath.join("foo.pipe"),
+    }
+  }
+
   pub fn create(&self) {
     nix::unistd::mkfifo(&self.filepath, nix::sys::stat::Mode::S_IRWXU).expect("cannot create pipe");
   }
@@ -15,12 +22,5 @@ impl Pipe {
   pub fn open(&self) -> std::io::BufReader<std::fs::File> {
     let file = std::fs::File::open(&self.filepath).unwrap();
     std::io::BufReader::new(file)
-  }
-
-  // constructs the pipe to use in the current directory
-  pub fn in_dir(dirpath: std::path::PathBuf) -> Pipe {
-    Pipe {
-      filepath: dirpath.join("foo.pipe"),
-    }
   }
 }
