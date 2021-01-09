@@ -31,7 +31,6 @@ fn main() {
     // spawn the pipe reader thread
     let line_sender = sender.clone();
     thread::spawn(move || {
-        println!("waiting for input ...");
         let pipe = fs::File::open(&fifo_path).unwrap();
         // read lines from the pipe
         loop {
