@@ -8,7 +8,6 @@ use std::thread;
 
 const PIPE_FILENAME: &str = "foo.pipe";
 
-#[derive(Debug)]
 enum Signal {
     Line(String),
     Finish,
@@ -16,36 +15,33 @@ enum Signal {
 
 fn main() {
     let (sender, receiver) = channel::<Signal>();
-    let ctrlc_sender = sender.clone();
-    let line_sender = sender.clone();
 
     // spawn the SIGINT listener
+    let ctrlc_sender = sender.clone();
     ctrlc::set_handler(move || {
-        ctrlc_sender
-            .send(Signal::Finish)
-            .expect("cannot signal Finish");
+        ctrlc_sender.send(Signal::Finish).unwrap();
     })
-    .expect("cannot spawn SIGINT handler thread");
+    .unwrap();
 
     // create the named pipe
-    let current_dir = env::current_dir().expect("Cannot get current dir");
+    let current_dir = env::current_dir().unwrap();
     let fifo_path = current_dir.join(PIPE_FILENAME);
     unistd::mkfifo(&fifo_path, stat::Mode::S_IRWXU).expect("cannot create pipe");
 
     // spawn the pipe reader thread
+    let line_sender = sender.clone();
     thread::spawn(move || {
         println!("waiting for input ...");
-        let pipe = fs::File::open(&fifo_path).expect("cannot open pipe");
+        let pipe = fs::File::open(&fifo_path).unwrap();
         // read lines from the pipe
         loop {
             let reader = BufReader::new(&pipe);
             for line in reader.lines() {
                 match line {
-                    Ok(text) => line_sender
-                        .send(Signal::Line(text))
-                        .expect("cannot send line"),
+                    Ok(text) => line_sender.send(Signal::Line(text)).unwrap(),
                     Err(err) => {
                         println!("error reading line: {}", err);
+                        line_sender.send(Signal::Finish).unwrap();
                         break;
                     }
                 };
@@ -54,7 +50,7 @@ fn main() {
     });
 
     loop {
-        match receiver.recv().expect("error receiving") {
+        match receiver.recv().unwrap() {
             Signal::Line(line) => println!("received line: {}", line),
             Signal::Finish => break,
         }
