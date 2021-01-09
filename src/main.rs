@@ -21,20 +21,22 @@ fn main() {
 
     // spawn the SIGINT listener
     ctrlc::set_handler(move || {
-        ctrlc_sender.send(Signal::Finish).unwrap();
+        ctrlc_sender
+            .send(Signal::Finish)
+            .expect("cannot signal Finish");
     })
     .expect("cannot spawn SIGINT handler thread");
 
-    // create new named pipe
+    // create the named pipe
     let current_dir = env::current_dir().expect("Cannot get current dir");
     let fifo_path = current_dir.join(PIPE_FILENAME);
     unistd::mkfifo(&fifo_path, stat::Mode::S_IRWXU).expect("cannot create pipe");
 
     // spawn the pipe reader thread
-    println!("waiting for input ...");
     thread::spawn(move || {
+        println!("waiting for input ...");
         let pipe = fs::File::open(&fifo_path).expect("cannot open pipe");
-        // read line by line from the pipe
+        // read lines from the pipe
         loop {
             let reader = BufReader::new(&pipe);
             for line in reader.lines() {
@@ -52,8 +54,7 @@ fn main() {
     });
 
     loop {
-        let signal = receiver.recv().expect("error receiving");
-        match signal {
+        match receiver.recv().expect("error receiving") {
             Signal::Line(line) => println!("received line: {}", line),
             Signal::Finish => break,
         }
