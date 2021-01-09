@@ -16,24 +16,24 @@ enum Signal {
 fn main() {
     let (sender, receiver) = channel::<Signal>();
 
-    // spawn the SIGINT listener
+    // create the named pipe
+    let current_dir = env::current_dir().unwrap();
+    let fifo_path = current_dir.join(PIPE_FILENAME);
+    unistd::mkfifo(&fifo_path, stat::Mode::S_IRWXU).expect("cannot create pipe");
+
+    // start the SIGINT listener thread
     let ctrlc_sender = sender.clone();
     ctrlc::set_handler(move || {
         ctrlc_sender.send(Signal::Finish).unwrap();
     })
     .unwrap();
 
-    // create the named pipe
-    let current_dir = env::current_dir().unwrap();
-    let fifo_path = current_dir.join(PIPE_FILENAME);
-    unistd::mkfifo(&fifo_path, stat::Mode::S_IRWXU).expect("cannot create pipe");
-
-    // spawn the pipe reader thread
+    // start the pipe reader thread
     let line_sender = sender.clone();
     thread::spawn(move || {
         let pipe = fs::File::open(&fifo_path).unwrap();
-        // read lines from the pipe
         loop {
+            // TODO: don't create a new BufReader for each line
             let reader = BufReader::new(&pipe);
             for line in reader.lines() {
                 match line {
@@ -48,6 +48,7 @@ fn main() {
         }
     });
 
+    // process the signals from the worker threads
     loop {
         match receiver.recv().unwrap() {
             Signal::Line(line) => println!("received line: {}", line),
