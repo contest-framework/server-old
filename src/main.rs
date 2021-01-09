@@ -5,7 +5,7 @@ use std::fs;
 use std::io::{prelude::*, BufReader};
 use std::sync::mpsc::channel;
 use std::thread;
-use std::time::Duration;
+// use std::time::Duration;
 
 #[derive(Debug)]
 enum Signal {
@@ -19,12 +19,11 @@ fn main() {
     let line_sender = sender.clone();
 
     // spawn the SIGINT listener
-    thread::spawn(move || {
-        println!("SIGINT thread sleeping for 2 seconds ...");
-        thread::sleep(Duration::from_secs(5));
-        println!("SIGINT thread resuming");
+    ctrlc::set_handler(move || {
+        println!("received Ctrl-C");
         ctrlc_sender.send(Signal::Finish).unwrap();
-    });
+    })
+    .expect("cannot spawn SIGINT handler thread");
 
     // create new named pipe
     let current_dir = env::current_dir().expect("Cannot get current dir");
