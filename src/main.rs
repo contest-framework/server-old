@@ -1,31 +1,28 @@
 mod pipe;
+mod sigint;
+mod signal;
 
 use std::env;
 use std::io::prelude::*;
 use std::sync::mpsc::channel;
 use std::sync::Arc;
 
-enum Signal {
-    Line(String),
-    Finish,
-}
-
 fn main() {
     // create the named pipe
-    let pipe = Arc::new(pipe::Pipe::in_dir(env::current_dir().unwrap()));
+    let pipe = Arc::new(pipe::in_dir(env::current_dir().unwrap()));
     pipe.create();
 
     // start the worker threads
-    let (sender, receiver) = channel::<Signal>();
-    handle_sigint(sender.clone());
+    let (sender, receiver) = channel::<signal::Signal>();
+    sigint::handle(sender.clone());
     listen_on_pipe(&pipe, sender);
-    println!("Tertestrial is ready");
+    println!("Tertestrial is online");
 
     // process the signals from the worker threads
     for signal in receiver {
         match signal {
-            Signal::Line(line) => println!("received line: {}", line),
-            Signal::Finish => break,
+            signal::Signal::Line(line) => println!("received line: {}", line),
+            signal::Signal::Finish => break,
         }
     }
 
@@ -33,26 +30,17 @@ fn main() {
     pipe.delete()
 }
 
-// captures Ctrl-C and messages it as a Signal::Finish message via the given sender
-fn handle_sigint(sender: std::sync::mpsc::Sender<Signal>) {
-    let ctrlc_sender = sender.clone();
-    ctrlc::set_handler(move || {
-        ctrlc_sender.send(Signal::Finish).unwrap();
-    })
-    .unwrap();
-}
-
-fn listen_on_pipe(pipe: &Arc<pipe::Pipe>, sender: std::sync::mpsc::Sender<Signal>) {
+fn listen_on_pipe(pipe: &Arc<pipe::Pipe>, sender: std::sync::mpsc::Sender<signal::Signal>) {
     let pipe = Arc::clone(&pipe);
     std::thread::spawn(move || {
         loop {
             // TODO: don't create a new BufReader for each line
             for line in pipe.open().lines() {
                 match line {
-                    Ok(text) => sender.send(Signal::Line(text)).unwrap(),
+                    Ok(text) => sender.send(signal::Signal::Line(text)).unwrap(),
                     Err(err) => {
                         println!("error reading line: {}", err);
-                        sender.send(Signal::Finish).unwrap();
+                        sender.send(signal::Signal::Finish).unwrap();
                         break;
                     }
                 };
