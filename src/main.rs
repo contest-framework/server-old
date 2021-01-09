@@ -1,6 +1,7 @@
+mod pipe;
+
 use std::env;
-use std::fs;
-use std::io::{prelude::*, BufReader};
+use std::io::prelude::*;
 use std::sync::mpsc::channel;
 use std::sync::Arc;
 
@@ -9,37 +10,9 @@ enum Signal {
     Finish,
 }
 
-// A fifo pipe that auto-deletes itself when going out of scope.
-struct Pipe {
-    filepath: std::path::PathBuf,
-}
-
-impl Pipe {
-    fn create(&self) {
-        nix::unistd::mkfifo(&self.filepath, nix::sys::stat::Mode::S_IRWXU)
-            .expect("cannot create pipe");
-    }
-
-    fn delete(&self) {
-        std::fs::remove_file(&self.filepath).expect("cannot delete pipe");
-    }
-
-    fn open(&self) -> std::io::BufReader<fs::File> {
-        let file = fs::File::open(&self.filepath).unwrap();
-        BufReader::new(file)
-    }
-
-    // constructs the pipe to use in the current directory
-    fn in_dir(dirpath: std::path::PathBuf) -> Pipe {
-        Pipe {
-            filepath: dirpath.join("foo.pipe"),
-        }
-    }
-}
-
 fn main() {
     // create the named pipe
-    let pipe = Arc::new(Pipe::in_dir(env::current_dir().unwrap()));
+    let pipe = Arc::new(pipe::Pipe::in_dir(env::current_dir().unwrap()));
     pipe.create();
 
     // start the worker threads
@@ -69,7 +42,7 @@ fn handle_sigint(sender: std::sync::mpsc::Sender<Signal>) {
     .unwrap();
 }
 
-fn listen_on_pipe(pipe: &Arc<Pipe>, sender: std::sync::mpsc::Sender<Signal>) {
+fn listen_on_pipe(pipe: &Arc<pipe::Pipe>, sender: std::sync::mpsc::Sender<Signal>) {
     let pipe = Arc::clone(&pipe);
     std::thread::spawn(move || {
         loop {
