@@ -1,41 +1,80 @@
-use nix::sys::stat;
-use nix::unistd;
 use std::env;
 use std::fs;
 use std::io::{prelude::*, BufReader};
 use std::sync::mpsc::channel;
-use std::thread;
-
-const PIPE_FILENAME: &str = "foo.pipe";
+use std::sync::Arc;
 
 enum Signal {
     Line(String),
     Finish,
 }
 
+// A fifo pipe that auto-deletes itself when going out of scope.
+struct Pipe {
+    filepath: std::path::PathBuf,
+}
+
+impl Pipe {
+    fn create(&self) {
+        nix::unistd::mkfifo(&self.filepath, nix::sys::stat::Mode::S_IRWXU)
+            .expect("cannot create pipe");
+    }
+
+    fn delete(&self) {
+        std::fs::remove_file(&self.filepath).expect("cannot delete pipe");
+    }
+
+    fn open(&self) -> std::io::BufReader<fs::File> {
+        let file = fs::File::open(&self.filepath).unwrap();
+        BufReader::new(file)
+    }
+
+    // constructs the pipe to use in the current directory
+    fn in_dir(dirpath: std::path::PathBuf) -> Pipe {
+        Pipe {
+            filepath: dirpath.join("foo.pipe"),
+        }
+    }
+}
+
 fn main() {
-    let (sender, receiver) = channel::<Signal>();
-
     // create the named pipe
-    let current_dir = env::current_dir().unwrap();
-    // TODO: why can't I use this immutable value everywhere?
-    let fifo_path = current_dir.join(PIPE_FILENAME);
-    unistd::mkfifo(&fifo_path, stat::Mode::S_IRWXU).expect("cannot create pipe");
+    let pipe = Arc::new(Pipe::in_dir(env::current_dir().unwrap()));
+    pipe.create();
 
-    // start the SIGINT listener thread
+    // start the worker threads
+    let (sender, receiver) = channel::<Signal>();
+    handle_sigint(sender.clone());
+    listen_on_pipe(&pipe, sender);
+    println!("Tertestrial is ready");
+
+    // process the signals from the worker threads
+    for signal in receiver {
+        match signal {
+            Signal::Line(line) => println!("received line: {}", line),
+            Signal::Finish => break,
+        }
+    }
+
+    // cleanup
+    pipe.delete()
+}
+
+// captures Ctrl-C and messages it as a Signal::Finish message via the given sender
+fn handle_sigint(sender: std::sync::mpsc::Sender<Signal>) {
     let ctrlc_sender = sender.clone();
     ctrlc::set_handler(move || {
         ctrlc_sender.send(Signal::Finish).unwrap();
     })
     .unwrap();
+}
 
-    // start the pipe reader thread
-    thread::spawn(move || {
-        let pipe = fs::File::open(&fifo_path).unwrap();
+fn listen_on_pipe(pipe: &Arc<Pipe>, sender: std::sync::mpsc::Sender<Signal>) {
+    let pipe = Arc::clone(&pipe);
+    std::thread::spawn(move || {
         loop {
             // TODO: don't create a new BufReader for each line
-            let reader = BufReader::new(&pipe);
-            for line in reader.lines() {
+            for line in pipe.open().lines() {
                 match line {
                     Ok(text) => sender.send(Signal::Line(text)).unwrap(),
                     Err(err) => {
@@ -47,21 +86,6 @@ fn main() {
             }
         }
     });
-
-    println!("Tertestrial is ready");
-    // process the signals from the worker threads
-    loop {
-        match receiver.recv().unwrap() {
-            Signal::Line(line) => println!("received line: {}", line),
-            Signal::Finish => break,
-        }
-    }
-
-    // delete the named pipe
-    // TODO: use the fifo_path from above here
-    let fifo_path = current_dir.join(PIPE_FILENAME);
-    fs::remove_file(fifo_path).expect("cannot delete pipe");
-    println!("\nThanks for using Tertestrial!")
 }
 
 // // Patterns are sent from the client.
