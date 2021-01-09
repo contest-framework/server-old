@@ -18,6 +18,7 @@ fn main() {
 
     // create the named pipe
     let current_dir = env::current_dir().unwrap();
+    // TODO: why can't I use this immutable value everywhere?
     let fifo_path = current_dir.join(PIPE_FILENAME);
     unistd::mkfifo(&fifo_path, stat::Mode::S_IRWXU).expect("cannot create pipe");
 
@@ -29,7 +30,6 @@ fn main() {
     .unwrap();
 
     // start the pipe reader thread
-    let line_sender = sender.clone();
     thread::spawn(move || {
         let pipe = fs::File::open(&fifo_path).unwrap();
         loop {
@@ -37,10 +37,10 @@ fn main() {
             let reader = BufReader::new(&pipe);
             for line in reader.lines() {
                 match line {
-                    Ok(text) => line_sender.send(Signal::Line(text)).unwrap(),
+                    Ok(text) => sender.send(Signal::Line(text)).unwrap(),
                     Err(err) => {
                         println!("error reading line: {}", err);
-                        line_sender.send(Signal::Finish).unwrap();
+                        sender.send(Signal::Finish).unwrap();
                         break;
                     }
                 };
@@ -48,6 +48,7 @@ fn main() {
         }
     });
 
+    println!("Tertestrial is ready");
     // process the signals from the worker threads
     loop {
         match receiver.recv().unwrap() {
@@ -57,6 +58,7 @@ fn main() {
     }
 
     // delete the named pipe
+    // TODO: use the fifo_path from above here
     let fifo_path = current_dir.join(PIPE_FILENAME);
     fs::remove_file(fifo_path).expect("cannot delete pipe");
     println!("\nThanks for using Tertestrial!")
