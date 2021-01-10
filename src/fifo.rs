@@ -26,7 +26,7 @@ impl Pipe {
 }
 
 // constructs a fifo pipe in the current directory
-pub fn in_dir(dirpath: std::path::PathBuf) -> Pipe {
+pub fn in_dir(dirpath: &std::path::PathBuf) -> Pipe {
   Pipe {
     filepath: dirpath.join("foo.pipe"),
   }

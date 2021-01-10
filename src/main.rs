@@ -14,7 +14,7 @@ fn main() {
     sigint::handle(sender.clone());
 
     // create the fifo pipe and listen on it
-    let pipe = Arc::new(fifo::in_dir(std::env::current_dir().unwrap()));
+    let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));
     pipe.create();
     fifo::listen(&pipe, sender);
 
