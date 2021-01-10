@@ -1,6 +1,6 @@
 // This file contains code to manage the FIFO pipe and read from it.
 
-use super::signal::*;
+use super::signal::Signal;
 use std::io::prelude::*;
 
 use std::sync::Arc;
