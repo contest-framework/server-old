@@ -8,6 +8,7 @@ use std::sync::mpsc::channel;
 use std::sync::Arc;
 
 fn main() {
+    // load the configuration
     let config = config::from_file();
     println!("configuration: {:?}", config);
 
