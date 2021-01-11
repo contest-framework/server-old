@@ -1,0 +1,28 @@
+{
+  "actions": [
+    {
+      "trigger": {},
+      "run": "bin/spec"
+    },
+
+    {
+      "trigger": { "filename": ".feature$" },
+      "run": "bin/features {{filename}}"
+    },
+
+    {
+      "trigger": {
+        "filename": ".feature$",
+        "line": "d+"
+      },
+      "run": "bin/features {{filename}}:{{line}}"
+    },
+
+    {
+      "trigger": {
+        "filename": "-spec.ls$"
+      },
+      "run": "bin/unit {{filename}}"
+    }
+  ]
+}

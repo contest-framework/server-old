@@ -1,3 +1,4 @@
+mod config;
 mod fifo;
 mod sigint;
 mod signal;
@@ -7,6 +8,9 @@ use std::sync::mpsc::channel;
 use std::sync::Arc;
 
 fn main() {
+    let config = config::from_file();
+    println!("configuration: {:?}", config);
+
     // set up the cross-thread communication infrastructure
     let (sender, receiver) = channel::<Signal>();
 
