@@ -1,6 +1,6 @@
 mod config;
+mod ctrl_c;
 mod fifo;
-mod sigint;
 mod signal;
 
 use signal::*;
@@ -16,7 +16,7 @@ fn main() {
     let (sender, receiver) = channel::<Signal>();
 
     // handle Ctrl-C
-    sigint::handle(sender.clone());
+    ctrl_c::handle(sender.clone());
 
     // create the fifo pipe and listen on it
     let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));
