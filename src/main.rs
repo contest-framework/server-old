@@ -36,7 +36,7 @@ fn main() {
     println!("Tertestrial is online");
     for signal in receiver {
         match signal {
-            Signal::Line(line) => run::run(line),
+            Signal::Line(line) => run(line),
             Signal::Exit => break,
         }
     }
@@ -44,4 +44,8 @@ fn main() {
     // cleanup after Ctrl-C
     pipe.delete();
     println!("\nSee you later!");
+}
+
+fn run(text: String) {
+    run::run(text);
 }
