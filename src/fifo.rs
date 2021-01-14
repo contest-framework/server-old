@@ -8,7 +8,7 @@ use std::sync::Arc;
 // A fifo pipe
 #[derive(Debug)]
 pub struct Pipe {
-  filepath: std::path::PathBuf,
+  pub filepath: std::path::PathBuf,
 }
 
 impl Pipe {
@@ -33,7 +33,7 @@ impl Pipe {
 // constructs a fifo pipe in the current directory
 pub fn in_dir(dirpath: &std::path::PathBuf) -> Pipe {
   Pipe {
-    filepath: dirpath.join("foo.pipe"),
+    filepath: dirpath.join(".tertestrial.pipe"),
   }
 }
 
