@@ -1,6 +1,7 @@
 mod config;
 mod ctrl_c;
 mod fifo;
+mod run;
 mod signal;
 
 use signal::*;
@@ -10,7 +11,6 @@ use std::sync::Arc;
 fn main() {
     // load the configuration
     let config = config::from_file();
-    println!("configuration: {:?}", config);
 
     // set up the cross-thread communication infrastructure
     let (sender, receiver) = channel::<Signal>();
@@ -27,7 +27,7 @@ fn main() {
     println!("Tertestrial is online");
     for signal in receiver {
         match signal {
-            Signal::Line(line) => println!("received line: {}", line),
+            Signal::Line(line) => run::run(line),
             Signal::Exit => break,
         }
     }
