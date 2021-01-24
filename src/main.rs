@@ -63,8 +63,10 @@ fn run(text: String, configuration: &config::Configuration) -> Result<(), UserEr
             }
             run::Outcome::NotFound(command) => Err(UserErr::new(
                 String::from(format!("test command not found: {}", command)),
-                String::from(
-                    "Please verify your configuration is correct and the command is in the path.",
+                String::from(format!(
+                    "I received this trigger from the client: {}\nYour config file specifies to run this command in that case: {}\nI couldn't run this command. Please verify that the command is in the path or fix your config file.",
+                    text,
+                    command)
                 ),
             )),
         },
@@ -79,7 +81,5 @@ fn exit_pipe_exists(path: &String) {
 }
 
 fn print_user_error(err: UserErr) {
-    println!("User error: {}", err.reason);
-    println!("");
-    println!("{}", err.guidance);
+    println!("\nUser error: {}\n\n{}", err.reason, err.guidance);
 }
