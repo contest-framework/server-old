@@ -28,6 +28,7 @@ impl Pipe {
     std::io::BufReader::new(file)
   }
 
+  // provides the path of this pipe as a string
   pub fn path_str(&self) -> String {
     self.filepath.display().to_string()
   }
