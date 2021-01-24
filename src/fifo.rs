@@ -2,7 +2,6 @@
 
 use super::signal::Signal;
 use std::io::prelude::*;
-
 use std::sync::Arc;
 
 // A fifo pipe
@@ -27,6 +26,10 @@ impl Pipe {
   pub fn open(&self) -> std::io::BufReader<std::fs::File> {
     let file = std::fs::File::open(&self.filepath).unwrap();
     std::io::BufReader::new(file)
+  }
+
+  pub fn path_str(&self) -> String {
+    self.filepath.display().to_string()
   }
 }
 
@@ -56,54 +59,18 @@ pub fn listen(pipe: &Arc<Pipe>, sender: std::sync::mpsc::Sender<Signal>) {
   });
 }
 
-use std::error::Error;
-use std::fmt;
-
-#[derive(Debug)]
-enum MyErr {
-  UserErr { reason: String, guidance: String },
-  DeveloperError(i64),
-}
-
-impl MyErr {
-  fn new(reason: &str, guidance: &str) -> MyErr {
-    MyErr::UserErr {
-      reason: reason.to_string(),
-      guidance: guidance.to_string(),
-    }
-  }
-}
-
-impl Error for MyErr {}
-
-impl fmt::Display for MyErr {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    match self {
-      MyErr::UserErr { reason, guidance } => write!(f, "Error: {}\n{}", reason, guidance),
-      MyErr::DeveloperError(code) => write!(f, "DEVELOPER ERR! {}", code),
-    }
-  }
-}
-
 #[test]
-fn pipe_create() -> Result<(), MyErr> {
+fn pipe_create() -> Result<(), std::io::Error> {
   let temp_path = tempfile::tempdir().unwrap().into_path();
   let pipe = in_dir(&temp_path);
   pipe.create();
   let mut created = vec![];
-  let entries = std::fs::read_dir(&temp_path)
-    .map_err(|err| MyErr::new("failed to read", "try a different one"))?;
-  for entry in entries {
-    created.push(
-      entry
-        .map_err(|err| MyErr::new("failed to read", "try a different one"))?
-        .path(),
-    );
+  for file in std::fs::read_dir(&temp_path)? {
+    created.push(file?.path());
   }
-
   let want = vec![pipe.filepath];
   assert_eq!(want, created);
-  std::fs::remove_dir_all(&temp_path).map_err(|err| MyErr::new("x", "y"))?;
+  std::fs::remove_dir_all(&temp_path)?;
   Ok(())
 }
 

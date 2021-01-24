@@ -1,3 +1,4 @@
+use super::errors::UserErr;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, PartialEq)]
@@ -6,8 +7,14 @@ pub struct Trigger {
   pub line: Option<String>,
 }
 
-pub fn from_line(line: String) -> Trigger {
-  serde_json::from_str(&line).expect("cannot parse line")
+pub fn from_line(line: &String) -> Result<Trigger, UserErr> {
+  match serde_json::from_str(&line) {
+    Ok(trigger) => Ok(trigger),
+    Err(err) => Err(UserErr::new(
+      format!("cannot parse line \"{}\"", line),
+      err.to_string(),
+    )),
+  }
 }
 
 //
@@ -16,7 +23,7 @@ pub fn from_line(line: String) -> Trigger {
 
 #[test]
 fn parse_line_empty() {
-  let have = from_line(String::from("{}"));
+  let have = from_line(&String::from("{}")).unwrap();
   let want = Trigger {
     filename: None,
     line: None,
@@ -26,7 +33,7 @@ fn parse_line_empty() {
 
 #[test]
 fn parse_line_filename() {
-  let have = from_line(String::from("{\"filename\": \"foo.rs\"}"));
+  let have = from_line(&String::from("{\"filename\": \"foo.rs\"}")).unwrap();
   let want = Trigger {
     filename: Some(String::from("foo.rs")),
     line: None,
@@ -36,7 +43,10 @@ fn parse_line_filename() {
 
 #[test]
 fn parse_line_filename_line() {
-  let have = from_line(String::from("{\"filename\": \"foo.rs\", \"line\": \"12\"}"));
+  let have = from_line(&String::from(
+    "{\"filename\": \"foo.rs\", \"line\": \"12\"}",
+  ))
+  .unwrap();
   let want = Trigger {
     filename: Some(String::from("foo.rs")),
     line: Some(String::from("12")),
@@ -46,9 +56,10 @@ fn parse_line_filename_line() {
 
 #[test]
 fn parse_line_filename_extra_fields() {
-  let have = from_line(String::from(
+  let have = from_line(&String::from(
     "{\"filename\": \"foo.rs\", \"other\": \"12\"}",
-  ));
+  ))
+  .unwrap();
   let want = Trigger {
     filename: Some(String::from("foo.rs")),
     line: None,
@@ -56,15 +67,17 @@ fn parse_line_filename_extra_fields() {
   assert_eq!(have, want);
 }
 
-// #[test]
-// fn parse_line_invalid_json() {
-//   let have = from_line(String::from("{\"filename}"));
-//   let want = Trigger {
-//     filename: Some(String::from("foo.rs")),
-//     line: None,
-//   };
-//   assert_eq!(have, want);
-// }
+#[test]
+fn parse_line_invalid_json() {
+  let want = UserErr::new(
+    String::from("cannot parse line \"{\"filename}\""),
+    String::from("EOF while parsing a string at line 1 column 11"),
+  );
+  match from_line(&String::from("{\"filename}")) {
+    Ok(_) => panic!("unexpected success"),
+    Err(err) => assert_eq!(err, want),
+  }
+}
 
 #[test]
 fn trigger_eq_match() {
