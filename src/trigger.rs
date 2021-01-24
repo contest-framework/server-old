@@ -11,8 +11,11 @@ pub fn from_line(line: &String) -> Result<Trigger, UserErr> {
   match serde_json::from_str(&line) {
     Ok(trigger) => Ok(trigger),
     Err(err) => Err(UserErr::new(
-      format!("cannot parse line \"{}\"", line),
-      err.to_string(),
+      format!("cannot parse command received from client: {}", line),
+      format!(
+        "Error message from JSON parser: {}\nThis is a problem with your Tertestrial client.",
+        err
+      ),
     )),
   }
 }
@@ -69,12 +72,13 @@ fn parse_line_filename_extra_fields() {
 
 #[test]
 fn parse_line_invalid_json() {
+  let have = from_line(&String::from("{\"filename}"));
   let want = UserErr::new(
-    String::from("cannot parse line \"{\"filename}\""),
-    String::from("EOF while parsing a string at line 1 column 11"),
+    String::from("cannot parse command received from client: {\"filename}"),
+    String::from("Error message from JSON parser: EOF while parsing a string at line 1 column 11\nThis is a problem with your Tertestrial client."),
   );
-  match from_line(&String::from("{\"filename}")) {
-    Ok(_) => panic!("unexpected success"),
+  match have {
+    Ok(_) => panic!("this shouldn't work"),
     Err(err) => assert_eq!(err, want),
   }
 }
