@@ -11,7 +11,7 @@ use signal::*;
 use std::sync::mpsc::channel;
 use std::sync::Arc;
 
-fn main() -> Result<(), UserErr> {
+fn main() {
     let config = config::from_file();
     let (sender, receiver) = channel::<Signal>(); // cross-thread communication channel
     ctrl_c::handle(sender.clone());
@@ -25,13 +25,24 @@ fn main() -> Result<(), UserErr> {
     println!("Tertestrial is online, Ctrl-C to exit");
     for signal in receiver {
         match signal {
-            Signal::Line(line) => run(line, &config)?,
-            Signal::Exit => break,
+            Signal::ReceivedLine(line) => match run(line, &config) {
+                Ok(_) => continue,
+                Err(user_err) => {
+                    print_user_error(user_err);
+                    break;
+                }
+            },
+            Signal::CannotReadPipe(err) => {
+                println!("cannot reading line from pipe: {}", err);
+                break;
+            }
+            Signal::Exit => {
+                println!("\nSee you later!");
+                break;
+            }
         }
     }
     pipe.delete();
-    println!("\nSee you later!");
-    Ok(())
 }
 
 fn run(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
@@ -65,4 +76,10 @@ fn exit_pipe_exists(path: &String) {
     println!("This could mean a Tertestrial instance could already be running.");
     println!("If you are sure no other instance is running, please delete this file and start Tertestrial again.");
     std::process::exit(2);
+}
+
+fn print_user_error(err: UserErr) {
+    println!("User error: {}", err.reason);
+    println!("");
+    println!("{}", err.guidance);
 }

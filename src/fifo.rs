@@ -60,10 +60,9 @@ pub fn listen(pipe: &Arc<Pipe>, sender: std::sync::mpsc::Sender<Signal>) {
       // TODO: don't create a new BufReader for each line
       for line in pipe.open().lines() {
         match line {
-          Ok(text) => sender.send(Signal::Line(text)).unwrap(),
+          Ok(text) => sender.send(Signal::ReceivedLine(text)).unwrap(),
           Err(err) => {
-            println!("error reading line: {}", err);
-            sender.send(Signal::Exit).unwrap();
+            sender.send(Signal::CannotReadPipe(err)).unwrap();
             break;
           }
         };
