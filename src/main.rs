@@ -43,17 +43,19 @@ fn run(text: String, configuration: &config::Configuration) -> Result<(), UserEr
             String::from("Please make sure that this trigger is listed in your configuration file"),
         )),
         Some(command) => match run::run(command) {
-            run::Outcome::TestPass => {
+            run::Outcome::TestPass() => {
                 println!("SUCCESS!");
                 Ok(())
             }
-            run::Outcome::TestFail => {
+            run::Outcome::TestFail() => {
                 println!("FAILED!");
                 Ok(())
             }
-            run::Outcome::NotFound => Err(UserErr::new(
-                String::from("test command not found"),
-                String::from("the command was not found"),
+            run::Outcome::NotFound(command) => Err(UserErr::new(
+                String::from(format!("test command not found: {}", command)),
+                String::from(
+                    "Please verify your configuration is correct and the command is in the path.",
+                ),
             )),
         },
     }
