@@ -1,4 +1,8 @@
-pub fn run(cmd: String) {
+// pub struct Runner {
+//   config
+// }
+
+pub fn run(cmd: &String) {
   println!("executing: {}", cmd);
   let words = shellwords::split(&cmd).unwrap();
   let (cmd, args) = words.split_at(1);

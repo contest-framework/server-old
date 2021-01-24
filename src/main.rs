@@ -3,49 +3,45 @@ mod ctrl_c;
 mod fifo;
 mod run;
 mod signal;
+mod trigger;
 
 use signal::*;
 use std::sync::mpsc::channel;
 use std::sync::Arc;
 
 fn main() {
-    // load the configuration
     let config = config::from_file();
-
-    // set up the cross-thread communication infrastructure
-    let (sender, receiver) = channel::<Signal>();
-
-    // handle Ctrl-C
+    let (sender, receiver) = channel::<Signal>(); // cross-thread communication channel
     ctrl_c::handle(sender.clone());
-
-    // create the fifo pipe and listen on it
     let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));
+    // TODO: try creating the pipe and check for this error in the result
     if pipe.exists() {
-        println!(
-            "A fifo pipe \"{}\" already exists.",
-            pipe.filepath.display().to_string()
-        );
-        println!("This could mean a Tertestrial instance could already be running.");
-        println!("If you are sure no other instance is running, please delete this file and start Tertestrial again.");
-        std::process::exit(2);
+        exit_pipe_exists(&pipe.filepath.display().to_string());
     }
     pipe.create();
     fifo::listen(&pipe, sender);
-
-    // process the signals from the worker threads in an event loop
     println!("Tertestrial is online");
     for signal in receiver {
         match signal {
-            Signal::Line(line) => run(line),
+            Signal::Line(line) => run(line, &config),
             Signal::Exit => break,
         }
     }
-
-    // cleanup after Ctrl-C
     pipe.delete();
     println!("\nSee you later!");
 }
 
-fn run(text: String) {
-    run::run(text);
+fn run(text: String, configuration: &config::Configuration) {
+    let trigger = trigger::from_line(text);
+    match configuration.get_command(trigger) {
+        Some(command) => run::run(command),
+        None => println!("NONE"),
+    }
+}
+
+fn exit_pipe_exists(path: &String) {
+    println!("A fifo pipe \"{}\" already exists.", path);
+    println!("This could mean a Tertestrial instance could already be running.");
+    println!("If you are sure no other instance is running, please delete this file and start Tertestrial again.");
+    std::process::exit(2);
 }

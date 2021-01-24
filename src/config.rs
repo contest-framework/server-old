@@ -1,10 +1,5 @@
+use super::trigger::Trigger;
 use serde::Deserialize;
-
-#[derive(Deserialize, Debug, PartialEq)]
-pub struct Trigger {
-  filename: Option<String>,
-  line: Option<String>,
-}
 
 // Actions are executed when receiving a trigger.
 #[derive(Deserialize, Debug)]
@@ -19,9 +14,8 @@ pub struct Configuration {
 }
 
 pub fn from_file() -> Configuration {
-  let file = std::fs::File::open("tertestrial.json").expect("Cannot open file");
-  let c: Configuration = serde_json::from_reader(file).expect("cannot read JSON");
-  c
+  let file = std::fs::File::open("tertestrial.json").expect("Cannot find configuration file");
+  serde_json::from_reader(file).expect("cannot read JSON")
 }
 
 impl Configuration {
@@ -35,57 +29,9 @@ impl Configuration {
   }
 }
 
-#[test]
-fn trigger_eq_match() {
-  let trigger1 = Trigger {
-    filename: Some(String::from("filename")),
-    line: Some(String::from("line")),
-  };
-  let trigger2 = Trigger {
-    filename: Some(String::from("filename")),
-    line: Some(String::from("line")),
-  };
-  assert!(trigger1 == trigger2);
-}
-
-#[test]
-fn trigger_eq_mismatching_filename() {
-  let trigger1 = Trigger {
-    filename: Some(String::from("filename 1")),
-    line: Some(String::from("line")),
-  };
-  let trigger2 = Trigger {
-    filename: Some(String::from("filename 2")),
-    line: Some(String::from("line")),
-  };
-  assert!(trigger1 != trigger2);
-}
-
-#[test]
-fn trigger_eq_mismatching_line() {
-  let trigger1 = Trigger {
-    filename: Some(String::from("filename")),
-    line: Some(String::from("line 1")),
-  };
-  let trigger2 = Trigger {
-    filename: Some(String::from("filename")),
-    line: Some(String::from("line 2")),
-  };
-  assert!(trigger1 != trigger2);
-}
-
-#[test]
-fn trigger_eq_missing_line() {
-  let trigger1 = Trigger {
-    filename: Some(String::from("filename")),
-    line: Some(String::from("line 1")),
-  };
-  let trigger2 = Trigger {
-    filename: Some(String::from("filename")),
-    line: None,
-  };
-  assert!(trigger1 != trigger2);
-}
+//
+// ----------------------------------------------------------------------------
+//
 
 #[test]
 fn config_get_command_empty() {
