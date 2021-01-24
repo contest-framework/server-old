@@ -16,14 +16,13 @@ fn main() -> Result<(), UserErr> {
     let (sender, receiver) = channel::<Signal>(); // cross-thread communication channel
     ctrl_c::handle(sender.clone());
     let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));
-    // TODO: don't do the extra check, try creating the pipe
-    // and check for this error in the result
-    if pipe.exists() {
-        exit_pipe_exists(&pipe.path_str());
+    match pipe.create() {
+        fifo::CreateOutcome::Ok() => {}
+        fifo::CreateOutcome::AlreadyExists(path) => exit_pipe_exists(&path),
+        fifo::CreateOutcome::OtherError(err) => panic!(err),
     }
-    pipe.create();
     fifo::listen(&pipe, sender);
-    println!("Tertestrial is online");
+    println!("Tertestrial is online, Ctrl-C to exit");
     for signal in receiver {
         match signal {
             Signal::Line(line) => run(line, &config)?,
