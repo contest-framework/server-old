@@ -1,19 +1,17 @@
+mod channel;
 mod config;
 mod ctrl_c;
 mod errors;
 mod fifo;
 mod run;
-mod signal;
 mod trigger;
 
 use errors::UserErr;
-use signal::*;
-use std::sync::mpsc::channel;
 use std::sync::Arc;
 
 fn main() {
     let config = config::from_file();
-    let (sender, receiver) = channel::<Signal>(); // cross-thread communication channel
+    let (sender, receiver) = channel::create(); // cross-thread communication channel
     ctrl_c::handle(sender.clone());
     let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));
     match pipe.create() {
@@ -25,18 +23,18 @@ fn main() {
     println!("Tertestrial is online, Ctrl-C to exit");
     for signal in receiver {
         match signal {
-            Signal::ReceivedLine(line) => match run(line, &config) {
+            channel::Signal::ReceivedLine(line) => match run(line, &config) {
                 Ok(_) => continue,
                 Err(user_err) => {
                     print_user_error(user_err);
                     break;
                 }
             },
-            Signal::CannotReadPipe(err) => {
+            channel::Signal::CannotReadPipe(err) => {
                 println!("cannot reading line from pipe: {}", err);
                 break;
             }
-            Signal::Exit => {
+            channel::Signal::Exit => {
                 println!("\nSee you later!");
                 break;
             }

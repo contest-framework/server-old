@@ -1,6 +1,6 @@
 // This file contains code to manage the FIFO pipe and read from it.
 
-use super::signal::Signal;
+use super::channel;
 use std::io::prelude::*;
 use std::sync::Arc;
 
@@ -53,16 +53,16 @@ pub fn in_dir(dirpath: &std::path::PathBuf) -> Pipe {
   }
 }
 
-pub fn listen(pipe: &Arc<Pipe>, sender: std::sync::mpsc::Sender<Signal>) {
+pub fn listen(pipe: &Arc<Pipe>, sender: channel::Sender) {
   let pipe = Arc::clone(&pipe);
   std::thread::spawn(move || {
     loop {
       // TODO: don't create a new BufReader for each line
       for line in pipe.open().lines() {
         match line {
-          Ok(text) => sender.send(Signal::ReceivedLine(text)).unwrap(),
+          Ok(text) => sender.send(channel::Signal::ReceivedLine(text)).unwrap(),
           Err(err) => {
-            sender.send(Signal::CannotReadPipe(err)).unwrap();
+            sender.send(channel::Signal::CannotReadPipe(err)).unwrap();
             break;
           }
         };
