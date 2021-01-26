@@ -75,55 +75,60 @@ pub fn listen(pipe: &Arc<Pipe>, sender: std::sync::mpsc::Sender<Signal>) {
 // ----------------------------------------------------------------------------
 //
 
-#[test]
-fn pipe_create_does_not_exist() -> Result<(), std::io::Error> {
-  let temp_path = tempfile::tempdir().unwrap().into_path();
-  let pipe = in_dir(&temp_path);
-  match pipe.create() {
-    CreateOutcome::Ok() => {}
-    _ => panic!("cannot create pipe"),
-  }
-  let mut files = vec![];
-  for file in std::fs::read_dir(&temp_path)? {
-    files.push(file?.path());
-  }
-  let want = vec![pipe.filepath];
-  assert_eq!(want, files);
-  std::fs::remove_dir_all(&temp_path)?;
-  Ok(())
-}
+#[cfg(test)]
+mod tests {
+  use super::*;
 
-#[test]
-fn pipe_create_exists() -> Result<(), std::io::Error> {
-  let temp_path = tempfile::tempdir().unwrap().into_path();
-  let pipe = in_dir(&temp_path);
-  match pipe.create() {
-    CreateOutcome::Ok() => {}
-    _ => panic!("cannot create first pipe"),
+  #[test]
+  fn pipe_create_does_not_exist() -> Result<(), std::io::Error> {
+    let temp_path = tempfile::tempdir().unwrap().into_path();
+    let pipe = in_dir(&temp_path);
+    match pipe.create() {
+      CreateOutcome::Ok() => {}
+      _ => panic!("cannot create pipe"),
+    }
+    let mut files = vec![];
+    for file in std::fs::read_dir(&temp_path)? {
+      files.push(file?.path());
+    }
+    let want = vec![pipe.filepath];
+    assert_eq!(want, files);
+    std::fs::remove_dir_all(&temp_path)?;
+    Ok(())
   }
-  match pipe.create() {
-    CreateOutcome::AlreadyExists(_) => {}
-    CreateOutcome::Ok() => panic!("should not create second pipe"),
-    CreateOutcome::OtherError(err) => panic!(err),
-  }
-  std::fs::remove_dir_all(&temp_path)?;
-  Ok(())
-}
 
-#[test]
-fn pipe_delete() -> Result<(), std::io::Error> {
-  let temp_path = tempfile::tempdir().unwrap().into_path();
-  let pipe = in_dir(&temp_path);
-  match pipe.create() {
-    CreateOutcome::Ok() => {}
-    _ => panic!(),
+  #[test]
+  fn pipe_create_exists() -> Result<(), std::io::Error> {
+    let temp_path = tempfile::tempdir().unwrap().into_path();
+    let pipe = in_dir(&temp_path);
+    match pipe.create() {
+      CreateOutcome::Ok() => {}
+      _ => panic!("cannot create first pipe"),
+    }
+    match pipe.create() {
+      CreateOutcome::AlreadyExists(_) => {}
+      CreateOutcome::Ok() => panic!("should not create second pipe"),
+      CreateOutcome::OtherError(err) => panic!(err),
+    }
+    std::fs::remove_dir_all(&temp_path)?;
+    Ok(())
   }
-  pipe.delete();
-  let mut files = vec![];
-  for file in std::fs::read_dir(&temp_path)? {
-    files.push(file?.path());
+
+  #[test]
+  fn pipe_delete() -> Result<(), std::io::Error> {
+    let temp_path = tempfile::tempdir().unwrap().into_path();
+    let pipe = in_dir(&temp_path);
+    match pipe.create() {
+      CreateOutcome::Ok() => {}
+      _ => panic!(),
+    }
+    pipe.delete();
+    let mut files = vec![];
+    for file in std::fs::read_dir(&temp_path)? {
+      files.push(file?.path());
+    }
+    assert_eq!(0, files.len());
+    std::fs::remove_dir_all(&temp_path).unwrap();
+    Ok(())
   }
-  assert_eq!(0, files.len());
-  std::fs::remove_dir_all(&temp_path).unwrap();
-  Ok(())
 }
