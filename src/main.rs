@@ -62,6 +62,11 @@ fn normal(debug: bool) {
 
 fn run(cmd: String) {
     println!("running cmd: {}", cmd);
+    let config = config::from_file();
+    match execute(cmd, &config) {
+        Ok(_) => return,
+        Err(user_err) => print_user_error(user_err),
+    }
 }
 
 fn execute(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
