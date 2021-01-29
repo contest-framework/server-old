@@ -12,10 +12,14 @@ use std::sync::Arc;
 
 fn main() {
     match args::parse(std::env::args()) {
-        args::Mode::Normal => normal(false),
-        args::Mode::Debug => normal(true),
-        args::Mode::Run(cmd) => run(cmd),
-        args::Mode::Error(err) => print_user_error(err),
+        Ok(cmd) => match cmd {
+            args::Command::Normal => normal(false),
+            args::Command::Debug => normal(true),
+            args::Command::Run(cmd) => run(cmd),
+            args::Command::Setup => setup(),
+            args::Command::Version => version(),
+        },
+        Err(e) => print_user_error(e),
     }
 }
 
@@ -66,6 +70,14 @@ fn run(cmd: String) {
         Ok(_) => {}
         Err(user_err) => print_user_error(user_err),
     }
+}
+
+fn setup() {
+    println!("setting up");
+}
+
+fn version() {
+    println!("Tertestrial v2.0.0-alpha");
 }
 
 fn execute(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {

@@ -1,46 +1,25 @@
 # Tertestrial Server - a test auto-runner
 
-Tertestrial runs configurable tasks on files or parts of files. Tasks are
-triggered by hotkeys from within your code editor, or automatically on file
-save, and run in a separate terminal window outside of your editor. A common
-application for this is running a particular unit test that is currently driving
-your development, i.e. which you want to make green, as part of test-driven
-development. With Tertestrial you can do this with an absolute minimum of key
-presses, distractions, slowdown from unnecessary test runs, and without having
-to leave your text editor.
+Tertestrial runs user-defined tasks, for example automated tests, with the
+absolutely smallest overhead.
 
 <a href="https://youtu.be/pxrES6xQlxo" target="_blank">
   <img src="documentation/tertestrial_video_1.png" width="480" height="269">
 </a>
 
-Tertestrial works with all test frameworks and any text editor with a
-[Tertestrial plugin](#editor-plugins). It comes with a set of built-in
-configurations for common frameworks that allow you to get started using it
-right away.
+Please see the list of available [Tertestrial plugins](#editor-plugins).
 
 ## How it works
 
-Tertestrial consists of a server (in this repository) and a number of editor
-plugins. The editor plugins send commands to the server via a named pipe
-`.tertestrial.tmp` in the directory where you start the server (typically the
-base directory of the code base you are working on). Tertestrial removes this
-pipe when stopping.
+The Tertestrial server (in this repository) creates a named pipe on the file
+system and listens on it for commands from
+[Tertestrial editor plugins](#editor-plugins).
 
 ## Installation
 
-- install [Node.js](https://nodejs.org/en) version 4 or above
-
-- install the Tertestrial server:
-
-  ```
-  npm i -g tertestrial
-  # or
-  yarn global add tertestrial
-  ```
-
+- download the correct binary for your platform from the releases page
 - install the [Tertestrial plugin for your editor](#editor-plugins)
-
-- add `.tertestrial.tmp` to your
+- add `.tertestrial.pipe` to your
   [global gitignore](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore).
 
 ## Creating a configuration file
