@@ -28,7 +28,7 @@ mod tests {
   use super::*;
 
   #[test]
-  fn parse_line_empty() {
+  fn from_line_empty() {
     let have = from_line(&String::from("{}")).unwrap();
     let want = Trigger {
       filename: None,
@@ -38,7 +38,7 @@ mod tests {
   }
 
   #[test]
-  fn parse_line_filename() {
+  fn from_line_filename() {
     let have = from_line(&String::from("{\"filename\": \"foo.rs\"}")).unwrap();
     let want = Trigger {
       filename: Some(String::from("foo.rs")),
@@ -48,7 +48,7 @@ mod tests {
   }
 
   #[test]
-  fn parse_line_filename_line() {
+  fn from_line_filename_line() {
     let have = from_line(&String::from(
       "{\"filename\": \"foo.rs\", \"line\": \"12\"}",
     ))
@@ -61,7 +61,7 @@ mod tests {
   }
 
   #[test]
-  fn parse_line_filename_extra_fields() {
+  fn from_line_filename_extra_fields() {
     let have = from_line(&String::from(
       "{\"filename\": \"foo.rs\", \"other\": \"12\"}",
     ))
@@ -74,7 +74,7 @@ mod tests {
   }
 
   #[test]
-  fn parse_line_invalid_json() {
+  fn from_line_invalid_json() {
     let have = from_line(&String::from("{\"filename}"));
     let want = UserErr::new(
     String::from("cannot parse command received from client: {\"filename}"),
