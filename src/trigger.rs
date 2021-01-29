@@ -23,6 +23,7 @@ pub fn from_line(line: &String) -> Result<Trigger, UserErr> {
 //
 // ----------------------------------------------------------------------------
 //
+
 #[cfg(test)]
 mod tests {
   use super::*;
