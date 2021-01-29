@@ -12,14 +12,14 @@ use std::sync::Arc;
 
 fn main() {
     match args::parse(std::env::args()) {
-        args::Mode::Normal => normal(),
-        args::Mode::Debug => debug(),
+        args::Mode::Normal => normal(false),
+        args::Mode::Debug => normal(true),
         args::Mode::Run(cmd) => run(cmd),
         args::Mode::Error(err) => print_user_error(err),
     }
 }
 
-fn normal() {
+fn normal(debug: bool) {
     let config = config::from_file();
     let (sender, receiver) = channel::create(); // cross-thread communication channel
     ctrl_c::handle(sender.clone());
@@ -30,15 +30,22 @@ fn normal() {
         fifo::CreateOutcome::Ok() => (),
     }
     fifo::listen(&pipe, sender);
-    println!("Tertestrial is online, Ctrl-C to exit");
+    if debug {
+        println!("Tertestrial is online in debug mode, Ctrl-C to exit");
+    } else {
+        println!("Tertestrial is online, Ctrl-C to exit");
+    }
     for signal in receiver {
         match signal {
-            channel::Signal::ReceivedLine(line) => match execute(line, &config) {
-                Ok(_) => continue,
-                Err(user_err) => {
-                    print_user_error(user_err);
-                    break;
-                }
+            channel::Signal::ReceivedLine(line) => match debug {
+                false => match execute(line, &config) {
+                    Ok(_) => continue,
+                    Err(user_err) => {
+                        print_user_error(user_err);
+                        break;
+                    }
+                },
+                true => println!("received from client: {}", line),
             },
             channel::Signal::CannotReadPipe(err) => {
                 println!("Error: Cannot read from pipe: {}", err);
@@ -51,10 +58,6 @@ fn normal() {
         }
     }
     pipe.delete();
-}
-
-fn debug() {
-    println!("debugging");
 }
 
 fn run(cmd: String) {
