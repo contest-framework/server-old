@@ -30,10 +30,9 @@ fn normal(debug: bool) {
         fifo::CreateOutcome::Ok() => (),
     }
     fifo::listen(&pipe, sender);
-    if debug {
-        println!("Tertestrial is online in debug mode, Ctrl-C to exit");
-    } else {
-        println!("Tertestrial is online, Ctrl-C to exit");
+    match debug {
+        false => println!("Tertestrial is online, Ctrl-C to exit"),
+        true => println!("Tertestrial is online in debug mode, Ctrl-C to exit"),
     }
     for signal in receiver {
         match signal {
