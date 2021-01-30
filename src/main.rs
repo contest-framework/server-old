@@ -73,7 +73,10 @@ fn run(cmd: String) {
 }
 
 fn setup() {
-    println!("setting up");
+    match config::create() {
+        Ok(_) => println!("Created configuration file "),
+        Err(e) => println!("Cannot create file: {}", e),
+    }
 }
 
 fn version() {

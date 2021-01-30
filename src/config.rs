@@ -18,6 +18,33 @@ pub fn from_file() -> Configuration {
   serde_json::from_reader(file).expect("cannot read JSON")
 }
 
+pub fn create() -> Result<(), std::io::Error> {
+  std::fs::write(
+    "tertestrial.json",
+    r#"{
+  "actions": [
+    {
+      "trigger": {},
+      "run": "echo test all files"
+    },
+
+    {
+      "trigger": { "filename": ".rs$" },
+      "run": "echo testing file {{filename}}"
+    },
+
+    {
+      "trigger": {
+        "filename": ".ext$",
+        "line": "d+"
+      },
+      "run": "echo testing file {{filename}} at line {{line}}"
+    }
+  ]
+}"#,
+  )
+}
+
 impl Configuration {
   pub fn get_command(&self, trigger: Trigger) -> Option<&String> {
     for action in &self.actions {

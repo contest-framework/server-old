@@ -2,27 +2,20 @@
   "actions": [
     {
       "trigger": {},
-      "run": "bin/spec"
+      "run": "cargo test"
     },
 
     {
-      "trigger": { "filename": ".feature$" },
-      "run": "bin/features {{filename}}"
+      "trigger": { "filename": ".ext$" },
+      "run": "echo testing file {{filename}}"
     },
 
     {
       "trigger": {
-        "filename": ".feature$",
+        "filename": ".ext$",
         "line": "d+"
       },
-      "run": "bin/features {{filename}}:{{line}}"
-    },
-
-    {
-      "trigger": {
-        "filename": "-spec.ls$"
-      },
-      "run": "bin/unit {{filename}}"
+      "run": "echo testing file {{filename}} at line {{line}}"
     }
   ]
 }
