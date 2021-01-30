@@ -1,3 +1,6 @@
+use errors::UserErr;
+use std::sync::Arc;
+
 mod args;
 mod channel;
 mod config;
@@ -6,9 +9,6 @@ mod errors;
 mod fifo;
 mod run;
 mod trigger;
-
-use errors::UserErr;
-use std::sync::Arc;
 
 fn main() {
     match args::parse(std::env::args()) {
@@ -77,7 +77,7 @@ fn setup() {
 }
 
 fn version() {
-    println!("Tertestrial v2.0.0-alpha");
+    println!("Tertestrial v0.4.0-alpha");
 }
 
 fn execute(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
@@ -86,7 +86,7 @@ fn execute(text: String, configuration: &config::Configuration) -> Result<(), Us
         Some(command) => command,
         None => {
             return Err(UserErr::new(
-                format!("cannot determine command for trigger \"{}\"", text),
+                format!(r#"cannot determine command for trigger "{}""#, text),
                 String::from(
                     "Please make sure that this trigger is listed in your configuration file",
                 ),
@@ -103,18 +103,19 @@ fn execute(text: String, configuration: &config::Configuration) -> Result<(), Us
             Ok(())
         }
         run::Outcome::NotFound(command) => Err(UserErr::new(
-            String::from(format!("test command not found: {}", command)),
-            String::from(format!(
-                "I received this trigger from the client: {}\nYour config file specifies to run this command in that case: {}\nI couldn't run this command. Please verify that the command is in the path or fix your config file.",
-                text,
-                command)
+            format!("test command not found: {}", command),
+            format!(
+                "I received this trigger from the client: {}\
+                Your config file specifies to run this command in that case: {}\
+                I couldn't run this command. Please verify that the command is in the path or fix your config file.",
+                text, command
             ),
         )),
     }
 }
 
-fn exit_pipe_exists(path: &String) {
-    println!("A fifo pipe \"{}\" already exists.", path);
+fn exit_pipe_exists(path: &str) {
+    println!(r#"A fifo pipe "{}" already exists."#, path);
     println!("This could mean a Tertestrial instance could already be running.");
     println!("If you are sure no other instance is running, please delete this file and start Tertestrial again.");
     std::process::exit(2);
