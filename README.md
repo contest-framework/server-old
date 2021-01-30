@@ -11,29 +11,18 @@ for commands from [Tertestrial editor plugins](#editor-plugins).
 
 ## Installation
 
-- download the correct binary for your platform from the releases page
+- coming soon: download the correct binary for your platform from the releases
+  page
 - install the [Tertestrial plugin for your editor](#editor-plugins)
 - add `.tertestrial.tmp` to your
   [global gitignore](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore).
 
-## Creating a configuration file
+## Configuration
 
-To use Tertestrial with a code base, run `tertestrial setup` in the root
-directory of that code base. This generates a configuration file that tells
-Tertestrial what to do with the different types of files in your project. The
-setup script asks whether you want to use one of the built-in configurations or
-make your own.
+Run `tertestrial setup` in the root directory of the code base you wish to use
+Tertestrial for to generate an example configuration file.
 
-### Built-in configurations
-
-If you select a built-in configuration, you are done with the setup and can
-[start using Tertestrial](#running-tertestrial).
-
-### Custom configurations
-
-Editor plugins send simple JSON-encoded messages that define what the user wants
-Tertestrial to do. What keys and values they contain depends on your use case,
-and how your editor plugin works. As an example, here are the messages sent by
+As an example, here are the messages sent by
 [Tertestrial-Vim](https://github.com/kevgo/tertestrial-vim):
 
 - when the user wants to run the current action on the whole code base
@@ -55,7 +44,7 @@ and how your editor plugin works. As an example, here are the messages sent by
   { "filename": "foo.js", "line": 3 }
   ```
 
-Tertestrial's configuration file (`tertestrial.yml`) defines how Tertestrial
+Tertestrial's configuration file (`tertestrial.json`) defines how Tertestrial
 should handle these messages. To do that, it defines a number of actions. These
 actions consist of:
 
@@ -69,7 +58,7 @@ Below is an example configuration file for JavaScript developers who use
 [Mocha](https://mochajs.org) for unit testing and
 [Cucumber-JS](https://github.com/cucumber/cucumber-js) for end-to-end tests:
 
-**tertestrial.yml**
+**tertestrial.json**
 
 ```yml
 actions:
