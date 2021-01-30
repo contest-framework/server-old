@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate prettytable;
+
 use errors::UserErr;
 use std::sync::Arc;
 
@@ -25,6 +28,10 @@ fn main() {
 
 fn normal(debug: bool) {
     let config = config::from_file();
+    if debug {
+        println!("using this configuration:");
+        println!("{}", config);
+    }
     let (sender, receiver) = channel::create(); // cross-thread communication channel
     ctrl_c::handle(sender.clone());
     let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));

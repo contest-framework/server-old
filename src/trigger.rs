@@ -5,9 +5,26 @@ use serde::Deserialize;
 pub struct Trigger {
   pub filename: Option<String>,
   pub line: Option<String>,
+  pub name: Option<String>,
 }
 
-pub fn from_line(line: &String) -> Result<Trigger, UserErr> {
+impl std::fmt::Display for Trigger {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    write!(f, "{{")?;
+    if self.filename.is_some() {
+      write!(f, "\"filename\": \"{}\"", self.filename.as_ref().unwrap())?;
+    }
+    if self.line.is_some() {
+      write!(f, "\"line\": \"{}\"", self.line.as_ref().unwrap())?;
+    }
+    if self.name.is_some() {
+      write!(f, "\"name\": \"{}\"", self.name.as_ref().unwrap())?;
+    }
+    write!(f, "}}")
+  }
+}
+
+pub fn from_line(line: &str) -> Result<Trigger, UserErr> {
   match serde_json::from_str(&line) {
     Ok(trigger) => Ok(trigger),
     Err(err) => Err(UserErr::new(
@@ -34,6 +51,7 @@ mod tests {
     let want = Trigger {
       filename: None,
       line: None,
+      name: None,
     };
     assert_eq!(have, want);
   }
@@ -44,6 +62,7 @@ mod tests {
     let want = Trigger {
       filename: Some(String::from("foo.rs")),
       line: None,
+      name: None,
     };
     assert_eq!(have, want);
   }
@@ -57,6 +76,7 @@ mod tests {
     let want = Trigger {
       filename: Some(String::from("foo.rs")),
       line: Some(String::from("12")),
+      name: None,
     };
     assert_eq!(have, want);
   }
@@ -70,6 +90,7 @@ mod tests {
     let want = Trigger {
       filename: Some(String::from("foo.rs")),
       line: None,
+      name: None,
     };
     assert_eq!(have, want);
   }
@@ -92,10 +113,12 @@ mod tests {
     let trigger1 = Trigger {
       filename: Some(String::from("filename")),
       line: Some(String::from("line")),
+      name: None,
     };
     let trigger2 = Trigger {
       filename: Some(String::from("filename")),
       line: Some(String::from("line")),
+      name: None,
     };
     assert!(trigger1 == trigger2);
   }
@@ -105,10 +128,12 @@ mod tests {
     let trigger1 = Trigger {
       filename: Some(String::from("filename 1")),
       line: Some(String::from("line")),
+      name: None,
     };
     let trigger2 = Trigger {
       filename: Some(String::from("filename 2")),
       line: Some(String::from("line")),
+      name: None,
     };
     assert!(trigger1 != trigger2);
   }
@@ -118,10 +143,12 @@ mod tests {
     let trigger1 = Trigger {
       filename: Some(String::from("filename")),
       line: Some(String::from("line 1")),
+      name: None,
     };
     let trigger2 = Trigger {
       filename: Some(String::from("filename")),
       line: Some(String::from("line 2")),
+      name: None,
     };
     assert!(trigger1 != trigger2);
   }
@@ -131,10 +158,12 @@ mod tests {
     let trigger1 = Trigger {
       filename: Some(String::from("filename")),
       line: Some(String::from("line 1")),
+      name: None,
     };
     let trigger2 = Trigger {
       filename: Some(String::from("filename")),
       line: None,
+      name: None,
     };
     assert!(trigger1 != trigger2);
   }

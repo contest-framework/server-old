@@ -6,16 +6,8 @@
     },
 
     {
-      "trigger": { "filename": ".ext$" },
-      "run": "echo testing file {{filename}}"
-    },
-
-    {
-      "trigger": {
-        "filename": ".ext$",
-        "line": "d+"
-      },
-      "run": "echo testing file {{filename}} at line {{line}}"
+      "trigger": { "name": "fn (w+)\\(" },
+      "run": "echo running test testing file {{name}}"
     }
   ]
 }

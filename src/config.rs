@@ -1,4 +1,5 @@
 use super::trigger::Trigger;
+use prettytable::Table;
 use serde::Deserialize;
 
 // Actions are executed when receiving a trigger.
@@ -56,6 +57,18 @@ impl Configuration {
   }
 }
 
+impl std::fmt::Display for Configuration {
+  fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let mut table = Table::new();
+    table.add_row(prettytable::row!["TRIGGER", "RUN"]);
+    for action in self.actions.iter() {
+      table.add_row(prettytable::row![format!("{}", action.trigger), action.run]);
+    }
+    table.printstd();
+    Ok(())
+  }
+}
+
 //
 // ----------------------------------------------------------------------------
 //
@@ -70,6 +83,7 @@ mod tests {
     let give = Trigger {
       filename: None,
       line: None,
+      name: None,
     };
     let have = config.get_command(give);
     assert_eq!(have, None);
@@ -81,6 +95,7 @@ mod tests {
       trigger: Trigger {
         filename: Some(String::from("matching filename")),
         line: Some(String::from("2")),
+        name: None,
       },
       run: String::from("action1 command"),
     };
@@ -88,6 +103,7 @@ mod tests {
       trigger: Trigger {
         filename: Some(String::from("matching filename")),
         line: None,
+        name: None,
       },
       run: String::from("action2 command"),
     };
@@ -95,6 +111,7 @@ mod tests {
       trigger: Trigger {
         filename: Some(String::from("other filename")),
         line: None,
+        name: None,
       },
       run: String::from("action3 command"),
     };
@@ -104,6 +121,7 @@ mod tests {
     let give = Trigger {
       filename: Some(String::from("matching filename")),
       line: None,
+      name: None,
     };
     let have = config.get_command(give);
     assert_eq!(have, Some(&String::from("action2 command")));
@@ -115,6 +133,7 @@ mod tests {
       trigger: Trigger {
         filename: Some(String::from("matching filename")),
         line: None,
+        name: None,
       },
       run: String::from("action1 command"),
     };
@@ -124,6 +143,7 @@ mod tests {
     let give = Trigger {
       filename: Some(String::from("other filename")),
       line: None,
+      name: None,
     };
     let have = config.get_command(give);
     assert_eq!(have, None);
