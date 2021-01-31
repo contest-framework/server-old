@@ -11,7 +11,8 @@
   ],
   "activationEvents": [
     "onCommand:tertestrial-vscode.testAll",
-    "onCommand:tertestrial-vscode.testFile"
+    "onCommand:tertestrial-vscode.testFile",
+    "onCommand:tertestrial-vscode.testLine"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -23,6 +24,10 @@
       {
         "command": "tertestrial-vscode.testFile",
         "title": "Tertestrial: Test current file"
+      },
+      {
+        "command": "tertestrial-vscode.testLine",
+        "title": "Tertestrial: Test current line in current file"
       }
     ]
   },

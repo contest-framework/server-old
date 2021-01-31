@@ -3,31 +3,40 @@ import * as pipe from "./pipe"
 import * as notification from "./notification"
 import * as workspace from "./workspace"
 import * as path from "path"
+import { UserError } from "./user_error"
 
 export function activate(context: vscode.ExtensionContext) {
-  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testAll", testAll))
-  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testFile", testFile))
+  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testAll", runSafe(testAll)))
+  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testFile", runSafe(testFile)))
+  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testLine", runSafe(testLine)))
 }
 
 async function testAll() {
-  if (await pipe.send("{}")) {
-    notification.display("testing all files")
-  }
+  notification.display("testing all files")
+  await pipe.send("{}")
 }
 
 async function testFile() {
-  const wsRoot = workspace.root()
-  if (!wsRoot) {
-    return
+  const relPath = workspace.currentFile()
+  notification.display(`testing file ${relPath}`)
+  await pipe.send(`{"filename": "${relPath}"}`)
+}
+
+async function testLine() {
+  const relPath = workspace.currentFile()
+}
+
+function runSafe(f: () => Promise<void>): () => Promise<void> {
+  const result = async function (f: () => Promise<void>) {
+    try {
+      await f()
+    } catch (e) {
+      if (e instanceof UserError) {
+        vscode.window.showErrorMessage(e.message)
+      } else {
+        throw e
+      }
+    }
   }
-  const currentEditor = vscode.window.activeTextEditor
-  if (!currentEditor) {
-    vscode.window.showErrorMessage("no window open")
-    return
-  }
-  const fullPath = currentEditor.document.fileName
-  const relPath = path.relative(wsRoot, fullPath)
-  if (await pipe.send(`{"filename": "${relPath}"}`)) {
-    notification.display(`testing file ${relPath}`)
-  }
+  return result.bind(null, f)
 }
