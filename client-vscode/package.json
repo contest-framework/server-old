@@ -10,18 +10,19 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:tertestrial-vscode.runAll"
+    "onCommand:tertestrial-vscode.testAll",
+    "onCommand:tertestrial-vscode.testFile"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "tertestrial-vscode.helloWorld",
-        "title": "Hello World"
+        "command": "tertestrial-vscode.testAll",
+        "title": "Tertestrial: Test all files"
       },
       {
-        "command": "tertestrial-vscode.runAll",
-        "title": "Tertestrial: Run all"
+        "command": "tertestrial-vscode.testFile",
+        "title": "Tertestrial: Test current file"
       }
     ]
   },

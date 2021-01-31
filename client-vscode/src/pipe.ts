@@ -1,18 +1,17 @@
 import * as vscode from "vscode"
 import * as path from "path"
 import { promises as fs } from "fs"
+import * as workspace from "./workspace"
 
 const PIPE_FILENAME = ".tertestrial.tmp"
 
 export async function send(text: string): Promise<boolean> {
-  // get workspace path
-  const wsFolders = vscode.workspace.workspaceFolders
-  if (!wsFolders || wsFolders?.length === 0) {
-    vscode.window.showErrorMessage("No workspace folders open")
+  // get pipe file path
+  const wsRoot = workspace.root()
+  if (!wsRoot) {
     return false
   }
-  // get pipe path
-  const pipePath = path.join(wsFolders[0].uri.fsPath, PIPE_FILENAME)
+  const pipePath = path.join(wsRoot, PIPE_FILENAME)
   // ensure pipe exists
   let stat
   try {
