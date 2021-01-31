@@ -1,41 +1,42 @@
 import * as vscode from "vscode"
 import { promises as fs } from "fs"
+import * as path from "path"
 
-const filePath = ".tertestrial.tmp"
+const FILE_PATH = ".tertestrial.tmp"
 
 export function activate(context: vscode.ExtensionContext) {
-  const runAll = vscode.commands.registerCommand("tertestrial-vscode.runAll", async function () {
-    // check if pipe exists
-    const uri = vscode.Uri.file("/")
-    const folders = vscode.workspace.workspaceFolders
-    if (!folders || folders?.length === 0) {
-      vscode.window.showErrorMessage("Cannot determine workspaceFolders")
-      return
+  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.runAll", runAll))
+}
+
+async function runAll() {
+  // ensure pipe exists
+  const folders = vscode.workspace.workspaceFolders
+  if (!folders || folders?.length === 0) {
+    vscode.window.showErrorMessage("No workspace folders open")
+    return
+  }
+  const wsPath = folders[0].uri.fsPath
+  const pipePath = path.join(wsPath, FILE_PATH)
+  let stat
+  try {
+    stat = await fs.stat(pipePath)
+  } catch (e) {
+    if (e.code === "ENOENT") {
+      vscode.window.showErrorMessage(`Please start the Tertestrial server first: ${e}`)
+    } else {
+      vscode.window.showErrorMessage(`Error reading pipe: ${e}`)
     }
-    const wsPath = folders[0].uri.fsPath
-    let stat
-    try {
-      stat = await vscode.workspace.fs.stat(uri)
-      // stat = await fs.stat(uri)
-    } catch (e) {
-      if (e.code === "FileNotFound") {
-        vscode.window.showErrorMessage(`Please start the Tertestrial server first: ${e}`)
-      } else {
-        vscode.window.showErrorMessage(`Error reading pipe: ${e}`)
-      }
-      return
-    }
-    if (stat.type) {
-      vscode.window.showErrorMessage(`The file ${filePath} must be a FIFO pipe.`)
-      return
-    }
-    await fs.appendFile(filePath, "{}", {
-      flag: "a",
-      encoding: "utf8",
-    })
-    vscode.window.setStatusBarMessage("Tertestrial: Running all files")
+    return
+  }
+  if (!stat.isFIFO()) {
+    vscode.window.showErrorMessage(`The file ${pipePath} must be a FIFO pipe.`)
+    return
+  }
+  await fs.appendFile(pipePath, "{}", {
+    flag: "a",
+    encoding: "utf8",
   })
-  context.subscriptions.push(runAll)
+  vscode.window.setStatusBarMessage("Tertestrial: Running all files")
 }
 
 export function deactivate() {}
