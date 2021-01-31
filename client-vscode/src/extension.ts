@@ -2,7 +2,6 @@ import * as vscode from "vscode"
 import * as pipe from "./pipe"
 import * as notification from "./notification"
 import * as workspace from "./workspace"
-import * as path from "path"
 import { UserError } from "./user_error"
 
 export function activate(context: vscode.ExtensionContext) {
@@ -24,6 +23,9 @@ async function testFile() {
 
 async function testLine() {
   const relPath = workspace.currentFile()
+  const line = workspace.currentLine()
+  notification.display(`testing file ${relPath}:${line}`)
+  await pipe.send(`{"filename": "${relPath}", "line": "${line}"}`)
 }
 
 function runSafe(f: () => Promise<void>): () => Promise<void> {
