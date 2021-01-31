@@ -1,0 +1,15 @@
+language: node_js
+
+node_js:
+  - "4"
+  - "6"
+  - "7"
+
+
+before_script:
+  - node_modules/o-tools-livescript/bin/build
+
+cache: yarn
+
+notifications:
+  email: false
