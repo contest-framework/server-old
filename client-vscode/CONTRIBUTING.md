@@ -2,7 +2,7 @@
 
 - you need Rust 2018 stable: https://www.rust-lang.org/tools/install
 - run tests: `cargo test`
-- see the [Makefile](Makefile) for avalailable Make commands
+- see the [Makefile](client-vscode/Makefile) for avalailable Make commands
 
 ## Create your own editor plugin
 

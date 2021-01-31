@@ -69,4 +69,4 @@ to bring tertestrial back into the foreground, then press **ctrl-c**.
 
 ## Development
 
-See the [developer documentation](client-vscode/CONTRIBUTING.md).
+See the [developer documentation](CONTRIBUTING.md).
