@@ -1,13 +1,6 @@
-# Tertestrial Server - a test auto-runner
+# Tertestrial Server
 
-Tertestrial runs user-defined tasks, for example automated tests, from within
-your code editor, with the absolutely smallest overhead. The Tertestrial server
-(in this repository) creates a named pipe on the file system and listens on it
-for commands from [Tertestrial editor plugins](#editor-plugins).
-
-<a href="https://youtu.be/pxrES6xQlxo" target="_blank">
-  <img src="documentation/tertestrial_video_1.png" width="480" height="269">
-</a>
+This is the Rust implementation of a Tertestrial server.
 
 ## Installation
 
