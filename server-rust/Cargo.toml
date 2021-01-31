@@ -1,0 +1,21 @@
+[package]
+name = "tertestrial"
+version = "0.0.1"
+authors = ["Kevin Goslar <kevin.goslar@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+nix = "0.19.0"
+ctrlc = { version = "3.0", features = ["termination"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tempfile = "3"
+shellwords = "1.1.0"
+prettytable-rs = "^0.8"
+
+[profile.release]
+opt-level = 's'    # Optimize for size
+lto = true         # enable link-time optimization (removes dead code)
+codegen-units = 1  # reduce codegen units to enable additional optimizations
