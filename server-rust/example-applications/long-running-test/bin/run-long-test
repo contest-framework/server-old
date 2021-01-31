@@ -1,4 +1,0 @@
-#!/usr/bin/env node
-
-require('http').createServer( (req, res) => { res.end('hello world\n') } )
-               .listen(3000, '127.0.0.1', () => { console.log('Server running') })

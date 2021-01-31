@@ -1,4 +1,0 @@
-actions:
-
-  - match:
-    command: 'bin/tests'

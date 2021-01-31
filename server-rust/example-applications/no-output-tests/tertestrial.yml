@@ -1,9 +1,0 @@
-actions:
-
-  - match:
-      filename: 'success'
-    command: 'bin/run-test-success'
-
-  - match:
-      filename: 'failure'
-    command: 'bin/run-test-failure'
