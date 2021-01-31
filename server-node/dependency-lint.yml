@@ -11,7 +11,7 @@ executedModules:
       - bin/spec
       - bin/unit
     ignore: []
-    root: 'bin/*'
+    root: "bin/*"
 
 ignoreErrors:
   missing: []
@@ -26,11 +26,11 @@ ignoreErrors:
 requiredModules:
   files:
     dev:
-      - '{features,spec,test}/**/*'
-      - '**/*{.,_,-}{spec,test}.ls'
+      - "{features,spec,test}/**/*"
+      - "**/*{.,_,-}{spec,test}.ls"
     ignore:
-      - 'node_modules/**/*'
-    root: '**/*.ls'
+      - "node_modules/**/*"
+    root: "**/*.ls"
   stripLoaders: false
   transpilers:
     - extension: .ls

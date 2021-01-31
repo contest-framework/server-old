@@ -11,22 +11,25 @@
 ## 0.3.0
 
 - **BREAKING CHANGE**: update configuration structure for multiple action sets
-  - the named action sets should now just be keys on the actions object instead of nested arrays
-      ```yml
-      # 0.2.0
-      actions:
-        - headless:
-          # ...
-        - firefox:
-          # ...
 
-      # 0.3.0
-      actions:
-        headless:
-          # ...
-        firefox:
-          # ...
-      ```
+  - the named action sets should now just be keys on the actions object instead of nested arrays
+
+    ```yml
+    # 0.2.0
+    actions:
+      - headless:
+        # ...
+      - firefox:
+        # ...
+
+    # 0.3.0
+    actions:
+      headless:
+        # ...
+      firefox:
+        # ...
+    ```
+
 - gracefully handle invalid json and multiple lines of json
 
 ## 0.2.0
@@ -44,11 +47,9 @@
 - aborts when detecting a currently running process
 - add `help` and `version` command-line commands
 
-
 ## 0.1.1
 
 - output the exit code of tests
-
 
 ## 0.1
 
@@ -56,7 +57,6 @@
   - changed from `{"operation": "repeatLastTest"}` to `{"repeatLastTest": true}`
 - compatibility with Node 4 in addition to 5 and 6
 - terminates the currently running test before starting a new one
-
 
 ## 0.0.7
 
@@ -67,7 +67,6 @@
 - automatically reloads configuration file when it is updated
 - removes the named pipe when the program ends
 - shows warning when running in directory with existing named pipe
-
 
 ## 0.0.6
 

@@ -4,13 +4,11 @@ machine:
   node:
     version: 6.1.0
 
-
 dependencies:
   override:
     - yarn
   cache_directories:
     - ~/.cache/yarn
-
 
 test:
   pre:
@@ -19,7 +17,6 @@ test:
   override:
     - node_modules/dependency-lint/bin/dependency-lint.js
     - cucumber-js --format json:$CIRCLE_TEST_REPORTS/cucumber/tests.cucumber --format pretty
-
 
 deployment:
   publish:

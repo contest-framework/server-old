@@ -1,14 +1,13 @@
 actions:
-
   - match:
       filename: '\.feature$'
-    command: 'cucumber-js {{filename}}'
+    command: "cucumber-js {{filename}}"
 
   - match:
       filename: '\.feature$'
       line: '\d+'
-    command: 'cucumber-js {{filename}}:{{line}}'
+    command: "cucumber-js {{filename}}:{{line}}"
 
   - match:
       filename: '\.js$'
-    command: 'mocha {{filename}}'
+    command: "mocha {{filename}}"

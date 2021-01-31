@@ -1,4 +1,3 @@
 actions:
-
   - match:
-    command: 'bin/tests'
+    command: "bin/tests"
