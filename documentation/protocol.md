@@ -11,14 +11,54 @@ clients can write Tertestrial commands into the pipe. All commands use the
 
 ### Test commands
 
-- run all tests: `{}`
-- run all tests in a given file: `{ filename: "foo_test.js" }`
-- run the test at a given line: `{ filename: "foo_test.js", line: "12" }`
-- repeat the last test: `{ "repeatLastTest": true }`
-- stop the current test: `{ "stopCurrentTest": true }`
+There are three types of tests:
 
-Only one test should be running at a time to avoid interference between
-concurrently running tests. A new test must stop the currently running test.
+To have the server run all tests, send this command:
+
+```json
+{
+  "command": "all"
+}
+```
+
+To have the server run all tests in a given file, send this command:
+
+```json
+{
+  "command": "file",
+  "file": "<relative file path>"
+}
+```
+
+To have the server run only the test at a given line, send this command:
+
+```json
+{
+  "command": "line",
+  "file": "<relative file path>",
+  "line": <line number starting at 1>
+}
+```
+
+To have the server repeat the last test, send this command:
+
+```json
+{
+  "command": "repeatLastTest"
+}
+```
+
+To have the server stop the currently running test, send this command:
+
+```json
+{
+  "command": "stopCurrentTest"
+}
+```
+
+The server runs only one test at a time to avoid interference between
+concurrently running tests. If a test is still running, and the server receives
+the command to run another test, it stops the currently running test.
 
 ### Action sets
 

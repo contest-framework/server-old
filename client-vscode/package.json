@@ -29,6 +29,12 @@
         "command": "tertestrial-vscode.testLine",
         "title": "Tertestrial: Test current line in current file"
       }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": ".testconfig.json",
+        "url": "./src/testconfig.schema.json"
+      }
     ]
   },
   "scripts": {
