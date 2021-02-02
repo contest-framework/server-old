@@ -3,7 +3,15 @@
 The configuration file for Tertestrial has the name `.testconfig.json` and is in
 JSON syntax. It has the following structure.
 
-Options section:
+### Actions
+
+The `actions` section configures the actions Tertestrial executes
+
+### Action Sets
+
+### Options
+
+The `options` section configures Tertestrial.
 
 - `beforeRun`: activities to do before running tests. Possible options are:
   - `clearScreen: true`: clears all content of the screen including scrollback.
