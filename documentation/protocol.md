@@ -17,7 +17,7 @@ To have the server run all tests, send this command:
 
 ```json
 {
-  "command": "all"
+  "command": "testAll"
 }
 ```
 
@@ -25,16 +25,16 @@ To have the server run all tests in a given file, send this command:
 
 ```json
 {
-  "command": "file",
+  "command": "testFile",
   "file": "<relative file path>"
 }
 ```
 
-To have the server run only the test at a given line, send this command:
+To have the server run the test at a given line, send this command:
 
 ```json
 {
-  "command": "line",
+  "command": "testLine",
   "file": "<relative file path>",
   "line": <line number starting at 1>
 }
@@ -44,7 +44,7 @@ To have the server repeat the last test, send this command:
 
 ```json
 {
-  "command": "repeatLastTest"
+  "command": "repeatTest"
 }
 ```
 
@@ -52,7 +52,7 @@ To have the server stop the currently running test, send this command:
 
 ```json
 {
-  "command": "stopCurrentTest"
+  "command": "stopTest"
 }
 ```
 
@@ -62,5 +62,21 @@ the command to run another test, it stops the currently running test.
 
 ### Action sets
 
-- switch to a different action set: `{ "actionSet": 2 }`
-- cycle to the next action set: `{ "cycleActionSet": "next" }`
+If action sets are defined, Tertestrial activates the first one on start.
+
+To switch to a different action set, send this command:
+
+```json
+{
+  "command": "useActionSet",
+  "actionSetNumber": <action set number starting at 1>
+}
+```
+
+To cycle to the next action set, send this command:
+
+```json
+{
+  "command": "useNextActionSet"
+}
+```

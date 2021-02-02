@@ -1,7 +1,4 @@
 {
-  "options": {
-    "clearBeforeRun": "spaces"
-  },
   "actions": [
     {
       "desc": "run all tests",
@@ -69,5 +66,27 @@
       },
       "run": "echo mocha {{file}}:{{line}}"
     }
-  ]
+  ],
+  "options": {
+    "beforeRun": {
+      "clearScreen": true,
+      "emptyScreens": 1,
+      "newLines": 5
+    },
+    "afterRun": {
+      "newLines": 5,
+      "indicatorLines": 3,
+      "indicatorBackground": true
+    },
+    "colors": {
+      "indicatorLine": {
+        "pass": "\\033[1;32m",
+        "fail": "\\033[1;31m"
+      },
+      "indicatorBackground": {
+        "pass": "\\033[0;32m",
+        "fail": "\\033[0;31m"
+      }
+    }
+  }
 }
