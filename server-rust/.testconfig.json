@@ -1,0 +1,92 @@
+{
+  "actions": [
+    {
+      "desc": "run all tests",
+      "trigger": {
+        "command": "all"
+      },
+      "run": "echo make test"
+    },
+
+    {
+      "desc": "test RS file",
+      "trigger": {
+        "command": "file",
+        "file": "**/*.rs"
+      },
+      "run": "echo cargo test {{file_name}}"
+    },
+
+    {
+      "desc": "individual RS unit test",
+      "trigger": {
+        "command": "line",
+        "file": "**/*.rs"
+      },
+      "vars": [
+        {
+          "name": "test_name",
+          "source": "current_or_above_line_content",
+          "filter": "\\bfn (\\w+)\\("
+        }
+      ],
+      "run": "echo cargo test {{test_name}}"
+    },
+
+    {
+      "desc": "TS unit test file",
+      "trigger": {
+        "command": "file",
+        "file": "**/*.test.ts"
+      },
+      "run": "echo mocha {{file_path}}"
+    },
+
+    {
+      "desc": "TS source file",
+      "trigger": {
+        "command": "file",
+        "file": "**/*.ts"
+      },
+      "vars": [
+        {
+          "name": "file_name_without_ext",
+          "source": "file_name",
+          "filter": "^(.+)\\.ts$"
+        }
+      ],
+      "run": "echo mocha {{file_name_without_ext}}.test.ts"
+    },
+
+    {
+      "desc": "individual TS unit test",
+      "trigger": {
+        "command": "line",
+        "file": "**/*.test.ts"
+      },
+      "run": "echo mocha {{file}}:{{line}}"
+    }
+  ],
+  "options": {
+    "beforeRun": {
+      "clearScreen": true,
+      "emptyScreens": 1,
+      "newLines": 5
+    },
+    "afterRun": {
+      "newLines": 5,
+      "indicatorLines": 3,
+      "indicatorBackground": true
+    },
+    "colors": {
+      "indicatorLine": {
+        "pass": "\\033[1;32m",
+        "fail": "\\033[1;31m"
+      },
+      "indicatorBackground": {
+        "pass": "\\033[0;32m",
+        "fail": "\\033[0;31m"
+      }
+    }
+  }
+}
