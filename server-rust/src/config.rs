@@ -15,7 +15,7 @@ pub struct Configuration {
 }
 
 pub fn from_file() -> Configuration {
-  let file = std::fs::File::open("tertestrial.json").expect("Cannot find configuration file");
+  let file = std::fs::File::open(".testconfig.json").expect("Cannot find configuration file");
   serde_json::from_reader(file).expect("cannot read JSON")
 }
 
