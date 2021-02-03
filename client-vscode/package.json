@@ -12,7 +12,9 @@
   "activationEvents": [
     "onCommand:tertestrial-vscode.testAll",
     "onCommand:tertestrial-vscode.testFile",
-    "onCommand:tertestrial-vscode.testLine"
+    "onCommand:tertestrial-vscode.testLine",
+    "onCommand:tertestrial-vscode.repeatTest",
+    "onCommand:tertestrial-vscode.stopTest"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -28,6 +30,14 @@
       {
         "command": "tertestrial-vscode.testLine",
         "title": "Tertestrial: Test current line in current file"
+      },
+      {
+        "command": "tertestrial-vscode.repeatTest",
+        "title": "Tertestrial: Repeat last test"
+      },
+      {
+        "command": "tertestrial-vscode.stopTest",
+        "title": "Tertestrial: Stop the current test"
       }
     ],
     "jsonValidation": [
