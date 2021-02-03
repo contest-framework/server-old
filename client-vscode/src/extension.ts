@@ -25,7 +25,7 @@ async function testFile() {
 
 async function testLine() {
   const relPath = workspace.currentFile()
-  const line = workspace.currentLine()
+  const line = workspace.currentLine() + 1
   notification.display(`testing file ${relPath}:${line}`)
   await pipe.send(`{ "command": "testLine", "filename": "${relPath}", "line": "${line}" }`)
 }
