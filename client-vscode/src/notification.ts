@@ -5,6 +5,6 @@ const delay = util.promisify(setTimeout)
 
 export async function display(text: string) {
   const notification = vscode.window.setStatusBarMessage(`Tertestrial: ${text}`)
-  await delay(2000)
+  await delay(5000)
   notification.dispose()
 }
