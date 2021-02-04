@@ -3,7 +3,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct Trigger {
-  pub command: Option<String>,
+  pub command: String,
   pub file: Option<String>,
   pub line: Option<String>,
 }
@@ -12,12 +12,10 @@ impl std::fmt::Display for Trigger {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "{{")?;
     let mut parts: std::vec::Vec<String> = std::vec::Vec::new();
-    if self.command.is_some() {
-      parts.push(format!(
-        "\"command\": \"{}\"",
-        self.command.as_ref().unwrap()
-      ));
-    }
+    parts.push(format!(
+      "\"command\": \"{}\"",
+      self.command.as_ref().unwrap()
+    ));
     if self.file.is_some() {
       parts.push(format!("\"file\": \"{}\"", self.file.as_ref().unwrap()));
     }
@@ -51,23 +49,26 @@ mod tests {
   use super::*;
 
   #[test]
-  fn from_line_empty() {
-    let have = from_line(&String::from("{}")).unwrap();
+  fn from_line_test_all() {
+    let have = from_line(&"{ \"command\": \"testAll\".to_string() }").unwrap();
     let want = Trigger {
-      filename: None,
+      command: "testAll".to_string(),
+      file: None,
       line: None,
-      name: None,
     };
     assert_eq!(have, want);
   }
 
   #[test]
   fn from_line_filename() {
-    let have = from_line(&String::from("{\"filename\": \"foo.rs\"}")).unwrap();
+    let have = from_line(&String::from(
+      "{ \"command\": \"testAll\", \"file\": \"foo.rs\"}",
+    ))
+    .unwrap();
     let want = Trigger {
-      filename: Some(String::from("foo.rs")),
+      command: None,
+      file: Some("foo.rs".to_string()),
       line: None,
-      name: None,
     };
     assert_eq!(have, want);
   }
