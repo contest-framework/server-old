@@ -25,21 +25,24 @@ pub fn create() -> Result<(), std::io::Error> {
     r#"{
   "actions": [
     {
-      "trigger": {},
+      "trigger": { "command": "testAll" },
       "run": "echo test all files"
     },
 
     {
-      "trigger": { "filename": ".rs$" },
-      "run": "echo testing file {{filename}}"
+      "trigger": {
+        "command": "testFile",
+        "file": "\\.rs$"
+      },
+      "run": "echo testing file {{file}}"
     },
 
     {
       "trigger": {
-        "filename": ".ext$",
-        "line": "d+"
+        "command": "testLine",
+        "file": "\\.ext$",
       },
-      "run": "echo testing file {{filename}} at line {{line}}"
+      "run": "echo testing file {{file}} at line {{line}}"
     }
   ]
 }"#,

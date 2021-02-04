@@ -3,24 +3,29 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct Trigger {
-  pub filename: Option<String>,
+  pub command: Option<String>,
+  pub file: Option<String>,
   pub line: Option<String>,
-  pub name: Option<String>,
 }
 
 impl std::fmt::Display for Trigger {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "{{")?;
-    if self.filename.is_some() {
-      write!(f, "\"filename\": \"{}\"", self.filename.as_ref().unwrap())?;
+    let mut parts: std::vec::Vec<String> = std::vec::Vec::new();
+    if self.command.is_some() {
+      parts.push(format!(
+        "\"command\": \"{}\"",
+        self.command.as_ref().unwrap()
+      ));
+    }
+    if self.file.is_some() {
+      parts.push(format!("\"file\": \"{}\"", self.file.as_ref().unwrap()));
     }
     if self.line.is_some() {
-      write!(f, "\"line\": \"{}\"", self.line.as_ref().unwrap())?;
+      parts.push(format!("\"line\": \"{}\"", self.line.as_ref().unwrap()));
     }
-    if self.name.is_some() {
-      write!(f, "\"name\": \"{}\"", self.name.as_ref().unwrap())?;
-    }
-    write!(f, "}}")
+    write!(f, "{}", parts.join(", "))?;
+    write!(f, " }}")
   }
 }
 
