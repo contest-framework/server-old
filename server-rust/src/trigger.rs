@@ -5,17 +5,14 @@ use serde::Deserialize;
 pub struct Trigger {
   pub command: String,
   pub file: Option<String>,
-  pub line: Option<String>,
+  pub line: Option<u32>,
 }
 
 impl std::fmt::Display for Trigger {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "{{")?;
     let mut parts: std::vec::Vec<String> = std::vec::Vec::new();
-    parts.push(format!(
-      "\"command\": \"{}\"",
-      self.command.as_ref().unwrap()
-    ));
+    parts.push(format!("\"command\": \"{}\"", self.command));
     if self.file.is_some() {
       parts.push(format!("\"file\": \"{}\"", self.file.as_ref().unwrap()));
     }
@@ -50,7 +47,7 @@ mod tests {
 
   #[test]
   fn from_line_test_all() {
-    let have = from_line(&"{ \"command\": \"testAll\".to_string() }").unwrap();
+    let have = from_line("{ \"command\": \"testAll\" }").unwrap();
     let want = Trigger {
       command: "testAll".to_string(),
       file: None,
@@ -61,12 +58,9 @@ mod tests {
 
   #[test]
   fn from_line_filename() {
-    let have = from_line(&String::from(
-      "{ \"command\": \"testAll\", \"file\": \"foo.rs\"}",
-    ))
-    .unwrap();
+    let have = from_line("{ \"command\": \"testFile\", \"file\": \"foo.rs\" }").unwrap();
     let want = Trigger {
-      command: None,
+      command: "testFile".to_string(),
       file: Some("foo.rs".to_string()),
       line: None,
     };
@@ -75,14 +69,12 @@ mod tests {
 
   #[test]
   fn from_line_filename_line() {
-    let have = from_line(&String::from(
-      "{\"filename\": \"foo.rs\", \"line\": \"12\"}",
-    ))
-    .unwrap();
+    let have =
+      from_line("{ \"command\": \"testLine\", \"file\": \"foo.rs\", \"line\": 12 }").unwrap();
     let want = Trigger {
-      filename: Some(String::from("foo.rs")),
-      line: Some(String::from("12")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("foo.rs".to_string()),
+      line: Some(12),
     };
     assert_eq!(have, want);
   }
@@ -90,13 +82,13 @@ mod tests {
   #[test]
   fn from_line_filename_extra_fields() {
     let have = from_line(&String::from(
-      "{\"filename\": \"foo.rs\", \"other\": \"12\"}",
+      "{ \"command\": \"testFile\", \"file\": \"foo.rs\", \"other\": \"12\"}",
     ))
     .unwrap();
     let want = Trigger {
-      filename: Some(String::from("foo.rs")),
+      command: "testFile".to_string(),
+      file: Some(String::from("foo.rs")),
       line: None,
-      name: None,
     };
     assert_eq!(have, want);
   }
@@ -117,14 +109,14 @@ mod tests {
   #[test]
   fn trigger_eq_match() {
     let trigger1 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
     };
     let trigger2 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
     };
     assert!(trigger1 == trigger2);
   }
@@ -132,14 +124,14 @@ mod tests {
   #[test]
   fn trigger_eq_mismatching_filename() {
     let trigger1 = Trigger {
-      filename: Some(String::from("filename 1")),
-      line: Some(String::from("line")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename1".to_string()),
+      line: Some(12),
     };
     let trigger2 = Trigger {
-      filename: Some(String::from("filename 2")),
-      line: Some(String::from("line")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename2".to_string()),
+      line: Some(12),
     };
     assert!(trigger1 != trigger2);
   }
@@ -147,29 +139,14 @@ mod tests {
   #[test]
   fn trigger_eq_mismatching_line() {
     let trigger1 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line 1")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
     };
     let trigger2 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line 2")),
-      name: None,
-    };
-    assert!(trigger1 != trigger2);
-  }
-
-  #[test]
-  fn trigger_eq_missing_line() {
-    let trigger1 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line 1")),
-      name: None,
-    };
-    let trigger2 = Trigger {
-      filename: Some(String::from("filename")),
-      line: None,
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(11),
     };
     assert!(trigger1 != trigger2);
   }
