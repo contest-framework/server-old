@@ -24,7 +24,7 @@ impl std::fmt::Display for Trigger {
   }
 }
 
-pub fn from_line(line: &str) -> Result<Trigger, UserErr> {
+pub fn from_string(line: &str) -> Result<Trigger, UserErr> {
   match serde_json::from_str(&line) {
     Ok(trigger) => Ok(trigger),
     Err(err) => Err(UserErr::new(
@@ -47,7 +47,7 @@ mod tests {
 
   #[test]
   fn from_line_test_all() {
-    let have = from_line("{ \"command\": \"testAll\" }").unwrap();
+    let have = from_string("{ \"command\": \"testAll\" }").unwrap();
     let want = Trigger {
       command: "testAll".to_string(),
       file: None,
@@ -58,7 +58,7 @@ mod tests {
 
   #[test]
   fn from_line_filename() {
-    let have = from_line("{ \"command\": \"testFile\", \"file\": \"foo.rs\" }").unwrap();
+    let have = from_string("{ \"command\": \"testFile\", \"file\": \"foo.rs\" }").unwrap();
     let want = Trigger {
       command: "testFile".to_string(),
       file: Some("foo.rs".to_string()),
@@ -70,7 +70,7 @@ mod tests {
   #[test]
   fn from_line_filename_line() {
     let have =
-      from_line("{ \"command\": \"testLine\", \"file\": \"foo.rs\", \"line\": 12 }").unwrap();
+      from_string("{ \"command\": \"testLine\", \"file\": \"foo.rs\", \"line\": 12 }").unwrap();
     let want = Trigger {
       command: "testLine".to_string(),
       file: Some("foo.rs".to_string()),
@@ -81,7 +81,7 @@ mod tests {
 
   #[test]
   fn from_line_filename_extra_fields() {
-    let have = from_line(&String::from(
+    let have = from_string(&String::from(
       "{ \"command\": \"testFile\", \"file\": \"foo.rs\", \"other\": \"12\"}",
     ))
     .unwrap();
@@ -95,7 +95,7 @@ mod tests {
 
   #[test]
   fn from_line_invalid_json() {
-    let have = from_line(&String::from("{\"filename}"));
+    let have = from_string(&String::from("{\"filename}"));
     let want = UserErr::new(
     String::from("cannot parse command received from client: {\"filename}"),
     String::from("Error message from JSON parser: EOF while parsing a string at line 1 column 11\nThis is a problem with your Tertestrial client."),
