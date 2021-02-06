@@ -46,8 +46,8 @@ mod tests {
   use super::*;
 
   #[test]
-  fn from_line_empty() {
-    let have = from_line(&String::from("{}")).unwrap();
+  fn from_line_test_all() {
+    let have = from_string(r#"{ "command": "testAll" }"#).unwrap();
     let want = Trigger {
       filename: None,
       line: None,
@@ -58,7 +58,7 @@ mod tests {
 
   #[test]
   fn from_line_filename() {
-    let have = from_line(&String::from("{\"filename\": \"foo.rs\"}")).unwrap();
+    let have = from_string(r#"{ "command": "testFile", "file": "foo.rs" }"#).unwrap();
     let want = Trigger {
       filename: Some(String::from("foo.rs")),
       line: None,
@@ -69,10 +69,7 @@ mod tests {
 
   #[test]
   fn from_line_filename_line() {
-    let have = from_line(&String::from(
-      "{\"filename\": \"foo.rs\", \"line\": \"12\"}",
-    ))
-    .unwrap();
+    let have = from_string(r#"{ "command": "testLine", "file": "foo.rs", "line": 12 }"#).unwrap();
     let want = Trigger {
       filename: Some(String::from("foo.rs")),
       line: Some(String::from("12")),
@@ -83,10 +80,8 @@ mod tests {
 
   #[test]
   fn from_line_filename_extra_fields() {
-    let have = from_line(&String::from(
-      "{\"filename\": \"foo.rs\", \"other\": \"12\"}",
-    ))
-    .unwrap();
+    let have =
+      from_string(r#"{ "command": "testFile", "file": "foo.rs", "other": "12" }"#).unwrap();
     let want = Trigger {
       filename: Some(String::from("foo.rs")),
       line: None,
