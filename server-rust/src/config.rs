@@ -61,13 +61,16 @@ pub fn create() -> Result<(), UserErr> {
 }
 
 impl Configuration {
-  pub fn get_command(&self, trigger: Trigger) -> Option<&String> {
+  pub fn get_command(&self, trigger: Trigger) -> Result<&String, UserErr> {
     for action in &self.actions {
       if action.trigger == trigger {
-        return Some(&action.run);
+        return Ok(&action.run);
       }
     }
-    None
+    Err(UserErr::new(
+      format!(r#"cannot determine command for trigger "{}""#, trigger),
+      "Please make sure that this trigger is listed in your configuration file",
+    ))
   }
 }
 
@@ -100,7 +103,7 @@ mod tests {
       line: None,
     };
     let have = config.get_command(give);
-    assert_eq!(have, None);
+    assert!(have.is_err());
   }
 
   #[test]
@@ -138,7 +141,7 @@ mod tests {
       line: Some(2),
     };
     let have = config.get_command(give);
-    assert_eq!(have, Some(&String::from("action2 command")));
+    assert_eq!(have, Ok(&String::from("action2 command")));
   }
 
   #[test]
@@ -160,6 +163,6 @@ mod tests {
       line: None,
     };
     let have = config.get_command(give);
-    assert_eq!(have, None);
+    assert!(have.is_err());
   }
 }

@@ -14,18 +14,25 @@ mod run;
 mod trigger;
 
 fn main() {
-    if let Err(user_err) = exec() {
+    if let Err(user_err) = main_with_err() {
         println!("\nUser error: {}\n\n{}", user_err.reason, user_err.guidance);
     }
 }
 
-fn exec() -> Result<(), UserErr> {
+fn main_with_err() -> Result<(), UserErr> {
     match args::parse(std::env::args())? {
         args::Command::Normal => normal(false),
         args::Command::Debug => normal(true),
-        args::Command::Run(cmd) => run(cmd),
-        args::Command::Setup => setup(),
-        args::Command::Version => version(),
+        args::Command::Run(cmd) => {
+            println!("running cmd: {}", cmd);
+            let config = config::from_file()?;
+            execute(cmd, &config)
+        }
+        args::Command::Setup => config::create(),
+        args::Command::Version => {
+            println!("Tertestrial v0.4.0-alpha");
+            Ok(())
+        }
     }
 }
 
@@ -77,32 +84,9 @@ fn normal(debug: bool) -> Result<(), UserErr> {
     result
 }
 
-fn run(cmd: String) -> Result<(), UserErr> {
-    println!("running cmd: {}", cmd);
-    let config = config::from_file()?;
-    execute(cmd, &config)
-}
-
-fn setup() -> Result<(), UserErr> {
-    config::create()
-}
-
-fn version() -> Result<(), UserErr> {
-    println!("Tertestrial v0.4.0-alpha");
-    Ok(())
-}
-
 fn execute(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
     let trigger = trigger::from_string(&text)?;
-    let command = match configuration.get_command(trigger) {
-        Some(command) => command,
-        None => {
-            return Err(UserErr::new(
-                format!(r#"cannot determine command for trigger "{}""#, text),
-                "Please make sure that this trigger is listed in your configuration file",
-            ))
-        }
-    };
+    let command = configuration.get_command(trigger)?;
     match run::run(command) {
         run::Outcome::TestPass() => {
             println!("SUCCESS!");
@@ -119,7 +103,7 @@ fn execute(text: String, configuration: &config::Configuration) -> Result<(), Us
                 Your config file specifies to run this command in that case: {}\
                 I couldn't run this command. Please verify that the command is in the path or fix your config file.",
                 text, command
-            ).to_string(),
+            ),
         )),
     }
 }
