@@ -8,7 +8,7 @@ pub enum Outcome {
   NotFound(String),
 }
 
-pub fn run(command: &String) -> Outcome {
+pub fn run(command: &str) -> Outcome {
   println!("executing: {}", command);
   let argv = shellwords::split(&command).unwrap();
   let (cmd, args) = argv.split_at(1);

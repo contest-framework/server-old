@@ -3,28 +3,28 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct Trigger {
-  pub filename: Option<String>,
-  pub line: Option<String>,
-  pub name: Option<String>,
+  pub command: String,
+  pub file: Option<String>,
+  pub line: Option<u32>,
 }
 
 impl std::fmt::Display for Trigger {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "{{")?;
-    if self.filename.is_some() {
-      write!(f, "\"filename\": \"{}\"", self.filename.as_ref().unwrap())?;
+    let mut parts: std::vec::Vec<String> = std::vec::Vec::new();
+    parts.push(format!("\"command\": \"{}\"", self.command));
+    if self.file.is_some() {
+      parts.push(format!("\"file\": \"{}\"", self.file.as_ref().unwrap()));
     }
     if self.line.is_some() {
-      write!(f, "\"line\": \"{}\"", self.line.as_ref().unwrap())?;
+      parts.push(format!("\"line\": \"{}\"", self.line.as_ref().unwrap()));
     }
-    if self.name.is_some() {
-      write!(f, "\"name\": \"{}\"", self.name.as_ref().unwrap())?;
-    }
-    write!(f, "}}")
+    write!(f, "{}", parts.join(", "))?;
+    write!(f, " }}")
   }
 }
 
-pub fn from_line(line: &str) -> Result<Trigger, UserErr> {
+pub fn from_string(line: &str) -> Result<Trigger, UserErr> {
   match serde_json::from_str(&line) {
     Ok(trigger) => Ok(trigger),
     Err(err) => Err(UserErr::new(
@@ -49,9 +49,9 @@ mod tests {
   fn from_line_test_all() {
     let have = from_string(r#"{ "command": "testAll" }"#).unwrap();
     let want = Trigger {
-      filename: None,
+      command: "testAll".to_string(),
+      file: None,
       line: None,
-      name: None,
     };
     assert_eq!(have, want);
   }
@@ -60,9 +60,9 @@ mod tests {
   fn from_line_filename() {
     let have = from_string(r#"{ "command": "testFile", "file": "foo.rs" }"#).unwrap();
     let want = Trigger {
-      filename: Some(String::from("foo.rs")),
+      command: "testFile".to_string(),
+      file: Some("foo.rs".to_string()),
       line: None,
-      name: None,
     };
     assert_eq!(have, want);
   }
@@ -71,9 +71,9 @@ mod tests {
   fn from_line_filename_line() {
     let have = from_string(r#"{ "command": "testLine", "file": "foo.rs", "line": 12 }"#).unwrap();
     let want = Trigger {
-      filename: Some(String::from("foo.rs")),
-      line: Some(String::from("12")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("foo.rs".to_string()),
+      line: Some(12),
     };
     assert_eq!(have, want);
   }
@@ -83,16 +83,16 @@ mod tests {
     let have =
       from_string(r#"{ "command": "testFile", "file": "foo.rs", "other": "12" }"#).unwrap();
     let want = Trigger {
-      filename: Some(String::from("foo.rs")),
+      command: "testFile".to_string(),
+      file: Some(String::from("foo.rs")),
       line: None,
-      name: None,
     };
     assert_eq!(have, want);
   }
 
   #[test]
   fn from_line_invalid_json() {
-    let have = from_line(&String::from("{\"filename}"));
+    let have = from_string(&String::from("{\"filename}"));
     let want = UserErr::new(
     String::from("cannot parse command received from client: {\"filename}"),
     String::from("Error message from JSON parser: EOF while parsing a string at line 1 column 11\nThis is a problem with your Tertestrial client."),
@@ -106,14 +106,14 @@ mod tests {
   #[test]
   fn trigger_eq_match() {
     let trigger1 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
     };
     let trigger2 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
     };
     assert!(trigger1 == trigger2);
   }
@@ -121,14 +121,14 @@ mod tests {
   #[test]
   fn trigger_eq_mismatching_filename() {
     let trigger1 = Trigger {
-      filename: Some(String::from("filename 1")),
-      line: Some(String::from("line")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename1".to_string()),
+      line: Some(12),
     };
     let trigger2 = Trigger {
-      filename: Some(String::from("filename 2")),
-      line: Some(String::from("line")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename2".to_string()),
+      line: Some(12),
     };
     assert!(trigger1 != trigger2);
   }
@@ -136,29 +136,14 @@ mod tests {
   #[test]
   fn trigger_eq_mismatching_line() {
     let trigger1 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line 1")),
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
     };
     let trigger2 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line 2")),
-      name: None,
-    };
-    assert!(trigger1 != trigger2);
-  }
-
-  #[test]
-  fn trigger_eq_missing_line() {
-    let trigger1 = Trigger {
-      filename: Some(String::from("filename")),
-      line: Some(String::from("line 1")),
-      name: None,
-    };
-    let trigger2 = Trigger {
-      filename: Some(String::from("filename")),
-      line: None,
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(11),
     };
     assert!(trigger1 != trigger2);
   }

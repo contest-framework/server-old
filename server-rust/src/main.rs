@@ -87,7 +87,7 @@ fn version() {
 }
 
 fn execute(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
-    let trigger = trigger::from_line(&text)?;
+    let trigger = trigger::from_string(&text)?;
     let command = match configuration.get_command(trigger) {
         Some(command) => command,
         None => {
