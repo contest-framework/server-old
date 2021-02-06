@@ -17,13 +17,13 @@ pub struct Configuration {
 
 pub fn from_file() -> Result<Configuration, UserErr> {
   let file = match std::fs::File::open("tertestrial.json") {
+    Ok(config) => config,
     Err(e) => {
       match e.kind() {
         std::io::ErrorKind::NotFound => return Err(UserErr::new("Configuration file not found".to_string(), "Tertestrial requires a configuration file named \".testconfig.json\" in the current directory. Please run \"tertestrial setup \" to create one.".to_string())),
         _ => return Err(UserErr::new(format!("Cannot open configuration file: {}", e), "".to_string())),
       }
     }
-    Ok(config) => config
   };
   serde_json::from_reader(file).map_err(|e| {
     UserErr::new(
