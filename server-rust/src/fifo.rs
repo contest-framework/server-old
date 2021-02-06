@@ -1,6 +1,7 @@
 // This file contains code to manage the FIFO pipe and read from it.
 
 use super::channel;
+use super::errors::UserErr;
 use std::io::prelude::*;
 use std::sync::Arc;
 
@@ -31,8 +32,9 @@ impl Pipe {
     }
   }
 
-  pub fn delete(&self) {
-    std::fs::remove_file(&self.filepath).expect("cannot delete pipe");
+  pub fn delete(&self) -> Result<(), UserErr> {
+    std::fs::remove_file(&self.filepath)
+      .map_err(|e| UserErr::new(format!("Cannot delete pipe: {}", e), "".to_string()))
   }
 
   pub fn open(&self) -> std::io::BufReader<std::fs::File> {
@@ -122,7 +124,7 @@ mod tests {
       CreateOutcome::Ok() => {}
       _ => panic!(),
     }
-    pipe.delete();
+    pipe.delete().unwrap();
     let mut files = vec![];
     for file in std::fs::read_dir(&temp_path)? {
       files.push(file?.path());

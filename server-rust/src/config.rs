@@ -1,3 +1,4 @@
+use super::errors::UserErr;
 use super::trigger::Trigger;
 use prettytable::Table;
 use serde::Deserialize;
@@ -14,14 +15,27 @@ pub struct Configuration {
   actions: Vec<Action>,
 }
 
-pub fn from_file() -> Configuration {
-  let file = std::fs::File::open(".testconfig.json").expect("Cannot find configuration file");
-  serde_json::from_reader(file).expect("cannot read JSON")
+pub fn from_file() -> Result<Configuration, UserErr> {
+  let file = match std::fs::File::open(".testconfig.json") {
+    Ok(config) => config,
+    Err(e) => {
+      match e.kind() {
+        std::io::ErrorKind::NotFound => return Err(UserErr::new("Configuration file not found".to_string(), "Tertestrial requires a configuration file named \".testconfig.json\" in the current directory. Please run \"tertestrial setup \" to create one.".to_string())),
+        _ => return Err(UserErr::new(format!("Cannot open configuration file: {}", e), "".to_string())),
+      }
+    }
+  };
+  serde_json::from_reader(file).map_err(|e| {
+    UserErr::new(
+      format!("Cannot parse configuration file: {}", e),
+      "".to_string(),
+    )
+  })
 }
 
-pub fn create() -> Result<(), std::io::Error> {
+pub fn create() -> Result<(), UserErr> {
   std::fs::write(
-    "tertestrial.json",
+    ".testconfig.json",
     r#"{
   "actions": [
     {
@@ -47,6 +61,12 @@ pub fn create() -> Result<(), std::io::Error> {
   ]
 }"#,
   )
+  .map_err(|e| {
+    UserErr::new(
+      format!("cannot create configuration file: {}", e),
+      "".to_string(),
+    )
+  })
 }
 
 impl Configuration {
