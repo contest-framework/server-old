@@ -1,5 +1,5 @@
+use super::errors::UserErr;
 use super::trigger::Trigger;
-use super::UserErr;
 use prettytable::Table;
 use serde::Deserialize;
 
@@ -34,7 +34,7 @@ pub fn from_file() -> Result<Configuration, UserErr> {
   }
 }
 
-pub fn create() -> Result<(), std::io::Error> {
+pub fn create() -> Result<(), UserErr> {
   std::fs::write(
     "tertestrial.json",
     r#"{
@@ -62,6 +62,12 @@ pub fn create() -> Result<(), std::io::Error> {
   ]
 }"#,
   )
+  .map_err(|e| {
+    UserErr::new(
+      format!("cannot create configuration file: {}", e),
+      "".to_string(),
+    )
+  })
 }
 
 impl Configuration {

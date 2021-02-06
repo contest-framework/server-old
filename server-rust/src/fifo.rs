@@ -31,8 +31,8 @@ impl Pipe {
     }
   }
 
-  pub fn delete(&self) {
-    std::fs::remove_file(&self.filepath).expect("cannot delete pipe");
+  pub fn delete(&self) -> Result<(), std::io::Error> {
+    std::fs::remove_file(&self.filepath)
   }
 
   pub fn open(&self) -> std::io::BufReader<std::fs::File> {
@@ -122,7 +122,7 @@ mod tests {
       CreateOutcome::Ok() => {}
       _ => panic!(),
     }
-    pipe.delete();
+    pipe.delete()?;
     let mut files = vec![];
     for file in std::fs::read_dir(&temp_path)? {
       files.push(file?.path());

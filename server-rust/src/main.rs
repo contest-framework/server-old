@@ -14,17 +14,18 @@ mod run;
 mod trigger;
 
 fn main() {
-    let res = {
-        match args::parse(std::env::args())? {
-            args::Command::Normal => normal(false),
-            args::Command::Debug => normal(true),
-            args::Command::Run(cmd) => run(cmd)?,
-            args::Command::Setup => setup(),
-            args::Command::Version => version(),
-        }
-    };
-    if res.is_err() {
-        print_user_error(res.err());
+    if let Err(user_err) = exec() {
+        print_user_error(user_err)
+    }
+}
+
+fn exec() -> Result<(), UserErr> {
+    match args::parse(std::env::args())? {
+        args::Command::Normal => normal(false),
+        args::Command::Debug => normal(true),
+        args::Command::Run(cmd) => run(cmd),
+        args::Command::Setup => setup(),
+        args::Command::Version => version(),
     }
 }
 
@@ -69,7 +70,8 @@ fn normal(debug: bool) -> Result<(), UserErr> {
             }
         }
     }
-    pipe.delete();
+    pipe.delete()
+        .map_err(|e| UserErr::new(format!("Cannot delete pipe: {}", e), "".to_string()))
 }
 
 fn run(cmd: String) -> Result<(), UserErr> {
@@ -82,8 +84,9 @@ fn setup() -> Result<(), UserErr> {
     config::create()
 }
 
-fn version() {
+fn version() -> Result<(), UserErr> {
     println!("Tertestrial v0.4.0-alpha");
+    Ok(())
 }
 
 fn execute(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
