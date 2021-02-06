@@ -29,8 +29,8 @@ pub fn from_string(line: &str) -> Result<Trigger, UserErr> {
     Ok(trigger) => Ok(trigger),
     Err(err) => Err(UserErr::new(
       format!("cannot parse command received from client: {}", line),
-      format!(
-        "Error message from JSON parser: {}\nThis is a problem with your Tertestrial client.",
+      &format!(
+        "This is a problem with your Tertestrial client.\n\nError message from JSON parser: {}",
         err
       ),
     )),
@@ -92,11 +92,8 @@ mod tests {
 
   #[test]
   fn from_line_invalid_json() {
-    let have = from_string(&String::from("{\"filename}"));
-    let want = UserErr::new(
-    String::from("cannot parse command received from client: {\"filename}"),
-    String::from("Error message from JSON parser: EOF while parsing a string at line 1 column 11\nThis is a problem with your Tertestrial client."),
-  );
+    let have = from_string("{\"filename}");
+    let want = UserErr::from_str("cannot parse command received from client: {\"filename}", "This is a problem with your Tertestrial client.\n\nError message from JSON parser: EOF while parsing a string at line 1 column 11");
     match have {
       Ok(_) => panic!("this shouldn't work"),
       Err(err) => assert_eq!(err, want),

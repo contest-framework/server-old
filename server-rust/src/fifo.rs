@@ -34,7 +34,7 @@ impl Pipe {
 
   pub fn delete(&self) -> Result<(), UserErr> {
     std::fs::remove_file(&self.filepath)
-      .map_err(|e| UserErr::new(format!("Cannot delete pipe: {}", e), "".to_string()))
+      .map_err(|e| UserErr::new(format!("Cannot delete pipe: {}", e), ""))
   }
 
   pub fn open(&self) -> std::io::BufReader<std::fs::File> {
