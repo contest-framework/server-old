@@ -6,7 +6,7 @@ use super::errors::UserErr;
 pub enum Command {
   Normal,      // normal operation
   Debug,       // print the received commands from the pipe
-  Run(String), // run the given string
+  Run(String), // run the given command manually
   Setup,       // create a config file
   Version,     // show the version
 }

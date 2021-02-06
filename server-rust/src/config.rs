@@ -25,13 +25,12 @@ pub fn from_file() -> Result<Configuration, UserErr> {
     }
     Ok(config) => config
   };
-  match serde_json::from_reader(file) {
-    Ok(result) => Ok(result),
-    Err(e) => Err(UserErr::new(
+  serde_json::from_reader(file).map_err(|e| {
+    UserErr::new(
       format!("Cannot parse configuration file: {}", e),
       "".to_string(),
-    )),
-  }
+    )
+  })
 }
 
 pub fn create() -> Result<(), UserErr> {

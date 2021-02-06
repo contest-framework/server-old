@@ -15,7 +15,7 @@ mod trigger;
 
 fn main() {
     if let Err(user_err) = exec() {
-        print_user_error(user_err)
+        println!("\nUser error: {}\n\n{}", user_err.reason, user_err.guidance);
     }
 }
 
@@ -39,29 +39,32 @@ fn normal(debug: bool) -> Result<(), UserErr> {
     ctrl_c::handle(sender.clone());
     let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));
     match pipe.create() {
-        fifo::CreateOutcome::AlreadyExists(path) => exit_pipe_exists(&path),
+        fifo::CreateOutcome::AlreadyExists(path) => return Err(UserErr::new(format!("A fifo pipe \"{}\" already exists.", path), "This could mean a Tertestrial instance could already be running.\nIf you are sure no other instance is running, please delete this file and start Tertestrial again.".to_string())),
         fifo::CreateOutcome::OtherError(err) => panic!(err),
-        fifo::CreateOutcome::Ok() => (),
+        fifo::CreateOutcome::Ok() => {}
     }
     fifo::listen(&pipe, sender);
     match debug {
         false => println!("Tertestrial is online, Ctrl-C to exit"),
         true => println!("Tertestrial is online in debug mode, Ctrl-C to exit"),
     }
+    let mut result: Result<(), UserErr> = Ok(());
     for signal in receiver {
         match signal {
             channel::Signal::ReceivedLine(line) => match debug {
-                false => match execute(line, &config) {
-                    Ok(_) => continue,
-                    Err(user_err) => {
-                        print_user_error(user_err);
+                true => println!("received from client: {}", line),
+                false => {
+                    result = execute(line, &config);
+                    if result.is_err() {
                         break;
                     }
-                },
-                true => println!("received from client: {}", line),
+                }
             },
             channel::Signal::CannotReadPipe(err) => {
-                println!("Error: Cannot read from pipe: {}", err);
+                result = Err(UserErr::new(
+                    format!("Cannot read from pipe: {}", err),
+                    "This is an internal error".to_string(),
+                ));
                 break;
             }
             channel::Signal::Exit => {
@@ -70,8 +73,8 @@ fn normal(debug: bool) -> Result<(), UserErr> {
             }
         }
     }
-    pipe.delete()
-        .map_err(|e| UserErr::new(format!("Cannot delete pipe: {}", e), "".to_string()))
+    pipe.delete()?;
+    result
 }
 
 fn run(cmd: String) -> Result<(), UserErr> {
@@ -121,15 +124,4 @@ fn execute(text: String, configuration: &config::Configuration) -> Result<(), Us
             ),
         )),
     }
-}
-
-fn exit_pipe_exists(path: &str) {
-    println!(r#"A fifo pipe "{}" already exists."#, path);
-    println!("This could mean a Tertestrial instance could already be running.");
-    println!("If you are sure no other instance is running, please delete this file and start Tertestrial again.");
-    std::process::exit(2);
-}
-
-fn print_user_error(err: UserErr) {
-    println!("\nUser error: {}\n\n{}", err.reason, err.guidance);
 }
