@@ -7,8 +7,18 @@ pub struct UserErr {
 }
 
 impl UserErr {
-  pub fn new(reason: String, guidance: String) -> UserErr {
-    UserErr { reason, guidance }
+  pub fn new(reason: String, guidance: &str) -> UserErr {
+    UserErr {
+      reason,
+      guidance: guidance.to_string(),
+    }
+  }
+
+  pub fn from_str(reason: &str, guidance: &str) -> UserErr {
+    UserErr {
+      reason: reason.to_string(),
+      guidance: guidance.to_string(),
+    }
   }
 }
 

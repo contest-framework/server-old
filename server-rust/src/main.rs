@@ -39,7 +39,7 @@ fn normal(debug: bool) -> Result<(), UserErr> {
     ctrl_c::handle(sender.clone());
     let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));
     match pipe.create() {
-        fifo::CreateOutcome::AlreadyExists(path) => return Err(UserErr::new(format!("A fifo pipe \"{}\" already exists.", path), "This could mean a Tertestrial instance could already be running.\nIf you are sure no other instance is running, please delete this file and start Tertestrial again.".to_string())),
+        fifo::CreateOutcome::AlreadyExists(path) => return Err(UserErr::new(format!("A fifo pipe \"{}\" already exists.", path), "This could mean a Tertestrial instance could already be running.\nIf you are sure no other instance is running, please delete this file and start Tertestrial again.")),
         fifo::CreateOutcome::OtherError(err) => panic!(err),
         fifo::CreateOutcome::Ok() => {}
     }
@@ -63,7 +63,7 @@ fn normal(debug: bool) -> Result<(), UserErr> {
             channel::Signal::CannotReadPipe(err) => {
                 result = Err(UserErr::new(
                     format!("Cannot read from pipe: {}", err),
-                    "This is an internal error".to_string(),
+                    "This is an internal error",
                 ));
                 break;
             }
@@ -99,9 +99,7 @@ fn execute(text: String, configuration: &config::Configuration) -> Result<(), Us
         None => {
             return Err(UserErr::new(
                 format!(r#"cannot determine command for trigger "{}""#, text),
-                String::from(
-                    "Please make sure that this trigger is listed in your configuration file",
-                ),
+                "Please make sure that this trigger is listed in your configuration file",
             ))
         }
     };
@@ -116,12 +114,12 @@ fn execute(text: String, configuration: &config::Configuration) -> Result<(), Us
         }
         run::Outcome::NotFound(command) => Err(UserErr::new(
             format!("test command not found: {}", command),
-            format!(
+            &format!(
                 "I received this trigger from the client: {}\
                 Your config file specifies to run this command in that case: {}\
                 I couldn't run this command. Please verify that the command is in the path or fix your config file.",
                 text, command
-            ),
+            ).to_string(),
         )),
     }
 }

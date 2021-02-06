@@ -20,17 +20,13 @@ pub fn from_file() -> Result<Configuration, UserErr> {
     Ok(config) => config,
     Err(e) => {
       match e.kind() {
-        std::io::ErrorKind::NotFound => return Err(UserErr::new("Configuration file not found".to_string(), "Tertestrial requires a configuration file named \".testconfig.json\" in the current directory. Please run \"tertestrial setup \" to create one.".to_string())),
-        _ => return Err(UserErr::new(format!("Cannot open configuration file: {}", e), "".to_string())),
+        std::io::ErrorKind::NotFound => return Err(UserErr::from_str("Configuration file not found", "Tertestrial requires a configuration file named \".testconfig.json\" in the current directory. Please run \"tertestrial setup \" to create one.")),
+        _ => return Err(UserErr::new(format!("Cannot open configuration file: {}", e), "")),
       }
     }
   };
-  serde_json::from_reader(file).map_err(|e| {
-    UserErr::new(
-      format!("Cannot parse configuration file: {}", e),
-      "".to_string(),
-    )
-  })
+  serde_json::from_reader(file)
+    .map_err(|e| UserErr::new(format!("Cannot parse configuration file: {}", e), ""))
 }
 
 pub fn create() -> Result<(), UserErr> {
@@ -61,12 +57,7 @@ pub fn create() -> Result<(), UserErr> {
   ]
 }"#,
   )
-  .map_err(|e| {
-    UserErr::new(
-      format!("cannot create configuration file: {}", e),
-      "".to_string(),
-    )
-  })
+  .map_err(|e| UserErr::new(format!("cannot create configuration file: {}", e), ""))
 }
 
 impl Configuration {

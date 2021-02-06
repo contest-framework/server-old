@@ -25,9 +25,9 @@ where
         "run" => match argv.next() {
           Some(cmd) => mode = Command::Run(cmd),
           None => {
-            return Err(UserErr::new(
-              String::from("missing option for \"run\" command"),
-              String::from("The \"run\" command requires the command to run"),
+            return Err(UserErr::from_str(
+              "missing option for \"run\" command",
+              "The \"run\" command requires the command to run",
             ))
           }
         },
@@ -36,7 +36,7 @@ where
         _ => {
           return Err(UserErr::new(
             format!("unknown argument: {}", arg),
-            String::from("The arguments are \"debug\" or \"run <command>\"."),
+            "The arguments are \"debug\" or \"run <command>\".",
           ))
         }
       },
