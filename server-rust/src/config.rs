@@ -16,7 +16,7 @@ pub struct Configuration {
 }
 
 pub fn from_file() -> Result<Configuration, UserErr> {
-  let file = match std::fs::File::open("tertestrial.json") {
+  let file = match std::fs::File::open(".testconfig.json") {
     Ok(config) => config,
     Err(e) => {
       match e.kind() {
@@ -35,7 +35,7 @@ pub fn from_file() -> Result<Configuration, UserErr> {
 
 pub fn create() -> Result<(), UserErr> {
   std::fs::write(
-    "tertestrial.json",
+    ".testconfig.json",
     r#"{
   "actions": [
     {
