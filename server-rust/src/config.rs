@@ -15,7 +15,7 @@ pub struct Configuration {
 }
 
 pub fn from_file() -> Configuration {
-  let file = std::fs::File::open("tertestrial.json").expect("Cannot find configuration file");
+  let file = std::fs::File::open(".testconfig.json").expect("Cannot find configuration file");
   serde_json::from_reader(file).expect("cannot read JSON")
 }
 
@@ -25,21 +25,24 @@ pub fn create() -> Result<(), std::io::Error> {
     r#"{
   "actions": [
     {
-      "trigger": {},
+      "trigger": { "command": "testAll" },
       "run": "echo test all files"
     },
 
     {
-      "trigger": { "filename": ".rs$" },
-      "run": "echo testing file {{filename}}"
+      "trigger": {
+        "command": "testFile",
+        "file": "\\.rs$"
+      },
+      "run": "echo testing file {{file}}"
     },
 
     {
       "trigger": {
-        "filename": ".ext$",
-        "line": "d+"
+        "command": "testLine",
+        "file": "\\.ext$",
       },
-      "run": "echo testing file {{filename}} at line {{line}}"
+      "run": "echo testing file {{file}} at line {{line}}"
     }
   ]
 }"#,
@@ -78,40 +81,40 @@ mod tests {
   use super::*;
 
   #[test]
-  fn config_get_command_empty() {
+  fn get_command_test_all() {
     let config = Configuration { actions: vec![] };
     let give = Trigger {
-      filename: None,
+      command: "testAll".to_string(),
+      file: None,
       line: None,
-      name: None,
     };
     let have = config.get_command(give);
     assert_eq!(have, None);
   }
 
   #[test]
-  fn config_get_command_multiple_actions() {
+  fn get_command_match() {
     let action1 = Action {
       trigger: Trigger {
-        filename: Some(String::from("matching filename")),
-        line: Some(String::from("2")),
-        name: None,
+        command: "testLine".to_string(),
+        file: Some("filename".to_string()),
+        line: Some(1),
       },
       run: String::from("action1 command"),
     };
     let action2 = Action {
       trigger: Trigger {
-        filename: Some(String::from("matching filename")),
-        line: None,
-        name: None,
+        command: "testLine".to_string(),
+        file: Some("filename".to_string()),
+        line: Some(2),
       },
       run: String::from("action2 command"),
     };
     let action3 = Action {
       trigger: Trigger {
-        filename: Some(String::from("other filename")),
-        line: None,
-        name: None,
+        command: "testLine".to_string(),
+        file: Some("filename".to_string()),
+        line: Some(3),
       },
       run: String::from("action3 command"),
     };
@@ -119,9 +122,9 @@ mod tests {
       actions: vec![action1, action2, action3],
     };
     let give = Trigger {
-      filename: Some(String::from("matching filename")),
-      line: None,
-      name: None,
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(2),
     };
     let have = config.get_command(give);
     assert_eq!(have, Some(&String::from("action2 command")));
@@ -131,9 +134,9 @@ mod tests {
   fn config_get_command_no_match() {
     let action1 = Action {
       trigger: Trigger {
-        filename: Some(String::from("matching filename")),
+        command: "testFile".to_string(),
+        file: Some("filename".to_string()),
         line: None,
-        name: None,
       },
       run: String::from("action1 command"),
     };
@@ -141,9 +144,9 @@ mod tests {
       actions: vec![action1],
     };
     let give = Trigger {
-      filename: Some(String::from("other filename")),
+      command: "testFile".to_string(),
+      file: Some("other filename".to_string()),
       line: None,
-      name: None,
     };
     let have = config.get_command(give);
     assert_eq!(have, None);
