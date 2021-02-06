@@ -21,12 +21,12 @@ fn main() {
 
 fn main_with_err() -> Result<(), UserErr> {
     match args::parse(std::env::args())? {
-        args::Command::Normal => normal(false),
-        args::Command::Debug => normal(true),
+        args::Command::Normal => listen(false),
+        args::Command::Debug => listen(true),
         args::Command::Run(cmd) => {
             println!("running cmd: {}", cmd);
             let config = config::from_file()?;
-            execute(cmd, &config)
+            run_command(cmd, &config)
         }
         args::Command::Setup => config::create(),
         args::Command::Version => {
@@ -36,7 +36,7 @@ fn main_with_err() -> Result<(), UserErr> {
     }
 }
 
-fn normal(debug: bool) -> Result<(), UserErr> {
+fn listen(debug: bool) -> Result<(), UserErr> {
     let config = config::from_file()?;
     if debug {
         println!("using this configuration:");
@@ -61,7 +61,7 @@ fn normal(debug: bool) -> Result<(), UserErr> {
             channel::Signal::ReceivedLine(line) => match debug {
                 true => println!("received from client: {}", line),
                 false => {
-                    result = execute(line, &config);
+                    result = run_command(line, &config);
                     if result.is_err() {
                         break;
                     }
@@ -84,7 +84,7 @@ fn normal(debug: bool) -> Result<(), UserErr> {
     result
 }
 
-fn execute(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
+fn run_command(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
     let trigger = trigger::from_string(&text)?;
     let command = configuration.get_command(trigger)?;
     match run::run(command) {
