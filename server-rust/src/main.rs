@@ -15,7 +15,7 @@ mod trigger;
 
 fn main() {
     if let Err(user_err) = main_with_err() {
-        println!("\nUser error: {}\n\n{}", user_err.reason, user_err.guidance);
+        println!("\nError: {}\n\n{}", user_err.reason, user_err.guidance);
     }
 }
 
