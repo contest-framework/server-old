@@ -14,20 +14,22 @@ mod run;
 mod trigger;
 
 fn main() {
-    match args::parse(std::env::args()) {
-        Ok(cmd) => match cmd {
+    let res = {
+        match args::parse(std::env::args())? {
             args::Command::Normal => normal(false),
             args::Command::Debug => normal(true),
-            args::Command::Run(cmd) => run(cmd),
+            args::Command::Run(cmd) => run(cmd)?,
             args::Command::Setup => setup(),
             args::Command::Version => version(),
-        },
-        Err(e) => print_user_error(e),
+        }
+    };
+    if res.is_err() {
+        print_user_error(res.err());
     }
 }
 
-fn normal(debug: bool) {
-    let config = config::from_file();
+fn normal(debug: bool) -> Result<(), UserErr> {
+    let config = config::from_file()?;
     if debug {
         println!("using this configuration:");
         println!("{}", config);
@@ -70,20 +72,14 @@ fn normal(debug: bool) {
     pipe.delete();
 }
 
-fn run(cmd: String) {
+fn run(cmd: String) -> Result<(), UserErr> {
     println!("running cmd: {}", cmd);
-    let config = config::from_file();
-    match execute(cmd, &config) {
-        Ok(_) => {}
-        Err(user_err) => print_user_error(user_err),
-    }
+    let config = config::from_file()?;
+    execute(cmd, &config)
 }
 
-fn setup() {
-    match config::create() {
-        Ok(_) => println!("Created configuration file "),
-        Err(e) => println!("Cannot create file: {}", e),
-    }
+fn setup() -> Result<(), UserErr> {
+    config::create()
 }
 
 fn version() {
