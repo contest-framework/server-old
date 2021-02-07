@@ -20,14 +20,14 @@ async function testAll() {
 async function testFile() {
   const relPath = workspace.currentFile()
   notification.display(`testing file ${relPath}`)
-  await pipe.send(`{ "command": "testFile", "filename": "${relPath}" }`)
+  await pipe.send(`{ "command": "testFile", "file": "${relPath}" }`)
 }
 
 async function testLine() {
   const relPath = workspace.currentFile()
   const line = workspace.currentLine() + 1
   notification.display(`testing file ${relPath}:${line}`)
-  await pipe.send(`{ "command": "testLine", "filename": "${relPath}", "line": "${line}" }`)
+  await pipe.send(`{ "command": "testLine", "file": "${relPath}", "line": "${line}" }`)
 }
 
 async function repeatTest() {

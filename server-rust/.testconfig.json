@@ -3,15 +3,15 @@
     {
       "desc": "run all tests",
       "trigger": {
-        "command": "all"
+        "command": "testAll"
       },
-      "run": "echo make test"
+      "run": "make test"
     },
 
     {
       "desc": "test RS file",
       "trigger": {
-        "command": "file",
+        "command": "testFile",
         "file": "**/*.rs"
       },
       "run": "echo cargo test {{file_name}}"
@@ -20,7 +20,7 @@
     {
       "desc": "individual RS unit test",
       "trigger": {
-        "command": "line",
+        "command": "testLine",
         "file": "**/*.rs"
       },
       "vars": [
@@ -36,7 +36,7 @@
     {
       "desc": "TS unit test file",
       "trigger": {
-        "command": "file",
+        "command": "testFile",
         "file": "**/*.test.ts"
       },
       "run": "echo mocha {{file_path}}"
@@ -45,7 +45,7 @@
     {
       "desc": "TS source file",
       "trigger": {
-        "command": "file",
+        "command": "testFile",
         "file": "**/*.ts"
       },
       "vars": [
@@ -61,7 +61,7 @@
     {
       "desc": "individual TS unit test",
       "trigger": {
-        "command": "line",
+        "command": "testLine",
         "file": "**/*.test.ts"
       },
       "run": "echo mocha {{file}}:{{line}}"
