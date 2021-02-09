@@ -14,7 +14,7 @@
         "command": "testFile",
         "file": "**/*.rs"
       },
-      "run": "echo cargo test {{file_name}}"
+      "run": "echo cargo test {{file}}"
     },
 
     {
@@ -39,7 +39,7 @@
         "command": "testFile",
         "file": "**/*.test.ts"
       },
-      "run": "echo mocha {{file_path}}"
+      "run": "echo mocha {{file}}"
     },
 
     {
@@ -50,12 +50,12 @@
       },
       "vars": [
         {
-          "name": "file_name_without_ext",
-          "source": "file_name",
+          "name": "file_without_ext",
+          "source": "file",
           "filter": "^(.+)\\.ts$"
         }
       ],
-      "run": "echo mocha {{file_name_without_ext}}.test.ts"
+      "run": "echo mocha {{file_without_ext}}.test.ts"
     },
 
     {
