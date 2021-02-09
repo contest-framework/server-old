@@ -8,6 +8,31 @@ pub struct Trigger {
   pub line: Option<u32>,
 }
 
+impl Trigger {
+  pub fn matches(&self, other: &Trigger) -> Result<bool, UserErr> {
+    if self.command != other.command {
+      return Ok(false);
+    }
+    if self.line != other.line {
+      return Ok(false);
+    }
+    if self.file.is_none() && other.file.is_none() {
+      return Ok(true);
+    }
+    if self.file.is_some() && other.file.is_some() {
+      let self_file = &self.file.as_ref().unwrap();
+      let pattern = glob::Pattern::new(&self_file).map_err(|e| {
+        UserErr::new(
+          format!("Invalid glob pattern: {}", &self_file),
+          &e.to_string(),
+        )
+      })?;
+      return Ok(pattern.matches(other.file.as_ref().unwrap()));
+    }
+    Ok(false)
+  }
+}
+
 impl std::fmt::Display for Trigger {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "{{")?;
@@ -101,7 +126,7 @@ mod tests {
   }
 
   #[test]
-  fn trigger_eq_match() {
+  fn eq_match() {
     let trigger1 = Trigger {
       command: "testLine".to_string(),
       file: Some("filename".to_string()),
@@ -116,7 +141,7 @@ mod tests {
   }
 
   #[test]
-  fn trigger_eq_mismatching_filename() {
+  fn eq_mismatching_filename() {
     let trigger1 = Trigger {
       command: "testLine".to_string(),
       file: Some("filename1".to_string()),
@@ -131,7 +156,7 @@ mod tests {
   }
 
   #[test]
-  fn trigger_eq_mismatching_line() {
+  fn eq_mismatching_line() {
     let trigger1 = Trigger {
       command: "testLine".to_string(),
       file: Some("filename".to_string()),
@@ -143,5 +168,71 @@ mod tests {
       line: Some(11),
     };
     assert!(trigger1 != trigger2);
+  }
+
+  #[test]
+  fn matches_match() {
+    let config = Trigger {
+      command: "testLine".to_string(),
+      file: Some("**/*.rs".to_string()),
+      line: Some(12),
+    };
+    let give = Trigger {
+      command: "testLine".to_string(),
+      file: Some("foo.rs".to_string()),
+      line: Some(12),
+    };
+    assert!(config.matches(&give).unwrap());
+    let give = Trigger {
+      command: "testLine".to_string(),
+      file: Some("foo/bar.rs".to_string()),
+      line: Some(12),
+    };
+    assert!(config.matches(&give).unwrap());
+  }
+
+  #[test]
+  fn matches_mismatching_command() {
+    let config = Trigger {
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
+    };
+    let give = Trigger {
+      command: "testFile".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
+    };
+    assert!(!config.matches(&give).unwrap());
+  }
+
+  #[test]
+  fn matches_mismatching_file() {
+    let config = Trigger {
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
+    };
+    let give = Trigger {
+      command: "testFile".to_string(),
+      file: Some("filename2".to_string()),
+      line: Some(12),
+    };
+    assert!(!config.matches(&give).unwrap());
+  }
+
+  #[test]
+  fn matches_mismatching_line() {
+    let config = Trigger {
+      command: "testLine".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(12),
+    };
+    let give = Trigger {
+      command: "testFile".to_string(),
+      file: Some("filename".to_string()),
+      line: Some(11),
+    };
+    assert!(!config.matches(&give).unwrap());
   }
 }

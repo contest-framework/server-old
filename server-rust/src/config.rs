@@ -63,12 +63,12 @@ pub fn create() -> Result<(), UserErr> {
 impl Configuration {
   pub fn get_command(&self, trigger: Trigger) -> Result<&String, UserErr> {
     for action in &self.actions {
-      if action.trigger == trigger {
+      if action.trigger.matches(&trigger)? {
         return Ok(&action.run);
       }
     }
     Err(UserErr::new(
-      format!(r#"cannot determine command for trigger "{}""#, trigger),
+      format!("cannot determine command for trigger: {}", trigger),
       "Please make sure that this trigger is listed in your configuration file",
     ))
   }
