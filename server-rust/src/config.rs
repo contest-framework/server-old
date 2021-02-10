@@ -61,10 +61,10 @@ pub fn create() -> Result<(), UserErr> {
 }
 
 impl Configuration {
-  pub fn get_command(&self, trigger: Trigger) -> Result<&String, UserErr> {
+  pub fn get_command(&self, trigger: Trigger) -> Result<String, UserErr> {
     for action in &self.actions {
       if action.trigger.matches(&trigger)? {
-        return Ok(&action.run);
+        return Ok(format_run(&action.run, &trigger));
       }
     }
     Err(UserErr::new(
@@ -84,6 +84,31 @@ impl std::fmt::Display for Configuration {
     table.printstd();
     Ok(())
   }
+}
+
+// replaces placeholders in run strings
+fn format_run(run: &str, trigger: &Trigger) -> String {
+  let re = regex::Regex::new("\\{\\{\\s*command\\s*\\}\\}").unwrap();
+  let mut result: String = re
+    .replace(run, regex::NoExpand(&trigger.command))
+    .to_string();
+  match &trigger.file {
+    Some(file) => {
+      let re = regex::Regex::new("\\{\\{\\s*file\\s*\\}\\}").unwrap();
+      result = re.replace(&result, regex::NoExpand(&file)).to_string();
+    }
+    None => {}
+  }
+  match &trigger.line {
+    Some(line) => {
+      let re = regex::Regex::new("\\{\\{\\s*file\\s*\\}\\}").unwrap();
+      result = re
+        .replace(&result, regex::NoExpand(&line.to_string()))
+        .to_string();
+    }
+    None => {}
+  }
+  result
 }
 
 //
@@ -141,7 +166,7 @@ mod tests {
       line: Some(2),
     };
     let have = config.get_command(give);
-    assert_eq!(have, Ok(&String::from("action2 command")));
+    assert_eq!(have, Ok(String::from("action2 command")));
   }
 
   #[test]

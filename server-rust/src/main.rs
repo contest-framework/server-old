@@ -87,7 +87,7 @@ fn listen(debug: bool) -> Result<(), UserErr> {
 fn run_command(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
     let trigger = trigger::from_string(&text)?;
     let command = configuration.get_command(trigger)?;
-    match run::run(command) {
+    match run::run(&command) {
         run::Outcome::TestPass() => {
             println!("SUCCESS!");
             Ok(())

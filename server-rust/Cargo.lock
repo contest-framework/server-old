@@ -491,6 +491,7 @@ dependencies = [
  "glob",
  "nix 0.19.1",
  "prettytable-rs",
+ "regex",
  "serde",
  "serde_json",
  "shellwords",
