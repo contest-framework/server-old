@@ -8,6 +8,14 @@ use serde::Deserialize;
 pub struct Action {
   trigger: Trigger,
   run: String,
+  vars: Option<Vec<Var>>,
+}
+
+#[derive(Deserialize, Debug)]
+struct Var {
+  name: String,
+  source: String,
+  filter: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -64,7 +72,7 @@ impl Configuration {
   pub fn get_command(&self, trigger: Trigger) -> Result<String, UserErr> {
     for action in &self.actions {
       if action.trigger.matches(&trigger)? {
-        return Ok(self.format_run(&action.run, &trigger));
+        return Ok(self.format_run(&action, &trigger));
       }
     }
     Err(UserErr::new(
@@ -74,16 +82,24 @@ impl Configuration {
   }
 
   // replaces all placeholders in the given run string
-  fn format_run(&self, run: &str, trigger: &Trigger) -> String {
-    let replaced = replace(run, "command", &trigger.command);
-    let replaced = match &trigger.file {
-      Some(file) => replace(&replaced, "file", &file),
-      None => replaced,
-    };
-    let replaced = match &trigger.line {
-      Some(line) => replace(&replaced, "line", &line.to_string()),
-      None => replaced,
-    };
+  fn format_run(&self, action: &Action, trigger: &Trigger) -> String {
+    let mut values: std::collections::HashMap<&str, String> = std::collections::HashMap::new();
+    values.insert("command", trigger.command.clone());
+    if trigger.file.is_some() {
+      values.insert("file", trigger.file.as_ref().unwrap().clone());
+    }
+    if trigger.line.is_some() {
+      values.insert("line", trigger.line.unwrap().to_string());
+    }
+    if action.vars.is_some() {
+      for var in action.vars.as_ref().unwrap() {
+        values.insert(&var.name, calculate_var(&var, &values));
+      }
+    }
+    let mut replaced = action.run.clone();
+    for (placeholder, replacement) in values {
+      replaced = replace(&replaced, placeholder, &replacement);
+    }
     replaced
   }
 }
@@ -92,12 +108,25 @@ impl std::fmt::Display for Configuration {
   fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     let mut table = Table::new();
     table.add_row(prettytable::row!["TRIGGER", "RUN"]);
-    for action in self.actions.iter() {
+    for action in &self.actions {
       table.add_row(prettytable::row![format!("{}", action.trigger), action.run]);
     }
     table.printstd();
     Ok(())
   }
+}
+
+fn calculate_var(var: &Var, values: &std::collections::HashMap<&str, String>) -> String {
+  if var.source == "file" {
+    let text = values.get("file").unwrap();
+    let re = regex::Regex::new(&var.filter).unwrap();
+    let captures = re.captures(text).unwrap();
+    if captures.len() != 2 {
+      panic!("found {} captures", captures.len());
+    }
+    return captures.get(1).unwrap().as_str().to_string();
+  }
+  panic!("unhandled variable type: {}", var.source);
 }
 
 fn replace(text: &str, placeholder: &str, replacement: &str) -> String {
@@ -139,6 +168,7 @@ mod tests {
           line: Some(1),
         },
         run: String::from("action1 command"),
+        vars: Some(vec![]),
       };
       let action2 = Action {
         trigger: Trigger {
@@ -147,6 +177,7 @@ mod tests {
           line: Some(2),
         },
         run: String::from("action2 command"),
+        vars: Some(vec![]),
       };
       let action3 = Action {
         trigger: Trigger {
@@ -155,6 +186,7 @@ mod tests {
           line: Some(3),
         },
         run: String::from("action3 command"),
+        vars: Some(vec![]),
       };
       let config = Configuration {
         actions: vec![action1, action2, action3],
@@ -177,6 +209,7 @@ mod tests {
           line: None,
         },
         run: String::from("action1 command"),
+        vars: Some(vec![]),
       };
       let config = Configuration {
         actions: vec![action1],

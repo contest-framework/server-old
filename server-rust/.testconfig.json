@@ -14,7 +14,14 @@
         "command": "testFile",
         "file": "**/*.rs"
       },
-      "run": "cargo test {{file}}"
+      "vars": [
+        {
+          "name": "file_without_ext",
+          "source": "file",
+          "filter": "\\b(\\w+)\\.rs$"
+        }
+      ],
+      "run": "cargo test {{file_without_ext}}"
     },
 
     {
