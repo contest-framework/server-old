@@ -14,7 +14,7 @@
         "command": "testFile",
         "file": "**/*.rs"
       },
-      "run": "echo cargo test {{file}}"
+      "run": "cargo test {{file}}"
     },
 
     {

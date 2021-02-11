@@ -64,13 +64,27 @@ impl Configuration {
   pub fn get_command(&self, trigger: Trigger) -> Result<String, UserErr> {
     for action in &self.actions {
       if action.trigger.matches(&trigger)? {
-        return Ok(format_run(&action.run, &trigger));
+        return Ok(self.format_run(&action.run, &trigger));
       }
     }
     Err(UserErr::new(
       format!("cannot determine command for trigger: {}", trigger),
       "Please make sure that this trigger is listed in your configuration file",
     ))
+  }
+
+  // replaces all placeholders in the given run string
+  fn format_run(&self, run: &str, trigger: &Trigger) -> String {
+    let replaced = replace(run, "command", &trigger.command);
+    let replaced = match &trigger.file {
+      Some(file) => replace(&replaced, "file", &file),
+      None => replaced,
+    };
+    let replaced = match &trigger.line {
+      Some(line) => replace(&replaced, "line", &line.to_string()),
+      None => replaced,
+    };
+    replaced
   }
 }
 
@@ -86,29 +100,11 @@ impl std::fmt::Display for Configuration {
   }
 }
 
-// replaces placeholders in run strings
-fn format_run(run: &str, trigger: &Trigger) -> String {
-  let re = regex::Regex::new("\\{\\{\\s*command\\s*\\}\\}").unwrap();
-  let mut result: String = re
-    .replace(run, regex::NoExpand(&trigger.command))
-    .to_string();
-  match &trigger.file {
-    Some(file) => {
-      let re = regex::Regex::new("\\{\\{\\s*file\\s*\\}\\}").unwrap();
-      result = re.replace(&result, regex::NoExpand(&file)).to_string();
-    }
-    None => {}
-  }
-  match &trigger.line {
-    Some(line) => {
-      let re = regex::Regex::new("\\{\\{\\s*file\\s*\\}\\}").unwrap();
-      result = re
-        .replace(&result, regex::NoExpand(&line.to_string()))
-        .to_string();
-    }
-    None => {}
-  }
-  result
+fn replace(text: &str, placeholder: &str, replacement: &str) -> String {
+  regex::Regex::new(&format!("\\{{\\{{\\s*{}\\s*\\}}\\}}", placeholder))
+    .unwrap()
+    .replace_all(text, regex::NoExpand(replacement))
+    .to_string()
 }
 
 //
@@ -117,77 +113,104 @@ fn format_run(run: &str, trigger: &Trigger) -> String {
 
 #[cfg(test)]
 mod tests {
-  use super::*;
 
-  #[test]
-  fn get_command_test_all() {
-    let config = Configuration { actions: vec![] };
-    let give = Trigger {
-      command: "testAll".to_string(),
-      file: None,
-      line: None,
-    };
-    let have = config.get_command(give);
-    assert!(have.is_err());
-  }
+  #[cfg(test)]
+  mod get_command {
+    use super::super::*;
 
-  #[test]
-  fn get_command_match() {
-    let action1 = Action {
-      trigger: Trigger {
-        command: "testLine".to_string(),
-        file: Some("filename".to_string()),
-        line: Some(1),
-      },
-      run: String::from("action1 command"),
-    };
-    let action2 = Action {
-      trigger: Trigger {
+    #[test]
+    fn test_all() {
+      let config = Configuration { actions: vec![] };
+      let give = Trigger {
+        command: "testAll".to_string(),
+        file: None,
+        line: None,
+      };
+      let have = config.get_command(give);
+      assert!(have.is_err());
+    }
+
+    #[test]
+    fn exact_match() {
+      let action1 = Action {
+        trigger: Trigger {
+          command: "testLine".to_string(),
+          file: Some("filename".to_string()),
+          line: Some(1),
+        },
+        run: String::from("action1 command"),
+      };
+      let action2 = Action {
+        trigger: Trigger {
+          command: "testLine".to_string(),
+          file: Some("filename".to_string()),
+          line: Some(2),
+        },
+        run: String::from("action2 command"),
+      };
+      let action3 = Action {
+        trigger: Trigger {
+          command: "testLine".to_string(),
+          file: Some("filename".to_string()),
+          line: Some(3),
+        },
+        run: String::from("action3 command"),
+      };
+      let config = Configuration {
+        actions: vec![action1, action2, action3],
+      };
+      let give = Trigger {
         command: "testLine".to_string(),
         file: Some("filename".to_string()),
         line: Some(2),
-      },
-      run: String::from("action2 command"),
-    };
-    let action3 = Action {
-      trigger: Trigger {
-        command: "testLine".to_string(),
-        file: Some("filename".to_string()),
-        line: Some(3),
-      },
-      run: String::from("action3 command"),
-    };
-    let config = Configuration {
-      actions: vec![action1, action2, action3],
-    };
-    let give = Trigger {
-      command: "testLine".to_string(),
-      file: Some("filename".to_string()),
-      line: Some(2),
-    };
-    let have = config.get_command(give);
-    assert_eq!(have, Ok(String::from("action2 command")));
+      };
+      let have = config.get_command(give);
+      assert_eq!(have, Ok(String::from("action2 command")));
+    }
+
+    #[test]
+    fn no_match() {
+      let action1 = Action {
+        trigger: Trigger {
+          command: "testFile".to_string(),
+          file: Some("filename".to_string()),
+          line: None,
+        },
+        run: String::from("action1 command"),
+      };
+      let config = Configuration {
+        actions: vec![action1],
+      };
+      let give = Trigger {
+        command: "testFile".to_string(),
+        file: Some("other filename".to_string()),
+        line: None,
+      };
+      let have = config.get_command(give);
+      assert!(have.is_err());
+    }
   }
 
-  #[test]
-  fn config_get_command_no_match() {
-    let action1 = Action {
-      trigger: Trigger {
-        command: "testFile".to_string(),
-        file: Some("filename".to_string()),
-        line: None,
-      },
-      run: String::from("action1 command"),
-    };
-    let config = Configuration {
-      actions: vec![action1],
-    };
-    let give = Trigger {
-      command: "testFile".to_string(),
-      file: Some("other filename".to_string()),
-      line: None,
-    };
-    let have = config.get_command(give);
-    assert!(have.is_err());
+  #[cfg(test)]
+  mod replace {
+    use super::super::*;
+
+    #[test]
+    fn tight_placeholder() {
+      let have = replace("hello {{world}}", "world", "universe");
+      assert_eq!(have, "hello universe");
+    }
+
+    #[test]
+    fn loose_placeholder() {
+      let have = replace("hello {{ world }}", "world", "universe");
+      assert_eq!(have, "hello universe");
+    }
+
+    #[test]
+    fn multiple_placeholders() {
+      let have = replace("{{ hello }} {{ hello }}", "hello", "bye");
+      assert_eq!(have, "bye bye");
+    }
   }
 }
