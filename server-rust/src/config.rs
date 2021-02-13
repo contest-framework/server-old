@@ -91,7 +91,7 @@ impl Configuration {
   pub fn get_command(&self, trigger: Trigger) -> Result<String, UserErr> {
     for action in &self.actions {
       if action.trigger.matches_client_trigger(&trigger)? {
-        return Ok(self.format_run(&action, &trigger));
+        return Ok(self.format_run(&action, &trigger)?);
       }
     }
     Err(UserErr::new(
@@ -101,7 +101,7 @@ impl Configuration {
   }
 
   // replaces all placeholders in the given run string
-  fn format_run(&self, action: &Action, trigger: &Trigger) -> String {
+  fn format_run(&self, action: &Action, trigger: &Trigger) -> Result<String, UserErr> {
     let mut values: std::collections::HashMap<&str, String> = std::collections::HashMap::new();
     values.insert("command", trigger.command.clone());
     if trigger.file.is_some() {
@@ -112,14 +112,14 @@ impl Configuration {
     }
     if action.vars.is_some() {
       for var in action.vars.as_ref().unwrap() {
-        values.insert(&var.name, calculate_var(&var, &values));
+        values.insert(&var.name, calculate_var(&var, &values)?);
       }
     }
     let mut replaced = action.run.clone();
     for (placeholder, replacement) in values {
       replaced = replace(&replaced, placeholder, &replacement);
     }
-    replaced
+    Ok(replaced)
   }
 }
 
@@ -135,16 +135,22 @@ impl std::fmt::Display for Configuration {
   }
 }
 
-fn calculate_var(var: &Var, values: &std::collections::HashMap<&str, String>) -> String {
+fn calculate_var(
+  var: &Var,
+  values: &std::collections::HashMap<&str, String>,
+) -> Result<String, UserErr> {
   match var.source {
     VarSource::File => {
       let text = values.get("file").unwrap();
       let re = regex::Regex::new(&var.filter).unwrap();
       let captures = re.captures(text).unwrap();
       if captures.len() != 2 {
-        panic!("found {} captures", captures.len());
+        return Err(UserErr::new(
+          format!("found {} captures", captures.len()),
+          "filters in the Tertestrial configuration file can only contain one capture group",
+        ));
       }
-      return captures.get(1).unwrap().as_str().to_string();
+      return Ok(captures.get(1).unwrap().as_str().to_string());
     }
     VarSource::Line => {
       panic!("implement")
