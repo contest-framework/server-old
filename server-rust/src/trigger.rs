@@ -9,17 +9,21 @@ pub struct Trigger {
 }
 
 impl Trigger {
-  pub fn matches(&self, other: &Trigger) -> Result<bool, UserErr> {
-    if self.command != other.command {
+  pub fn matches_client_trigger(&self, from_client: &Trigger) -> Result<bool, UserErr> {
+    if self.command != from_client.command {
       return Ok(false);
     }
-    if self.line != other.line {
-      return Ok(false);
-    }
-    if self.file.is_none() && other.file.is_none() {
+    if self.line.is_none() && from_client.line.is_some() {
+      // client sent line but config doesn't contain it --> still a match
       return Ok(true);
     }
-    if self.file.is_some() && other.file.is_some() {
+    if self.line != from_client.line {
+      return Ok(false);
+    }
+    if self.file.is_none() && from_client.file.is_none() {
+      return Ok(true);
+    }
+    if self.file.is_some() && from_client.file.is_some() {
       let self_file = &self.file.as_ref().unwrap();
       let pattern = glob::Pattern::new(&self_file).map_err(|e| {
         UserErr::new(
@@ -27,7 +31,7 @@ impl Trigger {
           &e.to_string(),
         )
       })?;
-      return Ok(pattern.matches(other.file.as_ref().unwrap()));
+      return Ok(pattern.matches(from_client.file.as_ref().unwrap()));
     }
     Ok(false)
   }

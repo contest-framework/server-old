@@ -71,7 +71,7 @@ pub fn create() -> Result<(), UserErr> {
 impl Configuration {
   pub fn get_command(&self, trigger: Trigger) -> Result<String, UserErr> {
     for action in &self.actions {
-      if action.trigger.matches(&trigger)? {
+      if action.trigger.matches_client_trigger(&trigger)? {
         return Ok(self.format_run(&action, &trigger));
       }
     }
