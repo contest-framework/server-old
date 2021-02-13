@@ -2,7 +2,6 @@
 extern crate prettytable;
 
 use errors::UserErr;
-use std::sync::Arc;
 
 mod args;
 mod channel;
@@ -14,8 +13,14 @@ mod run;
 mod trigger;
 
 fn main() {
-    if let Err(user_err) = main_with_err() {
-        println!("\nError: {}\n\n{}", user_err.reason, user_err.guidance);
+    let panic_result = std::panic::catch_unwind(|| {
+        if let Err(user_err) = main_with_err() {
+            println!("\nError: {}\n\n{}", user_err.reason, user_err.guidance);
+        }
+    });
+    let _ = fifo::in_dir(&std::env::current_dir().unwrap()).delete();
+    if panic_result.is_err() {
+        panic!(panic_result);
     }
 }
 
@@ -44,13 +49,13 @@ fn listen(debug: bool) -> Result<(), UserErr> {
     }
     let (sender, receiver) = channel::create(); // cross-thread communication channel
     ctrl_c::handle(sender.clone());
-    let pipe = Arc::new(fifo::in_dir(&std::env::current_dir().unwrap()));
+    let pipe = fifo::in_dir(&std::env::current_dir().unwrap());
     match pipe.create() {
         fifo::CreateOutcome::AlreadyExists(path) => return Err(UserErr::new(format!("A fifo pipe \"{}\" already exists.", path), "This could mean a Tertestrial instance could already be running.\nIf you are sure no other instance is running, please delete this file and start Tertestrial again.")),
         fifo::CreateOutcome::OtherError(err) => panic!(err),
         fifo::CreateOutcome::Ok() => {}
     }
-    fifo::listen(&pipe, sender);
+    fifo::listen(pipe, sender);
     match debug {
         false => println!("Tertestrial is online, Ctrl-C to exit"),
         true => println!("Tertestrial is online in debug mode, Ctrl-C to exit"),
@@ -80,7 +85,6 @@ fn listen(debug: bool) -> Result<(), UserErr> {
             }
         }
     }
-    pipe.delete()?;
     result
 }
 

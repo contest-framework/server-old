@@ -3,7 +3,6 @@
 use super::channel;
 use super::errors::UserErr;
 use std::io::prelude::*;
-use std::sync::Arc;
 
 // A fifo pipe
 #[derive(Debug)]
@@ -55,8 +54,7 @@ pub fn in_dir(dirpath: &std::path::PathBuf) -> Pipe {
   }
 }
 
-pub fn listen(pipe: &Arc<Pipe>, sender: channel::Sender) {
-  let pipe = Arc::clone(&pipe);
+pub fn listen(pipe: Pipe, sender: channel::Sender) {
   std::thread::spawn(move || {
     loop {
       // TODO: don't create a new BufReader for each line
