@@ -76,7 +76,7 @@ pub fn create() -> Result<(), UserErr> {
 
     {
       "trigger": {
-        "command": "testLine",
+        "command": "testFunction",
         "file": "\\.ext$",
       },
       "run": "echo testing file {{file}} at line {{line}}"
@@ -182,7 +182,7 @@ mod tests {
     fn exact_match() {
       let action1 = Action {
         trigger: Trigger {
-          command: "testLine".to_string(),
+          command: "testFunction".to_string(),
           file: Some("filename".to_string()),
           line: Some(1),
         },
@@ -191,7 +191,7 @@ mod tests {
       };
       let action2 = Action {
         trigger: Trigger {
-          command: "testLine".to_string(),
+          command: "testFunction".to_string(),
           file: Some("filename".to_string()),
           line: Some(2),
         },
@@ -200,7 +200,7 @@ mod tests {
       };
       let action3 = Action {
         trigger: Trigger {
-          command: "testLine".to_string(),
+          command: "testFunction".to_string(),
           file: Some("filename".to_string()),
           line: Some(3),
         },
@@ -211,7 +211,7 @@ mod tests {
         actions: vec![action1, action2, action3],
       };
       let give = Trigger {
-        command: "testLine".to_string(),
+        command: "testFunction".to_string(),
         file: Some("filename".to_string()),
         line: Some(2),
       };

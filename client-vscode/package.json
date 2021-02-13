@@ -12,7 +12,7 @@
   "activationEvents": [
     "onCommand:tertestrial-vscode.testAll",
     "onCommand:tertestrial-vscode.testFile",
-    "onCommand:tertestrial-vscode.testLine",
+    "onCommand:tertestrial-vscode.testFunction",
     "onCommand:tertestrial-vscode.repeatTest",
     "onCommand:tertestrial-vscode.stopTest"
   ],
@@ -21,19 +21,19 @@
     "commands": [
       {
         "command": "tertestrial-vscode.testAll",
-        "title": "Tertestrial: Test all files"
+        "title": "Tertestrial: Test everything"
       },
       {
         "command": "tertestrial-vscode.testFile",
-        "title": "Tertestrial: Test current file"
+        "title": "Tertestrial: Test this file"
       },
       {
-        "command": "tertestrial-vscode.testLine",
-        "title": "Tertestrial: Test current line in current file"
+        "command": "tertestrial-vscode.testFunction",
+        "title": "Tertestrial: Test this function"
       },
       {
         "command": "tertestrial-vscode.repeatTest",
-        "title": "Tertestrial: Repeat last test"
+        "title": "Tertestrial: Repeat the last test"
       },
       {
         "command": "tertestrial-vscode.stopTest",

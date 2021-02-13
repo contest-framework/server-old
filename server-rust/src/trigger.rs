@@ -98,9 +98,10 @@ mod tests {
 
   #[test]
   fn from_line_filename_line() {
-    let have = from_string(r#"{ "command": "testLine", "file": "foo.rs", "line": 12 }"#).unwrap();
+    let have =
+      from_string(r#"{ "command": "testFunction", "file": "foo.rs", "line": 12 }"#).unwrap();
     let want = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("foo.rs".to_string()),
       line: Some(12),
     };
@@ -132,12 +133,12 @@ mod tests {
   #[test]
   fn eq_match() {
     let trigger1 = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename".to_string()),
       line: Some(12),
     };
     let trigger2 = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename".to_string()),
       line: Some(12),
     };
@@ -147,12 +148,12 @@ mod tests {
   #[test]
   fn eq_mismatching_filename() {
     let trigger1 = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename1".to_string()),
       line: Some(12),
     };
     let trigger2 = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename2".to_string()),
       line: Some(12),
     };
@@ -162,12 +163,12 @@ mod tests {
   #[test]
   fn eq_mismatching_line() {
     let trigger1 = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename".to_string()),
       line: Some(12),
     };
     let trigger2 = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename".to_string()),
       line: Some(11),
     };
@@ -177,18 +178,18 @@ mod tests {
   #[test]
   fn matches_match() {
     let config = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("**/*.rs".to_string()),
       line: Some(12),
     };
     let give = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("foo.rs".to_string()),
       line: Some(12),
     };
     assert!(config.matches_client_trigger(&give).unwrap());
     let give = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("foo/bar.rs".to_string()),
       line: Some(12),
     };
@@ -198,7 +199,7 @@ mod tests {
   #[test]
   fn matches_mismatching_command() {
     let config = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename".to_string()),
       line: Some(12),
     };
@@ -213,7 +214,7 @@ mod tests {
   #[test]
   fn matches_mismatching_file() {
     let config = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename".to_string()),
       line: Some(12),
     };
@@ -228,7 +229,7 @@ mod tests {
   #[test]
   fn matches_mismatching_line() {
     let config = Trigger {
-      command: "testLine".to_string(),
+      command: "testFunction".to_string(),
       file: Some("filename".to_string()),
       line: Some(12),
     };

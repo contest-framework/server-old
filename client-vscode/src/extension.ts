@@ -7,7 +7,7 @@ import { UserError } from "./user_error"
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testAll", runSafe(testAll)))
   context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testFile", runSafe(testFile)))
-  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testLine", runSafe(testLine)))
+  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testFunction", runSafe(testFunction)))
   context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.repeatTest", runSafe(repeatTest)))
   context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.stopTest", runSafe(stopTest)))
 }
@@ -23,11 +23,11 @@ async function testFile() {
   await pipe.send(`{ "command": "testFile", "file": "${relPath}" }`)
 }
 
-async function testLine() {
+async function testFunction() {
   const relPath = workspace.currentFile()
   const line = workspace.currentLine() + 1
-  notification.display(`testing file ${relPath}:${line}`)
-  await pipe.send(`{ "command": "testLine", "file": "${relPath}", "line": ${line} }`)
+  notification.display(`testing function at ${relPath}:${line}`)
+  await pipe.send(`{ "command": "testFunction", "file": "${relPath}", "line": ${line} }`)
 }
 
 async function repeatTest() {
@@ -41,7 +41,7 @@ async function stopTest() {
 }
 
 function runSafe(f: () => Promise<void>): () => Promise<void> {
-  const result = async function (f: () => Promise<void>) {
+  const runAndCatch = async function (f: () => Promise<void>) {
     try {
       await f()
     } catch (e) {
@@ -52,5 +52,5 @@ function runSafe(f: () => Promise<void>): () => Promise<void> {
       }
     }
   }
-  return result.bind(null, f)
+  return runAndCatch.bind(null, f)
 }

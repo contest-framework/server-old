@@ -27,7 +27,7 @@
     {
       "desc": "individual RS unit test",
       "trigger": {
-        "command": "testLine",
+        "command": "testFunction",
         "file": "**/*.rs"
       },
       "vars": [
@@ -68,7 +68,7 @@
     {
       "desc": "individual TS unit test",
       "trigger": {
-        "command": "testLine",
+        "command": "testFunction",
         "file": "**/*.test.ts"
       },
       "run": "echo mocha {{file}}:{{line}}"
