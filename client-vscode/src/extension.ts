@@ -27,7 +27,7 @@ async function testLine() {
   const relPath = workspace.currentFile()
   const line = workspace.currentLine() + 1
   notification.display(`testing file ${relPath}:${line}`)
-  await pipe.send(`{ "command": "testLine", "file": "${relPath}", "line": "${line}" }`)
+  await pipe.send(`{ "command": "testLine", "file": "${relPath}", "line": ${line} }`)
 }
 
 async function repeatTest() {
