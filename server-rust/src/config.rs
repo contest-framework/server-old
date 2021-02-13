@@ -140,34 +140,24 @@ fn calculate_var(
   values: &std::collections::HashMap<&str, String>,
 ) -> Result<String, UserErr> {
   match var.source {
-    VarSource::File => {
-      let text = values.get("file").unwrap();
-      let re = regex::Regex::new(&var.filter).unwrap();
-      let captures = re.captures(text).unwrap();
-      if captures.len() != 2 {
-        return Err(UserErr::new(
-          format!("found {} captures in filter \"{}\"", captures.len(), text),
-          "filters in the Tertestrial configuration file can only contain one capture group",
-        ));
-      }
-      return Ok(captures.get(1).unwrap().as_str().to_string());
-    }
-    VarSource::Line => {
-      let text = values.get("line").unwrap();
-      let re = regex::Regex::new(&var.filter).unwrap();
-      let captures = re.captures(text).unwrap();
-      if captures.len() != 2 {
-        return Err(UserErr::new(
-          format!("found {} captures in filter \"{}\"", captures.len(), text),
-          "filters in the Tertestrial configuration file can only contain one capture group",
-        ));
-      }
-      return Ok(captures.get(1).unwrap().as_str().to_string());
-    }
+    VarSource::File => filter(values.get("file").unwrap(), &var.filter),
+    VarSource::Line => filter(values.get("line").unwrap(), &var.filter),
     VarSource::CurrentOrAboveLineContent => {
       panic!("implement")
     }
-  };
+  }
+}
+
+fn filter(text: &str, filter: &str) -> Result<String, UserErr> {
+  let re = regex::Regex::new(filter).unwrap();
+  let captures = re.captures(text).unwrap();
+  if captures.len() != 2 {
+    return Err(UserErr::new(
+      format!("found {} captures in filter \"{}\"", captures.len(), text),
+      "filters in the Tertestrial configuration file can only contain one capture group",
+    ));
+  }
+  return Ok(captures.get(1).unwrap().as_str().to_string());
 }
 
 fn replace(text: &str, placeholder: &str, replacement: &str) -> String {
