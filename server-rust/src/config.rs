@@ -11,10 +11,29 @@ pub struct Action {
   vars: Option<Vec<Var>>,
 }
 
+#[derive(Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+enum VarSource {
+  File,
+  Line,
+  CurrentOrAboveLineContent,
+}
+
+impl std::fmt::Display for VarSource {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let text = match &self {
+      VarSource::File => "file",
+      VarSource::Line => "line",
+      VarSource::CurrentOrAboveLineContent => "currentOrAboveLineContent",
+    };
+    write!(f, "{}", text)
+  }
+}
+
 #[derive(Deserialize, Debug)]
 struct Var {
   name: String,
-  source: String,
+  source: VarSource,
   filter: String,
 }
 
@@ -117,7 +136,7 @@ impl std::fmt::Display for Configuration {
 }
 
 fn calculate_var(var: &Var, values: &std::collections::HashMap<&str, String>) -> String {
-  if var.source == "file" {
+  if var.source == VarSource::File {
     let text = values.get("file").unwrap();
     let re = regex::Regex::new(&var.filter).unwrap();
     let captures = re.captures(text).unwrap();

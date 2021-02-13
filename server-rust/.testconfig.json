@@ -33,7 +33,7 @@
       "vars": [
         {
           "name": "test_name",
-          "source": "current_or_above_line_content",
+          "source": "currentOrAboveLineContent",
           "filter": "\\bfn (\\w+)\\("
         }
       ],

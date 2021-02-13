@@ -186,13 +186,13 @@ mod tests {
       file: Some("foo.rs".to_string()),
       line: Some(12),
     };
-    assert!(config.matches(&give).unwrap());
+    assert!(config.matches_client_trigger(&give).unwrap());
     let give = Trigger {
       command: "testLine".to_string(),
       file: Some("foo/bar.rs".to_string()),
       line: Some(12),
     };
-    assert!(config.matches(&give).unwrap());
+    assert!(config.matches_client_trigger(&give).unwrap());
   }
 
   #[test]
@@ -207,7 +207,7 @@ mod tests {
       file: Some("filename".to_string()),
       line: Some(12),
     };
-    assert!(!config.matches(&give).unwrap());
+    assert!(!config.matches_client_trigger(&give).unwrap());
   }
 
   #[test]
@@ -222,7 +222,7 @@ mod tests {
       file: Some("filename2".to_string()),
       line: Some(12),
     };
-    assert!(!config.matches(&give).unwrap());
+    assert!(!config.matches_client_trigger(&give).unwrap());
   }
 
   #[test]
@@ -237,6 +237,6 @@ mod tests {
       file: Some("filename".to_string()),
       line: Some(11),
     };
-    assert!(!config.matches(&give).unwrap());
+    assert!(!config.matches_client_trigger(&give).unwrap());
   }
 }
