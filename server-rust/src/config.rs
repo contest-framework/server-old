@@ -11,7 +11,7 @@ pub struct Action {
   vars: Option<Vec<Var>>,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 enum VarSource {
   File,
@@ -136,16 +136,23 @@ impl std::fmt::Display for Configuration {
 }
 
 fn calculate_var(var: &Var, values: &std::collections::HashMap<&str, String>) -> String {
-  if var.source == VarSource::File {
-    let text = values.get("file").unwrap();
-    let re = regex::Regex::new(&var.filter).unwrap();
-    let captures = re.captures(text).unwrap();
-    if captures.len() != 2 {
-      panic!("found {} captures", captures.len());
+  match var.source {
+    VarSource::File => {
+      let text = values.get("file").unwrap();
+      let re = regex::Regex::new(&var.filter).unwrap();
+      let captures = re.captures(text).unwrap();
+      if captures.len() != 2 {
+        panic!("found {} captures", captures.len());
+      }
+      return captures.get(1).unwrap().as_str().to_string();
     }
-    return captures.get(1).unwrap().as_str().to_string();
-  }
-  panic!("unhandled variable type: {}", var.source);
+    VarSource::Line => {
+      panic!("implement")
+    }
+    VarSource::CurrentOrAboveLineContent => {
+      panic!("implement")
+    }
+  };
 }
 
 fn replace(text: &str, placeholder: &str, replacement: &str) -> String {
