@@ -146,14 +146,23 @@ fn calculate_var(
       let captures = re.captures(text).unwrap();
       if captures.len() != 2 {
         return Err(UserErr::new(
-          format!("found {} captures", captures.len()),
+          format!("found {} captures in filter \"{}\"", captures.len(), text),
           "filters in the Tertestrial configuration file can only contain one capture group",
         ));
       }
       return Ok(captures.get(1).unwrap().as_str().to_string());
     }
     VarSource::Line => {
-      panic!("implement")
+      let text = values.get("line").unwrap();
+      let re = regex::Regex::new(&var.filter).unwrap();
+      let captures = re.captures(text).unwrap();
+      if captures.len() != 2 {
+        return Err(UserErr::new(
+          format!("found {} captures in filter \"{}\"", captures.len(), text),
+          "filters in the Tertestrial configuration file can only contain one capture group",
+        ));
+      }
+      return Ok(captures.get(1).unwrap().as_str().to_string());
     }
     VarSource::CurrentOrAboveLineContent => {
       panic!("implement")
