@@ -40,8 +40,21 @@ struct Var {
 }
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Options {
+  pub before_run: BeforeRun,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct BeforeRun {
+  pub clear_screen: bool,
+}
+
+#[derive(Deserialize, Debug)]
 pub struct Configuration {
-  actions: Vec<Action>,
+  pub actions: Vec<Action>,
+  pub options: Options,
 }
 
 pub fn from_file() -> Result<Configuration, UserErr> {
@@ -133,6 +146,11 @@ impl std::fmt::Display for Configuration {
       table.add_row(prettytable::row![format!("{}", action.trigger), action.run]);
     }
     table.printstd();
+    println!("Options:");
+    println!(
+      "- beforeRun.clearScreen: {}",
+      self.options.before_run.clear_screen
+    );
     Ok(())
   }
 }
@@ -214,7 +232,14 @@ mod tests {
 
     #[test]
     fn test_all() {
-      let config = Configuration { actions: vec![] };
+      let config = Configuration {
+        actions: vec![],
+        options: Options {
+          before_run: BeforeRun {
+            clear_screen: false,
+          },
+        },
+      };
       let give = Trigger {
         command: "testAll".to_string(),
         file: None,
@@ -255,6 +280,11 @@ mod tests {
       };
       let config = Configuration {
         actions: vec![action1, action2, action3],
+        options: Options {
+          before_run: BeforeRun {
+            clear_screen: false,
+          },
+        },
       };
       let give = Trigger {
         command: "testFunction".to_string(),
@@ -278,6 +308,11 @@ mod tests {
       };
       let config = Configuration {
         actions: vec![action1],
+        options: Options {
+          before_run: BeforeRun {
+            clear_screen: false,
+          },
+        },
       };
       let give = Trigger {
         command: "testFile".to_string(),
