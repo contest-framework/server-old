@@ -37,7 +37,7 @@
           "filter": "\\bfn (\\w+)\\("
         }
       ],
-      "run": "echo cargo test {{test_name}}"
+      "run": "cargo test {{test_name}}"
     },
 
     {

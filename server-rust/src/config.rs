@@ -1,7 +1,9 @@
 use super::errors::UserErr;
 use super::trigger::Trigger;
 use prettytable::Table;
+use regex::Regex;
 use serde::Deserialize;
+use std::vec::Vec;
 
 // Actions are executed when receiving a trigger.
 #[derive(Deserialize, Debug)]
@@ -143,7 +145,35 @@ fn calculate_var(
     VarSource::File => filter(values.get("file").unwrap(), &var.filter),
     VarSource::Line => filter(values.get("line").unwrap(), &var.filter),
     VarSource::CurrentOrAboveLineContent => {
-      panic!("implement")
+      let file_name = values.get("file").unwrap();
+      let file_content = std::fs::read_to_string(file_name).unwrap();
+      let lines: Vec<&str> = file_content.split('\n').collect();
+      let re = Regex::new(&var.filter).unwrap();
+      let mut line: u32 = values.get("line").unwrap().parse().unwrap();
+      while line > 0 {
+        line -= 1;
+        let line_text: String = lines.get(line as usize).unwrap().to_string();
+        let captures = re.captures(&line_text);
+        if captures.is_none() {
+          // no match on this line --> try the one above
+          continue;
+        }
+        let captures = captures.unwrap();
+        if captures.len() > 2 {
+          return Err(UserErr::new(
+            format!(
+              "found too many captures using regex \"{}\" on line: {}",
+              &var.filter, &line_text
+            ),
+            "filters in the Tertestrial configuration file can only contain one capture group",
+          ));
+        }
+        return Ok(captures.get(1).unwrap().as_str().to_string());
+      }
+      Err(UserErr::new(
+        format!("Did not find pattern {} in file {}", &var.filter, file_name),
+        "Please check that the file .testconfig.json is correct",
+      ))
     }
   }
 }
@@ -153,7 +183,11 @@ fn filter(text: &str, filter: &str) -> Result<String, UserErr> {
   let captures = re.captures(text).unwrap();
   if captures.len() != 2 {
     return Err(UserErr::new(
-      format!("found {} captures in filter \"{}\"", captures.len(), text),
+      format!(
+        "found {} captures using filter \"{}\"",
+        captures.len(),
+        text
+      ),
       "filters in the Tertestrial configuration file can only contain one capture group",
     ));
   }
