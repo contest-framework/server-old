@@ -43,12 +43,19 @@ struct Var {
 #[serde(rename_all = "camelCase")]
 pub struct Options {
   pub before_run: BeforeRun,
+  pub after_run: AfterRun,
 }
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BeforeRun {
   pub clear_screen: bool,
+  pub newlines: u8,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct AfterRun {
   pub newlines: u8,
 }
 
@@ -240,6 +247,7 @@ mod tests {
             clear_screen: false,
             newlines: 0,
           },
+          after_run: AfterRun { newlines: 0 },
         },
       };
       let give = Trigger {
@@ -287,6 +295,7 @@ mod tests {
             clear_screen: false,
             newlines: 0,
           },
+          after_run: AfterRun { newlines: 0 },
         },
       };
       let give = Trigger {
@@ -316,6 +325,7 @@ mod tests {
             clear_screen: false,
             newlines: 0,
           },
+          after_run: AfterRun { newlines: 0 },
         },
       };
       let give = Trigger {

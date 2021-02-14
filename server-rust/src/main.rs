@@ -66,7 +66,16 @@ fn listen(debug: bool) -> Result<(), UserErr> {
             channel::Signal::ReceivedLine(line) => match debug {
                 true => println!("received from client: {}", line),
                 false => {
+                    for _ in 1..config.options.before_run.newlines {
+                        println!("");
+                    }
+                    if config.options.before_run.clear_screen {
+                        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
+                    }
                     result = run_command(line, &config);
+                    for _ in 1..config.options.after_run.newlines {
+                        println!("");
+                    }
                     if result.is_err() {
                         break;
                     }
@@ -90,12 +99,6 @@ fn listen(debug: bool) -> Result<(), UserErr> {
 
 fn run_command(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
     let trigger = trigger::from_string(&text)?;
-    for _ in 1..configuration.options.before_run.newlines {
-        println!("");
-    }
-    if configuration.options.before_run.clear_screen {
-        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
-    }
     let command = configuration.get_command(trigger)?;
     match run::run(&command) {
         run::Outcome::TestPass() => {
