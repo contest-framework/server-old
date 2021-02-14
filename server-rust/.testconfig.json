@@ -80,8 +80,8 @@
       "newlines": 0
     },
     "afterRun": {
-      "newlines": 0,
-      "indicatorLines": 3,
+      "newlines": 1,
+      "indicatorLines": 2,
       "indicatorBackground": true
     },
     "colors": {

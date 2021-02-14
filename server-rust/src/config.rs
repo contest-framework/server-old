@@ -57,6 +57,7 @@ pub struct BeforeRun {
 #[serde(rename_all = "camelCase")]
 pub struct AfterRun {
   pub newlines: u8,
+  pub indicator_lines: u8,
 }
 
 #[derive(Deserialize, Debug)]
@@ -247,7 +248,10 @@ mod tests {
             clear_screen: false,
             newlines: 0,
           },
-          after_run: AfterRun { newlines: 0 },
+          after_run: AfterRun {
+            newlines: 0,
+            indicator_lines: 0,
+          },
         },
       };
       let give = Trigger {
@@ -295,7 +299,10 @@ mod tests {
             clear_screen: false,
             newlines: 0,
           },
-          after_run: AfterRun { newlines: 0 },
+          after_run: AfterRun {
+            newlines: 0,
+            indicator_lines: 0,
+          },
         },
       };
       let give = Trigger {
@@ -325,7 +332,10 @@ mod tests {
             clear_screen: false,
             newlines: 0,
           },
-          after_run: AfterRun { newlines: 0 },
+          after_run: AfterRun {
+            newlines: 0,
+            indicator_lines: 0,
+          },
         },
       };
       let give = Trigger {

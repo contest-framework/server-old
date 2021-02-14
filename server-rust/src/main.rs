@@ -2,6 +2,9 @@
 extern crate prettytable;
 
 use errors::UserErr;
+use std::io::Write;
+use termcolor::WriteColor;
+use terminal_size::terminal_size;
 
 mod args;
 mod channel;
@@ -31,7 +34,7 @@ fn main_with_err() -> Result<(), UserErr> {
         args::Command::Run(cmd) => {
             println!("running cmd: {}", cmd);
             let config = config::from_file()?;
-            run_command(cmd, &config)
+            run_with_decoration(cmd, &config)
         }
         args::Command::Setup => config::create(),
         args::Command::Version => {
@@ -60,54 +63,70 @@ fn listen(debug: bool) -> Result<(), UserErr> {
         false => println!("Tertestrial is online, Ctrl-C to exit"),
         true => println!("Tertestrial is online in debug mode, Ctrl-C to exit"),
     }
-    let mut result: Result<(), UserErr> = Ok(());
     for signal in receiver {
         match signal {
             channel::Signal::ReceivedLine(line) => match debug {
                 true => println!("received from client: {}", line),
-                false => {
-                    for _ in 1..config.options.before_run.newlines {
-                        println!("");
-                    }
-                    if config.options.before_run.clear_screen {
-                        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
-                    }
-                    result = run_command(line, &config);
-                    for _ in 1..config.options.after_run.newlines {
-                        println!("");
-                    }
-                    if result.is_err() {
-                        break;
-                    }
-                }
+                false => run_with_decoration(line, &config)?,
             },
             channel::Signal::CannotReadPipe(err) => {
-                result = Err(UserErr::new(
+                return Err(UserErr::new(
                     format!("Cannot read from pipe: {}", err),
                     "This is an internal error",
                 ));
-                break;
             }
             channel::Signal::Exit => {
                 println!("\nSee you later!");
-                break;
+                return Ok(());
             }
         }
     }
-    result
+    Ok(())
 }
 
-fn run_command(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
+fn run_with_decoration(text: String, config: &config::Configuration) -> Result<(), UserErr> {
+    for _ in 0..config.options.before_run.newlines {
+        println!();
+    }
+    if config.options.before_run.clear_screen {
+        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
+    }
+    let result = run_command(text, config)?;
+    for _ in 0..config.options.after_run.newlines {
+        println!();
+    }
+    match terminal_size() {
+        None => println!("Warning: cannot determine terminal size"),
+        Some((width, _)) => {
+            for _ in 0..config.options.after_run.indicator_lines {
+                let mut stdout = termcolor::StandardStream::stdout(termcolor::ColorChoice::Auto);
+                let color = if result {
+                    termcolor::Color::Green
+                } else {
+                    termcolor::Color::Red
+                };
+                stdout
+                    .set_color(termcolor::ColorSpec::new().set_fg(Some(color)))
+                    .unwrap();
+                let text: String = std::iter::repeat("█").take(width.0 as usize).collect();
+                writeln!(&mut stdout, "{}", text).unwrap();
+            }
+        }
+    }
+    Ok(())
+}
+
+fn run_command(text: String, configuration: &config::Configuration) -> Result<bool, UserErr> {
     let trigger = trigger::from_string(&text)?;
     let command = configuration.get_command(trigger)?;
     match run::run(&command) {
         run::Outcome::TestPass() => {
             println!("SUCCESS!");
-            Ok(())
+            Ok(true)
         }
         run::Outcome::TestFail() => {
             println!("FAILED!");
-            Ok(())
+            Ok(false)
         }
         run::Outcome::NotFound(command) => Err(UserErr::new(
             format!("test command not found: {}", command),
