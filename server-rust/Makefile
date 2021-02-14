@@ -17,6 +17,5 @@ setup:  # prepare this workstation
 	rustup toolchain install stable-aarch64-apple-darwin
 
 test:  # runs all automated tests
-	cargo check
 	cargo clippy
 	cargo test
