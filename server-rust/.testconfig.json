@@ -78,7 +78,7 @@
     "beforeRun": {
       "clearScreen": true,
       "emptyScreens": 1,
-      "newLines": 5
+      "newlines": 0
     },
     "afterRun": {
       "newLines": 5,

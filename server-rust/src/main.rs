@@ -90,6 +90,9 @@ fn listen(debug: bool) -> Result<(), UserErr> {
 
 fn run_command(text: String, configuration: &config::Configuration) -> Result<(), UserErr> {
     let trigger = trigger::from_string(&text)?;
+    for _ in 1..configuration.options.before_run.newlines {
+        println!("");
+    }
     if configuration.options.before_run.clear_screen {
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
     }

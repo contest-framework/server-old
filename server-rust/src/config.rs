@@ -49,6 +49,7 @@ pub struct Options {
 #[serde(rename_all = "camelCase")]
 pub struct BeforeRun {
   pub clear_screen: bool,
+  pub newlines: u8,
 }
 
 #[derive(Deserialize, Debug)]
@@ -237,6 +238,7 @@ mod tests {
         options: Options {
           before_run: BeforeRun {
             clear_screen: false,
+            newlines: 0,
           },
         },
       };
@@ -283,6 +285,7 @@ mod tests {
         options: Options {
           before_run: BeforeRun {
             clear_screen: false,
+            newlines: 0,
           },
         },
       };
@@ -311,6 +314,7 @@ mod tests {
         options: Options {
           before_run: BeforeRun {
             clear_screen: false,
+            newlines: 0,
           },
         },
       };
