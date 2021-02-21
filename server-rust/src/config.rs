@@ -1,6 +1,6 @@
 //! program configuration loaded from the config file
 
-use super::errors::UserErr;
+use super::errors::TertError;
 use super::trigger::Trigger;
 use prettytable::Table;
 use regex::Regex;
@@ -68,21 +68,18 @@ pub struct Configuration {
   pub options: Options,
 }
 
-pub fn from_file() -> Result<Configuration, UserErr> {
+pub fn from_file() -> Result<Configuration, TertError> {
   let file = match std::fs::File::open(".testconfig.json") {
     Ok(config) => config,
-    Err(e) => {
-      match e.kind() {
-        std::io::ErrorKind::NotFound => return Err(UserErr::from_str("Configuration file not found", "Tertestrial requires a configuration file named \".testconfig.json\" in the current directory. Please run \"tertestrial setup \" to create one.")),
-        _ => return Err(UserErr::new(format!("Cannot open configuration file: {}", e), "")),
-      }
-    }
+    Err(e) => match e.kind() {
+      std::io::ErrorKind::NotFound => return Err(TertError::ConfigFileNotFound()),
+      _ => return Err(TertError::ConfigFileNotReadable(e.to_string())),
+    },
   };
-  serde_json::from_reader(file)
-    .map_err(|e| UserErr::new(format!("Cannot parse configuration file: {}", e), ""))
+  serde_json::from_reader(file).map_err(|err| TertError::ConfigFileInvalidContent(err.to_string()))
 }
 
-pub fn create() -> Result<(), UserErr> {
+pub fn create() -> Result<(), TertError> {
   std::fs::write(
     ".testconfig.json",
     r#"{
@@ -110,24 +107,21 @@ pub fn create() -> Result<(), UserErr> {
   ]
 }"#,
   )
-  .map_err(|e| UserErr::new(format!("cannot create configuration file: {}", e), ""))
+  .map_err(|e| TertError::CannotCreateConfigFile(e.to_string()))
 }
 
 impl Configuration {
-  pub fn get_command(&self, trigger: Trigger) -> Result<String, UserErr> {
+  pub fn get_command(&self, trigger: Trigger) -> Result<String, TertError> {
     for action in &self.actions {
       if action.trigger.matches_client_trigger(&trigger)? {
         return Ok(self.format_run(&action, &trigger)?);
       }
     }
-    Err(UserErr::new(
-      format!("cannot determine command for trigger: {}", trigger),
-      "Please make sure that this trigger is listed in your configuration file",
-    ))
+    Err(TertError::UnknownTrigger(trigger.to_string()))
   }
 
   /// replaces all placeholders in the given run string
-  fn format_run(&self, action: &Action, trigger: &Trigger) -> Result<String, UserErr> {
+  fn format_run(&self, action: &Action, trigger: &Trigger) -> Result<String, TertError> {
     let mut values: std::collections::HashMap<&str, String> = std::collections::HashMap::new();
     values.insert("command", trigger.command.clone());
     if trigger.file.is_some() {
@@ -169,7 +163,7 @@ impl std::fmt::Display for Configuration {
 fn calculate_var(
   var: &Var,
   values: &std::collections::HashMap<&str, String>,
-) -> Result<String, UserErr> {
+) -> Result<String, TertError> {
   match var.source {
     VarSource::File => filter(values.get("file").unwrap(), &var.filter),
     VarSource::Line => filter(values.get("line").unwrap(), &var.filter),
@@ -189,35 +183,30 @@ fn calculate_var(
         }
         let captures = captures.unwrap();
         if captures.len() > 2 {
-          return Err(UserErr::new(
-            format!(
-              "found too many captures using regex \"{}\" on line: {}",
-              &var.filter, &line_text
-            ),
-            "filters in the Tertestrial configuration file can only contain one capture group",
+          return Err(TertError::TriggerTooManyCaptures(
+            captures.len(),
+            var.filter.to_string(),
+            line_text,
           ));
         }
         return Ok(captures.get(1).unwrap().as_str().to_string());
       }
-      Err(UserErr::new(
-        format!("Did not find pattern {} in file {}", &var.filter, file_name),
-        "Please check that the file .testconfig.json is correct",
+      Err(TertError::TriggerRegexNotFound(
+        var.filter.to_string(),
+        file_name.to_string(),
       ))
     }
   }
 }
 
-fn filter(text: &str, filter: &str) -> Result<String, UserErr> {
+fn filter(text: &str, filter: &str) -> Result<String, TertError> {
   let re = regex::Regex::new(filter).unwrap();
   let captures = re.captures(text).unwrap();
   if captures.len() != 2 {
-    return Err(UserErr::new(
-      format!(
-        "found {} captures using filter \"{}\"",
-        captures.len(),
-        text
-      ),
-      "filters in the Tertestrial configuration file can only contain one capture group",
+    return Err(TertError::TriggerTooManyCaptures(
+      captures.len(),
+      filter.to_string(),
+      text.to_string(),
     ));
   }
   return Ok(captures.get(1).unwrap().as_str().to_string());

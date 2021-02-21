@@ -1,7 +1,7 @@
 //! manages and reads the FIFO pipe
 
 use super::channel;
-use super::errors::UserErr;
+use super::errors::TertError;
 use std::io::prelude::*;
 
 /// A FIFO pipe
@@ -31,9 +31,8 @@ impl Pipe {
     }
   }
 
-  pub fn delete(&self) -> Result<(), UserErr> {
-    std::fs::remove_file(&self.filepath)
-      .map_err(|e| UserErr::new(format!("Cannot delete pipe: {}", e), ""))
+  pub fn delete(&self) -> Result<(), TertError> {
+    std::fs::remove_file(&self.filepath).map_err(|e| TertError::FifoCannotDelete(e.to_string()))
   }
 
   pub fn open(&self) -> std::io::BufReader<std::fs::File> {
@@ -55,18 +54,15 @@ pub fn in_dir(dirpath: &std::path::PathBuf) -> Pipe {
 }
 
 pub fn listen(pipe: Pipe, sender: channel::Sender) {
-  std::thread::spawn(move || {
-    loop {
-      // TODO: don't create a new BufReader for each line
-      for line in pipe.open().lines() {
-        match line {
-          Ok(text) => sender.send(channel::Signal::ReceivedLine(text)).unwrap(),
-          Err(err) => {
-            sender.send(channel::Signal::CannotReadPipe(err)).unwrap();
-            break;
-          }
-        };
-      }
+  std::thread::spawn(move || loop {
+    for line in pipe.open().lines() {
+      match line {
+        Ok(text) => sender.send(channel::Signal::ReceivedLine(text)).unwrap(),
+        Err(err) => {
+          sender.send(channel::Signal::CannotReadPipe(err)).unwrap();
+          break;
+        }
+      };
     }
   });
 }

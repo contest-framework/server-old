@@ -1,6 +1,6 @@
 //! command-line arguments
 
-use super::errors::UserErr;
+use super::errors::TertError;
 
 #[derive(Debug, PartialEq)]
 pub enum Command {
@@ -11,7 +11,7 @@ pub enum Command {
   Version,     // show the version
 }
 
-pub fn parse<I>(mut argv: I) -> Result<Command, UserErr>
+pub fn parse<I>(mut argv: I) -> Result<Command, TertError>
 where
   I: Iterator<Item = String>,
 {
@@ -24,21 +24,11 @@ where
         "debug" => mode = Command::Debug,
         "run" => match argv.next() {
           Some(cmd) => mode = Command::Run(cmd),
-          None => {
-            return Err(UserErr::from_str(
-              "missing option for \"run\" command",
-              "The \"run\" command requires the command to run",
-            ))
-          }
+          None => return Err(TertError::ArgsMissingOptionForRunCommand()),
         },
         "setup" => mode = Command::Setup,
         "version" => mode = Command::Version,
-        _ => {
-          return Err(UserErr::new(
-            format!("unknown argument: {}", arg),
-            "The arguments are \"debug\" or \"run <command>\".",
-          ))
-        }
+        _ => return Err(TertError::ArgsUnknownCommand(arg)),
       },
     }
   }
@@ -76,20 +66,14 @@ mod tests {
   #[test]
   fn parse_run_without_arg() {
     let give = vec!["tertestrial".to_string(), "run".to_string()];
-    let want = Err(UserErr {
-      reason: "missing option for \"run\" command".to_string(),
-      guidance: "The \"run\" command requires the command to run".to_string(),
-    });
+    let want = Err(TertError::ArgsMissingOptionForRunCommand());
     assert_eq!(parse(give.into_iter()), want);
   }
 
   #[test]
   fn parse_unknown() {
     let give = vec!["tertestrial".to_string(), "zonk".to_string()];
-    let want = Err(UserErr {
-      reason: "unknown argument: zonk".to_string(),
-      guidance: "The arguments are \"debug\" or \"run <command>\".".to_string(),
-    });
+    let want = Err(TertError::ArgsUnknownCommand("zonk".to_string()));
     assert_eq!(parse(give.into_iter()), want);
   }
 }

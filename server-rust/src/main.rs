@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate prettytable;
 
-use errors::UserErr;
+use errors::TertError;
 use std::io::Write;
 use termcolor::WriteColor;
 use terminal_size::terminal_size;
@@ -17,8 +17,9 @@ mod trigger;
 
 fn main() {
     let panic_result = std::panic::catch_unwind(|| {
-        if let Err(user_err) = main_with_err() {
-            println!("\nError: {}\n\n{}", user_err.reason, user_err.guidance);
+        if let Err(tert_error) = main_with_err() {
+            let (msg, guidance) = tert_error.messages();
+            println!("\nError: {}\n\n{}", msg, guidance);
         }
     });
     let _ = fifo::in_dir(&std::env::current_dir().unwrap()).delete();
@@ -27,7 +28,7 @@ fn main() {
     }
 }
 
-fn main_with_err() -> Result<(), UserErr> {
+fn main_with_err() -> Result<(), TertError> {
     match args::parse(std::env::args())? {
         args::Command::Normal => listen(false),
         args::Command::Debug => listen(true),
@@ -44,7 +45,7 @@ fn main_with_err() -> Result<(), UserErr> {
     }
 }
 
-fn listen(debug: bool) -> Result<(), UserErr> {
+fn listen(debug: bool) -> Result<(), TertError> {
     let config = config::from_file()?;
     if debug {
         println!("using this configuration:");
@@ -54,7 +55,7 @@ fn listen(debug: bool) -> Result<(), UserErr> {
     ctrl_c::handle(sender.clone());
     let pipe = fifo::in_dir(&std::env::current_dir().unwrap());
     match pipe.create() {
-        fifo::CreateOutcome::AlreadyExists(path) => return Err(UserErr::new(format!("A fifo pipe \"{}\" already exists.", path), "This could mean a Tertestrial instance could already be running.\nIf you are sure no other instance is running, please delete this file and start Tertestrial again.")),
+        fifo::CreateOutcome::AlreadyExists(path) => return Err(TertError::FifoAlreadyExists(path)),
         fifo::CreateOutcome::OtherError(err) => panic!(err),
         fifo::CreateOutcome::Ok() => {}
     }
@@ -70,10 +71,7 @@ fn listen(debug: bool) -> Result<(), UserErr> {
                 false => run_with_decoration(line, &config)?,
             },
             channel::Signal::CannotReadPipe(err) => {
-                return Err(UserErr::new(
-                    format!("Cannot read from pipe: {}", err),
-                    "This is an internal error",
-                ));
+                return Err(TertError::FifoCannotRead(err.to_string()))
             }
             channel::Signal::Exit => {
                 println!("\nSee you later!");
@@ -84,7 +82,7 @@ fn listen(debug: bool) -> Result<(), UserErr> {
     Ok(())
 }
 
-fn run_with_decoration(text: String, config: &config::Configuration) -> Result<(), UserErr> {
+fn run_with_decoration(text: String, config: &config::Configuration) -> Result<(), TertError> {
     for _ in 0..config.options.before_run.newlines {
         println!();
     }
@@ -116,7 +114,7 @@ fn run_with_decoration(text: String, config: &config::Configuration) -> Result<(
     Ok(())
 }
 
-fn run_command(text: String, configuration: &config::Configuration) -> Result<bool, UserErr> {
+fn run_command(text: String, configuration: &config::Configuration) -> Result<bool, TertError> {
     let trigger = trigger::from_string(&text)?;
     let command = configuration.get_command(trigger)?;
     match run::run(&command) {
@@ -128,14 +126,6 @@ fn run_command(text: String, configuration: &config::Configuration) -> Result<bo
             println!("FAILED!");
             Ok(false)
         }
-        run::Outcome::NotFound(command) => Err(UserErr::new(
-            format!("test command not found: {}", command),
-            &format!(
-                "I received this trigger from the client: {}\
-                Your config file specifies to run this command in that case: {}\
-                I couldn't run this command. Please verify that the command is in the path or fix your config file.",
-                text, command
-            ),
-        )),
+        run::Outcome::NotFound(command) => Err(TertError::RunCommandNotFound(command)),
     }
 }

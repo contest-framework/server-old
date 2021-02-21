@@ -1,6 +1,6 @@
 //! commands sent over the FIFO
 
-use super::errors::UserErr;
+use super::errors::TertError;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, PartialEq)]
@@ -11,7 +11,7 @@ pub struct Trigger {
 }
 
 impl Trigger {
-  pub fn matches_client_trigger(&self, from_client: &Trigger) -> Result<bool, UserErr> {
+  pub fn matches_client_trigger(&self, from_client: &Trigger) -> Result<bool, TertError> {
     if self.command != from_client.command {
       return Ok(false);
     }
@@ -27,12 +27,8 @@ impl Trigger {
     }
     if self.file.is_some() && from_client.file.is_some() {
       let self_file = &self.file.as_ref().unwrap();
-      let pattern = glob::Pattern::new(&self_file).map_err(|e| {
-        UserErr::new(
-          format!("Invalid glob pattern: {}", &self_file),
-          &e.to_string(),
-        )
-      })?;
+      let pattern = glob::Pattern::new(&self_file)
+        .map_err(|e| TertError::ConfigInvalidGlobPattern(self_file.to_string(), e.to_string()))?;
       return Ok(pattern.matches(from_client.file.as_ref().unwrap()));
     }
     Ok(false)
@@ -55,16 +51,10 @@ impl std::fmt::Display for Trigger {
   }
 }
 
-pub fn from_string(line: &str) -> Result<Trigger, UserErr> {
+pub fn from_string(line: &str) -> Result<Trigger, TertError> {
   match serde_json::from_str(&line) {
     Ok(trigger) => Ok(trigger),
-    Err(err) => Err(UserErr::new(
-      format!("cannot parse command received from client: {}", line),
-      &format!(
-        "This is a problem with your Tertestrial client.\n\nError message from JSON parser: {}",
-        err
-      ),
-    )),
+    Err(err) => Err(TertError::InvalidTrigger(line.to_string(), err.to_string())),
   }
 }
 
@@ -123,9 +113,13 @@ mod tests {
   }
 
   #[test]
-  fn from_line_invalid_json() {
-    let have = from_string("{\"filename}");
-    let want = UserErr::from_str("cannot parse command received from client: {\"filename}", "This is a problem with your Tertestrial client.\n\nError message from JSON parser: EOF while parsing a string at line 1 column 11");
+  fn from_string_invalid_json() {
+    let line = "{\"filename}";
+    let have = from_string(line);
+    let want = TertError::InvalidTrigger(
+      line.to_string(),
+      "EOF while parsing a string at line 1 column 11".to_string(),
+    );
     match have {
       Ok(_) => panic!("this shouldn't work"),
       Err(err) => assert_eq!(err, want),
