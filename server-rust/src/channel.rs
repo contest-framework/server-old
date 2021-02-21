@@ -1,4 +1,4 @@
-// provides cross-thread communication via a message channel
+//! cross-thread communication via a message channel
 
 use std::sync::mpsc;
 

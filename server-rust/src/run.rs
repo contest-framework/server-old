@@ -1,6 +1,4 @@
-// pub struct Runner {
-//   config
-// }
+//! runs commands in a subshell
 
 pub enum Outcome {
   TestPass(),

@@ -1,4 +1,4 @@
-// This file contains code to handle Ctrl-C.
+//! capture and handle Ctrl-C
 
 use super::channel;
 

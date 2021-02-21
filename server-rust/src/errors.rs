@@ -1,3 +1,5 @@
+//! the custom error types used in this app
+
 use std::error::Error;
 
 #[derive(Debug, PartialEq)]

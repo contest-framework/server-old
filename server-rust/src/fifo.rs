@@ -1,4 +1,4 @@
-// This file contains code to manage the FIFO pipe and read from it.
+//! manages and reads the FIFO pipe
 
 use super::channel;
 use super::errors::UserErr;

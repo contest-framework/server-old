@@ -1,3 +1,5 @@
+//! program configuration loaded from the config file
+
 use super::errors::UserErr;
 use super::trigger::Trigger;
 use prettytable::Table;

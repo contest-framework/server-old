@@ -1,4 +1,4 @@
-// command-line arguments
+//! command-line arguments
 
 use super::errors::UserErr;
 

@@ -1,3 +1,5 @@
+//! commands sent over the FIFO
+
 use super::errors::UserErr;
 use serde::Deserialize;
 
