@@ -5,7 +5,7 @@ use regex::Regex;
 use serde::Deserialize;
 use std::vec::Vec;
 
-// Actions are executed when receiving a trigger.
+/// Actions are executed when receiving a trigger.
 #[derive(Deserialize, Debug)]
 pub struct Action {
   trigger: Trigger,
@@ -124,7 +124,7 @@ impl Configuration {
     ))
   }
 
-  // replaces all placeholders in the given run string
+  /// replaces all placeholders in the given run string
   fn format_run(&self, action: &Action, trigger: &Trigger) -> Result<String, UserErr> {
     let mut values: std::collections::HashMap<&str, String> = std::collections::HashMap::new();
     values.insert("command", trigger.command.clone());
