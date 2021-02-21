@@ -4,7 +4,7 @@ use super::channel;
 use super::errors::UserErr;
 use std::io::prelude::*;
 
-// A fifo pipe
+/// A FIFO pipe
 #[derive(Debug)]
 pub struct Pipe {
   pub filepath: std::path::PathBuf,
@@ -41,13 +41,13 @@ impl Pipe {
     std::io::BufReader::new(file)
   }
 
-  // provides the path of this pipe as a string
+  /// provides the path of this pipe as a string
   pub fn path_str(&self) -> String {
     self.filepath.display().to_string()
   }
 }
 
-// constructs a fifo pipe in the current directory
+/// constructs a fifo pipe in the current directory
 pub fn in_dir(dirpath: &std::path::PathBuf) -> Pipe {
   Pipe {
     filepath: dirpath.join(".tertestrial.tmp"),
