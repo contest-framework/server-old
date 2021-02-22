@@ -72,11 +72,13 @@ pub fn from_file() -> Result<Configuration, TertError> {
   let file = match std::fs::File::open(".testconfig.json") {
     Ok(config) => config,
     Err(e) => match e.kind() {
-      std::io::ErrorKind::NotFound => return Err(TertError::ConfigFileNotFound()),
-      _ => return Err(TertError::ConfigFileNotReadable(e.to_string())),
+      std::io::ErrorKind::NotFound => return Err(TertError::ConfigFileNotFound {}),
+      _ => return Err(TertError::ConfigFileNotReadable { err: e.to_string() }),
     },
   };
-  serde_json::from_reader(file).map_err(|err| TertError::ConfigFileInvalidContent(err.to_string()))
+  serde_json::from_reader(file).map_err(|err| TertError::ConfigFileInvalidContent {
+    err: err.to_string(),
+  })
 }
 
 pub fn create() -> Result<(), TertError> {
@@ -107,7 +109,7 @@ pub fn create() -> Result<(), TertError> {
   ]
 }"#,
   )
-  .map_err(|e| TertError::CannotCreateConfigFile(e.to_string()))
+  .map_err(|e| TertError::CannotCreateConfigFile { err: e.to_string() })
 }
 
 impl Configuration {
@@ -117,7 +119,9 @@ impl Configuration {
         return Ok(self.format_run(&action, &trigger)?);
       }
     }
-    Err(TertError::UnknownTrigger(trigger.to_string()))
+    Err(TertError::UnknownTrigger {
+      line: trigger.to_string(),
+    })
   }
 
   /// replaces all placeholders in the given run string
@@ -183,18 +187,18 @@ fn calculate_var(
         }
         let captures = captures.unwrap();
         if captures.len() > 2 {
-          return Err(TertError::TriggerTooManyCaptures(
-            captures.len(),
-            var.filter.to_string(),
-            line_text,
-          ));
+          return Err(TertError::TriggerTooManyCaptures {
+            count: captures.len(),
+            regex: var.filter.to_string(),
+            line: line_text,
+          });
         }
         return Ok(captures.get(1).unwrap().as_str().to_string());
       }
-      Err(TertError::TriggerRegexNotFound(
-        var.filter.to_string(),
-        file_name.to_string(),
-      ))
+      Err(TertError::TriggerRegexNotFound {
+        regex: var.filter.to_string(),
+        filename: file_name.to_string(),
+      })
     }
   }
 }
@@ -203,11 +207,11 @@ fn filter(text: &str, filter: &str) -> Result<String, TertError> {
   let re = regex::Regex::new(filter).unwrap();
   let captures = re.captures(text).unwrap();
   if captures.len() != 2 {
-    return Err(TertError::TriggerTooManyCaptures(
-      captures.len(),
-      filter.to_string(),
-      text.to_string(),
-    ));
+    return Err(TertError::TriggerTooManyCaptures {
+      count: captures.len(),
+      regex: filter.to_string(),
+      line: text.to_string(),
+    });
   }
   return Ok(captures.get(1).unwrap().as_str().to_string());
 }

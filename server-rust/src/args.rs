@@ -20,15 +20,15 @@ where
   loop {
     match argv.next() {
       None => return Ok(mode),
-      Some(arg) => match arg.as_str() {
+      Some(command) => match command.as_str() {
         "debug" => mode = Command::Debug,
         "run" => match argv.next() {
           Some(cmd) => mode = Command::Run(cmd),
-          None => return Err(TertError::ArgsMissingOptionForRunCommand()),
+          None => return Err(TertError::ArgsMissingOptionForRunCommand {}),
         },
         "setup" => mode = Command::Setup,
         "version" => mode = Command::Version,
-        _ => return Err(TertError::ArgsUnknownCommand(arg)),
+        _ => return Err(TertError::ArgsUnknownCommand { command }),
       },
     }
   }
@@ -66,14 +66,16 @@ mod tests {
   #[test]
   fn parse_run_without_arg() {
     let give = vec!["tertestrial".to_string(), "run".to_string()];
-    let want = Err(TertError::ArgsMissingOptionForRunCommand());
+    let want = Err(TertError::ArgsMissingOptionForRunCommand {});
     assert_eq!(parse(give.into_iter()), want);
   }
 
   #[test]
   fn parse_unknown() {
     let give = vec!["tertestrial".to_string(), "zonk".to_string()];
-    let want = Err(TertError::ArgsUnknownCommand("zonk".to_string()));
+    let want = Err(TertError::ArgsUnknownCommand {
+      command: "zonk".to_string(),
+    });
     assert_eq!(parse(give.into_iter()), want);
   }
 }

@@ -55,7 +55,9 @@ fn listen(debug: bool) -> Result<(), TertError> {
     ctrl_c::handle(sender.clone());
     let pipe = fifo::in_dir(&std::env::current_dir().unwrap());
     match pipe.create() {
-        fifo::CreateOutcome::AlreadyExists(path) => return Err(TertError::FifoAlreadyExists(path)),
+        fifo::CreateOutcome::AlreadyExists(path) => {
+            return Err(TertError::FifoAlreadyExists { path })
+        }
         fifo::CreateOutcome::OtherError(err) => panic!(err),
         fifo::CreateOutcome::Ok() => {}
     }
@@ -71,7 +73,9 @@ fn listen(debug: bool) -> Result<(), TertError> {
                 false => run_with_decoration(line, &config)?,
             },
             channel::Signal::CannotReadPipe(err) => {
-                return Err(TertError::FifoCannotRead(err.to_string()))
+                return Err(TertError::FifoCannotRead {
+                    err: err.to_string(),
+                })
             }
             channel::Signal::Exit => {
                 println!("\nSee you later!");
@@ -126,6 +130,6 @@ fn run_command(text: String, configuration: &config::Configuration) -> Result<bo
             println!("FAILED!");
             Ok(false)
         }
-        run::Outcome::NotFound(command) => Err(TertError::RunCommandNotFound(command)),
+        run::Outcome::NotFound(command) => Err(TertError::RunCommandNotFound { command }),
     }
 }

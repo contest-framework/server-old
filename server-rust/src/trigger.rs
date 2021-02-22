@@ -27,8 +27,11 @@ impl Trigger {
     }
     if self.file.is_some() && from_client.file.is_some() {
       let self_file = &self.file.as_ref().unwrap();
-      let pattern = glob::Pattern::new(&self_file)
-        .map_err(|e| TertError::ConfigInvalidGlobPattern(self_file.to_string(), e.to_string()))?;
+      let pattern =
+        glob::Pattern::new(&self_file).map_err(|e| TertError::ConfigInvalidGlobPattern {
+          pattern: self_file.to_string(),
+          err: e.to_string(),
+        })?;
       return Ok(pattern.matches(from_client.file.as_ref().unwrap()));
     }
     Ok(false)
@@ -54,7 +57,10 @@ impl std::fmt::Display for Trigger {
 pub fn from_string(line: &str) -> Result<Trigger, TertError> {
   match serde_json::from_str(&line) {
     Ok(trigger) => Ok(trigger),
-    Err(err) => Err(TertError::InvalidTrigger(line.to_string(), err.to_string())),
+    Err(err) => Err(TertError::InvalidTrigger {
+      line: line.to_string(),
+      err: err.to_string(),
+    }),
   }
 }
 
@@ -116,10 +122,10 @@ mod tests {
   fn from_string_invalid_json() {
     let line = "{\"filename}";
     let have = from_string(line);
-    let want = TertError::InvalidTrigger(
-      line.to_string(),
-      "EOF while parsing a string at line 1 column 11".to_string(),
-    );
+    let want = TertError::InvalidTrigger {
+      line: line.to_string(),
+      err: "EOF while parsing a string at line 1 column 11".to_string(),
+    };
     match have {
       Ok(_) => panic!("this shouldn't work"),
       Err(err) => assert_eq!(err, want),

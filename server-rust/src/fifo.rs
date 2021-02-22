@@ -32,7 +32,8 @@ impl Pipe {
   }
 
   pub fn delete(&self) -> Result<(), TertError> {
-    std::fs::remove_file(&self.filepath).map_err(|e| TertError::FifoCannotDelete(e.to_string()))
+    std::fs::remove_file(&self.filepath)
+      .map_err(|e| TertError::FifoCannotDelete { err: e.to_string() })
   }
 
   pub fn open(&self) -> std::io::BufReader<std::fs::File> {
