@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="142.319 71.025 230.966 191.687" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="109.289" y1="79.531" x2="109.289" y2="116.484" id="gradient-0" gradientTransform="matrix(0.99999, -0.006236, 0.001788, 0.524007, -0.206987, 48.359378)">
+      <stop offset="0" style="stop-color: rgb(0, 153, 15);"/>
+      <stop offset="1" style="stop-color: rgb(255, 0, 0);"/>
+    </linearGradient>
+  </defs>
+  <rect x="150.753" y="79.701" width="213.882" height="174.065" style="stroke: rgb(0, 0, 0); stroke-width: 9px; fill: rgb(255, 255, 255);" rx="9.685" ry="9.685"/>
+  <rect x="168.972" y="97.793" width="177.192" height="137.476" style="stroke: rgb(0, 0, 0); stroke-width: 9px; fill: rgb(255, 255, 255);" rx="12.375" ry="12.375"/>
+  <path d="M 112.847 108.824 L 105.697 108.824 L 105.697 107.104 L 107.917 106.714 L 107.917 90.954 L 103.407 90.954 L 103.017 93.714 L 100.987 93.714 L 100.987 88.914 L 117.537 88.914 L 117.537 93.714 L 115.537 93.714 L 115.127 90.954 L 110.617 90.954 L 110.617 106.714 L 112.847 107.104 L 112.847 108.824 Z" transform="matrix(4.930937767028809, 0, 0, 3.6465539932250977, -262.4395751953125, -192.2672119140625)" style="fill: url(#gradient-0); white-space: pre;"/>
+  <path d="M 233.28 181.055 L 198.55 196.455 L 198.55 188.485 L 222.84 178.815 L 226.25 178.125 L 226.25 177.885 L 222.84 177.075 L 198.55 167.565 L 198.55 159.645 L 233.28 175.005 L 233.28 181.055 Z" transform="matrix(1.094277024269104, 0, 0, 1.0539580583572388, -18.722700119018555, -8.274580001831055)" style="fill: rgb(51, 51, 51); white-space: pre;"/>
+</svg>
