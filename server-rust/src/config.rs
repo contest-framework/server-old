@@ -41,18 +41,18 @@ struct Var {
     filter: String,
 }
 
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
+#[derive(Debug)]
 pub struct Options {
     pub before_run: BeforeRun,
     pub after_run: AfterRun,
 }
 
 /// structure of options stored in the config file
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct FileOptions {
-    before_run: Option<BeforeRun>,
-    after_run: Option<AfterRun>,
+    before_run: Option<FileBeforeRun>,
+    after_run: Option<FileAfterRun>,
 }
 
 impl Options {
@@ -70,28 +70,40 @@ impl Options {
     }
 }
 
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
+#[derive(Debug)]
 pub struct BeforeRun {
     pub clear_screen: bool,
     pub newlines: u8,
 }
 
-#[derive(Deserialize, Debug)]
+/// structure of the BeforeRun section in the configuration file
+#[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
+struct FileBeforeRun {
+    clear_screen: Option<bool>,
+    newlines: Option<u8>,
+}
+
+#[derive(Debug)]
 pub struct AfterRun {
     pub newlines: u8,
     pub indicator_lines: u8,
 }
 
+#[derive(Deserialize)]
+struct FileAfterRun {
+    pub newlines: Option<u8>,
+    pub indicator_lines: Option<u8>,
+}
+
 /// The structure of the configuration file.
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
 struct FileConfiguration {
     actions: Vec<Action>,
     options: Option<FileOptions>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug)]
 pub struct Configuration {
     pub actions: Vec<Action>,
     pub options: Options,
@@ -156,15 +168,23 @@ impl Configuration {
                 let before_run = match file_options.before_run {
                     None => defaults.before_run,
                     Some(file_before_run) => BeforeRun {
-                        clear_screen: file_before_run.clear_screen,
-                        newlines: file_before_run.newlines,
+                        clear_screen: file_before_run
+                            .clear_screen
+                            .unwrap_or(defaults.before_run.clear_screen),
+                        newlines: file_before_run
+                            .newlines
+                            .unwrap_or(defaults.before_run.newlines),
                     },
                 };
                 let after_run = match file_options.after_run {
                     None => defaults.after_run,
                     Some(file_after_run) => AfterRun {
-                        indicator_lines: file_after_run.indicator_lines,
-                        newlines: file_after_run.newlines,
+                        indicator_lines: file_after_run
+                            .indicator_lines
+                            .unwrap_or(defaults.after_run.indicator_lines),
+                        newlines: file_after_run
+                            .newlines
+                            .unwrap_or(defaults.after_run.newlines),
                     },
                 };
                 Configuration {
@@ -317,16 +337,16 @@ mod tests {
             let file_config = FileConfiguration {
                 actions: vec![],
                 options: Some(FileOptions {
-                    before_run: Some(BeforeRun {
-                        clear_screen: true,
-                        newlines: 2,
+                    before_run: Some(FileBeforeRun {
+                        clear_screen: Some(true),
+                        newlines: None,
                     }),
                     after_run: None,
                 }),
             };
             let config = Configuration::backfill_defaults(file_config);
             assert_eq!(config.options.before_run.clear_screen, true);
-            assert_eq!(config.options.before_run.newlines, 2);
+            assert_eq!(config.options.before_run.newlines, 0);
             assert_eq!(config.options.after_run.indicator_lines, 3);
             assert_eq!(config.options.after_run.newlines, 0);
         }
