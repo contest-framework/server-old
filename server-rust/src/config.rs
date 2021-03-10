@@ -48,6 +48,21 @@ pub struct Options {
     pub after_run: AfterRun,
 }
 
+impl Options {
+    fn defaults() -> Options {
+        Options {
+            before_run: BeforeRun {
+                clear_screen: false,
+                newlines: 0,
+            },
+            after_run: AfterRun {
+                newlines: 0,
+                indicator_lines: 3,
+            },
+        }
+    }
+}
+
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BeforeRun {
@@ -60,6 +75,13 @@ pub struct BeforeRun {
 pub struct AfterRun {
     pub newlines: u8,
     pub indicator_lines: u8,
+}
+
+/// The structure of the configuration file.
+#[derive(Deserialize, Debug)]
+struct FileConfiguration {
+    pub actions: Vec<Action>,
+    pub options: Option<Options>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -76,8 +98,19 @@ pub fn from_file() -> Result<Configuration, TertError> {
             _ => return Err(TertError::ConfigFileNotReadable { err: e.to_string() }),
         },
     };
-    serde_json::from_reader(file).map_err(|err| TertError::ConfigFileInvalidContent {
-        err: err.to_string(),
+    let file_config: FileConfiguration =
+        serde_json::from_reader(file).map_err(|err| TertError::ConfigFileInvalidContent {
+            err: err.to_string(),
+        })?;
+    Ok(match file_config.options {
+        None => Configuration {
+            actions: file_config.actions,
+            options: Options::defaults(),
+        },
+        Some(options) => Configuration {
+            actions: file_config.actions,
+            options,
+        },
     })
 }
 
