@@ -3,58 +3,58 @@
 /// The possible errors that can occur in this codebase.
 #[derive(Debug, PartialEq)]
 pub enum TertError {
-  ArgsMissingOptionForRunCommand {},
-  ArgsUnknownCommand {
-    command: String,
-  },
-  CannotCreateConfigFile {
-    err: String,
-  },
-  ConfigFileNotFound {},
-  ConfigFileNotReadable {
-    err: String,
-  },
-  ConfigFileInvalidContent {
-    err: String,
-  },
-  ConfigInvalidGlobPattern {
-    pattern: String,
-    err: String,
-  },
-  FifoAlreadyExists {
-    path: String,
-  },
-  FifoCannotDelete {
-    err: String,
-  },
-  FifoCannotRead {
-    err: String,
-  },
-  InvalidTrigger {
-    line: String,
-    err: String,
-  },
-  RunCommandNotFound {
-    command: String,
-  },
-  TriggerTooManyCaptures {
-    count: usize,
-    regex: String,
-    line: String,
-  },
-  TriggerRegexNotFound {
-    regex: String,
-    filename: String,
-  },
-  UnknownTrigger {
-    line: String,
-  },
+    ArgsMissingOptionForRunCommand {},
+    ArgsUnknownCommand {
+        command: String,
+    },
+    CannotCreateConfigFile {
+        err: String,
+    },
+    ConfigFileNotFound {},
+    ConfigFileNotReadable {
+        err: String,
+    },
+    ConfigFileInvalidContent {
+        err: String,
+    },
+    ConfigInvalidGlobPattern {
+        pattern: String,
+        err: String,
+    },
+    FifoAlreadyExists {
+        path: String,
+    },
+    FifoCannotDelete {
+        err: String,
+    },
+    FifoCannotRead {
+        err: String,
+    },
+    InvalidTrigger {
+        line: String,
+        err: String,
+    },
+    RunCommandNotFound {
+        command: String,
+    },
+    TriggerTooManyCaptures {
+        count: usize,
+        regex: String,
+        line: String,
+    },
+    TriggerRegexNotFound {
+        regex: String,
+        filename: String,
+    },
+    UnknownTrigger {
+        line: String,
+    },
 }
 
 impl TertError {
-  /// Provides human-readable messages for TertErrors.
-  pub fn messages(&self) -> (String, String) {
-    match self {
+    /// Provides human-readable messages for TertErrors.
+    pub fn messages(&self) -> (String, String) {
+        match self {
       TertError::ArgsMissingOptionForRunCommand{} => ("missing option for \"run\" command".to_string(), "The \"run\" command requires the command to run".to_string()),
       TertError::ArgsUnknownCommand { command }  => (format!("unknown argument: {}", command), "The arguments are \"debug\" or \"run <command>\".".to_string()),
       TertError::CannotCreateConfigFile{err} => (format!("cannot create configuration file: {}", err), "".to_string()),
@@ -78,5 +78,5 @@ impl TertError {
       TertError::UnknownTrigger{line} => (format!("cannot determine command for trigger: {}", line),
       "Please make sure that this trigger is listed in your configuration file".to_string()),
     }
-  }
+    }
 }
