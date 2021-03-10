@@ -91,6 +91,7 @@ pub struct AfterRun {
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct FileAfterRun {
     pub newlines: Option<u8>,
     pub indicator_lines: Option<u8>,
