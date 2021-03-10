@@ -41,28 +41,70 @@ struct Var {
     filter: String,
 }
 
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
+#[derive(Debug)]
 pub struct Options {
     pub before_run: BeforeRun,
     pub after_run: AfterRun,
 }
 
-#[derive(Deserialize, Debug)]
+/// structure of options stored in the config file
+#[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
+struct FileOptions {
+    before_run: Option<FileBeforeRun>,
+    after_run: Option<FileAfterRun>,
+}
+
+impl Options {
+    fn defaults() -> Options {
+        Options {
+            before_run: BeforeRun {
+                clear_screen: false,
+                newlines: 0,
+            },
+            after_run: AfterRun {
+                newlines: 0,
+                indicator_lines: 3,
+            },
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct BeforeRun {
     pub clear_screen: bool,
     pub newlines: u8,
 }
 
-#[derive(Deserialize, Debug)]
+/// structure of the BeforeRun section in the configuration file
+#[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
+struct FileBeforeRun {
+    clear_screen: Option<bool>,
+    newlines: Option<u8>,
+}
+
+#[derive(Debug)]
 pub struct AfterRun {
     pub newlines: u8,
     pub indicator_lines: u8,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct FileAfterRun {
+    pub newlines: Option<u8>,
+    pub indicator_lines: Option<u8>,
+}
+
+/// The structure of the configuration file.
+#[derive(Deserialize)]
+struct FileConfiguration {
+    actions: Vec<Action>,
+    options: Option<FileOptions>,
+}
+
+#[derive(Debug)]
 pub struct Configuration {
     pub actions: Vec<Action>,
     pub options: Options,
@@ -76,9 +118,11 @@ pub fn from_file() -> Result<Configuration, TertError> {
             _ => return Err(TertError::ConfigFileNotReadable { err: e.to_string() }),
         },
     };
-    serde_json::from_reader(file).map_err(|err| TertError::ConfigFileInvalidContent {
-        err: err.to_string(),
-    })
+    let file_config: FileConfiguration =
+        serde_json::from_reader(file).map_err(|err| TertError::ConfigFileInvalidContent {
+            err: err.to_string(),
+        })?;
+    Ok(Configuration::backfill_defaults(file_config))
 }
 
 pub fn create() -> Result<(), TertError> {
@@ -113,6 +157,44 @@ pub fn create() -> Result<(), TertError> {
 }
 
 impl Configuration {
+    /// backfills missing values in the given FileConfiguration with default values
+    fn backfill_defaults(file: FileConfiguration) -> Configuration {
+        let defaults = Options::defaults();
+        match file.options {
+            None => Configuration {
+                actions: file.actions,
+                options: defaults,
+            },
+            Some(file_options) => Configuration {
+                actions: file.actions,
+                options: Options {
+                    before_run: match file_options.before_run {
+                        None => defaults.before_run,
+                        Some(file_before_run) => BeforeRun {
+                            clear_screen: file_before_run
+                                .clear_screen
+                                .unwrap_or(defaults.before_run.clear_screen),
+                            newlines: file_before_run
+                                .newlines
+                                .unwrap_or(defaults.before_run.newlines),
+                        },
+                    },
+                    after_run: match file_options.after_run {
+                        None => defaults.after_run,
+                        Some(file_after_run) => AfterRun {
+                            indicator_lines: file_after_run
+                                .indicator_lines
+                                .unwrap_or(defaults.after_run.indicator_lines),
+                            newlines: file_after_run
+                                .newlines
+                                .unwrap_or(defaults.after_run.newlines),
+                        },
+                    },
+                },
+            },
+        }
+    }
+
     pub fn get_command(&self, trigger: Trigger) -> Result<String, TertError> {
         for action in &self.actions {
             if action.trigger.matches_client_trigger(&trigger)? {
@@ -229,6 +311,43 @@ fn replace(text: &str, placeholder: &str, replacement: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+
+    #[cfg(test)]
+    mod backfill_defaults {
+        use super::super::*;
+
+        #[test]
+        fn no_options() {
+            let file_config = FileConfiguration {
+                actions: vec![],
+                options: None,
+            };
+            let config = Configuration::backfill_defaults(file_config);
+            assert_eq!(config.options.before_run.clear_screen, false);
+            assert_eq!(config.options.before_run.newlines, 0);
+            assert_eq!(config.options.after_run.indicator_lines, 3);
+            assert_eq!(config.options.after_run.newlines, 0);
+        }
+
+        #[test]
+        fn some_options() {
+            let file_config = FileConfiguration {
+                actions: vec![],
+                options: Some(FileOptions {
+                    before_run: Some(FileBeforeRun {
+                        clear_screen: Some(true),
+                        newlines: None,
+                    }),
+                    after_run: None,
+                }),
+            };
+            let config = Configuration::backfill_defaults(file_config);
+            assert_eq!(config.options.before_run.clear_screen, true);
+            assert_eq!(config.options.before_run.newlines, 0);
+            assert_eq!(config.options.after_run.indicator_lines, 3);
+            assert_eq!(config.options.after_run.newlines, 0);
+        }
+    }
 
     #[cfg(test)]
     mod get_command {
