@@ -105,7 +105,7 @@ mod tests {
         match pipe.create() {
             CreateOutcome::AlreadyExists(_) => {}
             CreateOutcome::Ok() => panic!("should not create second pipe"),
-            CreateOutcome::OtherError(err) => panic!(err),
+            CreateOutcome::OtherError(err) => panic!("{}", err),
         }
         std::fs::remove_dir_all(&temp_path)?;
         Ok(())

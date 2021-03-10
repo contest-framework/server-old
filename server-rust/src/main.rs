@@ -24,7 +24,7 @@ fn main() {
     });
     let _ = fifo::in_dir(&std::env::current_dir().unwrap()).delete();
     if panic_result.is_err() {
-        panic!(panic_result);
+        panic!("{:?}", panic_result);
     }
 }
 
@@ -58,7 +58,7 @@ fn listen(debug: bool) -> Result<(), TertError> {
         fifo::CreateOutcome::AlreadyExists(path) => {
             return Err(TertError::FifoAlreadyExists { path })
         }
-        fifo::CreateOutcome::OtherError(err) => panic!(err),
+        fifo::CreateOutcome::OtherError(err) => panic!("{}", err),
         fifo::CreateOutcome::Ok() => {}
     }
     fifo::listen(pipe, sender);
