@@ -102,16 +102,7 @@ pub fn from_file() -> Result<Configuration, TertError> {
         serde_json::from_reader(file).map_err(|err| TertError::ConfigFileInvalidContent {
             err: err.to_string(),
         })?;
-    Ok(match file_config.options {
-        None => Configuration {
-            actions: file_config.actions,
-            options: Options::defaults(),
-        },
-        Some(options) => Configuration {
-            actions: file_config.actions,
-            options,
-        },
-    })
+    Ok(Configuration::backfill_defaults(file_config))
 }
 
 pub fn create() -> Result<(), TertError> {
@@ -146,6 +137,20 @@ pub fn create() -> Result<(), TertError> {
 }
 
 impl Configuration {
+    /// backfills missing values in the given FileConfiguration with default values
+    fn backfill_defaults(file: FileConfiguration) -> Configuration {
+        match file.options {
+            None => Configuration {
+                actions: file.actions,
+                options: Options::defaults(),
+            },
+            Some(options) => Configuration {
+                actions: file.actions,
+                options,
+            },
+        }
+    }
+
     pub fn get_command(&self, trigger: Trigger) -> Result<String, TertError> {
         for action in &self.actions {
             if action.trigger.matches_client_trigger(&trigger)? {
