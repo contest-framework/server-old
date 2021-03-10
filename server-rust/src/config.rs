@@ -48,6 +48,13 @@ pub struct Options {
     pub after_run: AfterRun,
 }
 
+/// structure of options stored in the config file
+#[derive(Deserialize, Debug)]
+struct FileOptions {
+    before_run: Option<BeforeRun>,
+    after_run: Option<AfterRun>,
+}
+
 impl Options {
     fn defaults() -> Options {
         Options {
@@ -80,8 +87,8 @@ pub struct AfterRun {
 /// The structure of the configuration file.
 #[derive(Deserialize, Debug)]
 struct FileConfiguration {
-    pub actions: Vec<Action>,
-    pub options: Option<Options>,
+    actions: Vec<Action>,
+    options: Option<FileOptions>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -139,15 +146,35 @@ pub fn create() -> Result<(), TertError> {
 impl Configuration {
     /// backfills missing values in the given FileConfiguration with default values
     fn backfill_defaults(file: FileConfiguration) -> Configuration {
+        let defaults = Options::defaults();
         match file.options {
             None => Configuration {
                 actions: file.actions,
-                options: Options::defaults(),
+                options: defaults,
             },
-            Some(options) => Configuration {
-                actions: file.actions,
-                options,
-            },
+            Some(file_options) => {
+                let before_run = match file_options.before_run {
+                    None => defaults.before_run,
+                    Some(file_before_run) => BeforeRun {
+                        clear_screen: file_before_run.clear_screen,
+                        newlines: file_before_run.newlines,
+                    },
+                };
+                let after_run = match file_options.after_run {
+                    None => defaults.after_run,
+                    Some(file_after_run) => AfterRun {
+                        indicator_lines: file_after_run.indicator_lines,
+                        newlines: file_after_run.newlines,
+                    },
+                };
+                Configuration {
+                    actions: file.actions,
+                    options: Options {
+                        before_run,
+                        after_run,
+                    },
+                }
+            }
         }
     }
 
@@ -269,11 +296,11 @@ fn replace(text: &str, placeholder: &str, replacement: &str) -> String {
 mod tests {
 
     #[cfg(test)]
-    mod config {
+    mod backfill_defaults {
         use super::super::*;
 
         #[test]
-        fn test_all() {
+        fn no_options() {
             let file_config = FileConfiguration {
                 actions: vec![],
                 options: None,
@@ -281,6 +308,25 @@ mod tests {
             let config = Configuration::backfill_defaults(file_config);
             assert_eq!(config.options.before_run.clear_screen, false);
             assert_eq!(config.options.before_run.newlines, 0);
+            assert_eq!(config.options.after_run.indicator_lines, 3);
+            assert_eq!(config.options.after_run.newlines, 0);
+        }
+
+        #[test]
+        fn some_options() {
+            let file_config = FileConfiguration {
+                actions: vec![],
+                options: Some(FileOptions {
+                    before_run: Some(BeforeRun {
+                        clear_screen: true,
+                        newlines: 2,
+                    }),
+                    after_run: None,
+                }),
+            };
+            let config = Configuration::backfill_defaults(file_config);
+            assert_eq!(config.options.before_run.clear_screen, true);
+            assert_eq!(config.options.before_run.newlines, 2);
             assert_eq!(config.options.after_run.indicator_lines, 3);
             assert_eq!(config.options.after_run.newlines, 0);
         }
