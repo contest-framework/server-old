@@ -269,6 +269,24 @@ fn replace(text: &str, placeholder: &str, replacement: &str) -> String {
 mod tests {
 
     #[cfg(test)]
+    mod config {
+        use super::super::*;
+
+        #[test]
+        fn test_all() {
+            let file_config = FileConfiguration {
+                actions: vec![],
+                options: None,
+            };
+            let config = Configuration::backfill_defaults(file_config);
+            assert_eq!(config.options.before_run.clear_screen, false);
+            assert_eq!(config.options.before_run.newlines, 0);
+            assert_eq!(config.options.after_run.indicator_lines, 3);
+            assert_eq!(config.options.after_run.newlines, 0);
+        }
+    }
+
+    #[cfg(test)]
     mod get_command {
         use super::super::*;
 
