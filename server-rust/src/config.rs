@@ -165,37 +165,33 @@ impl Configuration {
                 actions: file.actions,
                 options: defaults,
             },
-            Some(file_options) => {
-                let before_run = match file_options.before_run {
-                    None => defaults.before_run,
-                    Some(file_before_run) => BeforeRun {
-                        clear_screen: file_before_run
-                            .clear_screen
-                            .unwrap_or(defaults.before_run.clear_screen),
-                        newlines: file_before_run
-                            .newlines
-                            .unwrap_or(defaults.before_run.newlines),
+            Some(file_options) => Configuration {
+                actions: file.actions,
+                options: Options {
+                    before_run: match file_options.before_run {
+                        None => defaults.before_run,
+                        Some(file_before_run) => BeforeRun {
+                            clear_screen: file_before_run
+                                .clear_screen
+                                .unwrap_or(defaults.before_run.clear_screen),
+                            newlines: file_before_run
+                                .newlines
+                                .unwrap_or(defaults.before_run.newlines),
+                        },
                     },
-                };
-                let after_run = match file_options.after_run {
-                    None => defaults.after_run,
-                    Some(file_after_run) => AfterRun {
-                        indicator_lines: file_after_run
-                            .indicator_lines
-                            .unwrap_or(defaults.after_run.indicator_lines),
-                        newlines: file_after_run
-                            .newlines
-                            .unwrap_or(defaults.after_run.newlines),
+                    after_run: match file_options.after_run {
+                        None => defaults.after_run,
+                        Some(file_after_run) => AfterRun {
+                            indicator_lines: file_after_run
+                                .indicator_lines
+                                .unwrap_or(defaults.after_run.indicator_lines),
+                            newlines: file_after_run
+                                .newlines
+                                .unwrap_or(defaults.after_run.newlines),
+                        },
                     },
-                };
-                Configuration {
-                    actions: file.actions,
-                    options: Options {
-                        before_run,
-                        after_run,
-                    },
-                }
-            }
+                },
+            },
         }
     }
 
