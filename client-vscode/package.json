@@ -14,7 +14,8 @@
     "onCommand:tertestrial-vscode.testFile",
     "onCommand:tertestrial-vscode.testFunction",
     "onCommand:tertestrial-vscode.repeatTest",
-    "onCommand:tertestrial-vscode.stopTest"
+    "onCommand:tertestrial-vscode.stopTest",
+    "onCommand:tertestrial-vscode.autoTest"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -38,6 +39,10 @@
       {
         "command": "tertestrial-vscode.stopTest",
         "title": "Tertestrial: Stop the current test"
+      },
+      {
+        "command": "tertestrial-vscode.autoTest",
+        "title": "Tertestrial: Start/Stop auto-running the last test command on file save"
       }
     ],
     "jsonValidation": [
