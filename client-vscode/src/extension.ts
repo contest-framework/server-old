@@ -5,11 +5,13 @@ import * as workspace from "./workspace"
 import { UserError } from "./user_error"
 
 export function activate(context: vscode.ExtensionContext) {
-  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testAll", runSafe(testAll)))
-  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testFile", runSafe(testFile)))
-  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.testFunction", runSafe(testFunction)))
-  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.repeatTest", runSafe(repeatTest)))
-  context.subscriptions.push(vscode.commands.registerCommand("tertestrial-vscode.stopTest", runSafe(stopTest)))
+  context.subscriptions.push(
+    vscode.commands.registerCommand("tertestrial-vscode.testAll", runSafe(testAll)),
+    vscode.commands.registerCommand("tertestrial-vscode.testFile", runSafe(testFile)),
+    vscode.commands.registerCommand("tertestrial-vscode.testFunction", runSafe(testFunction)),
+    vscode.commands.registerCommand("tertestrial-vscode.repeatTest", runSafe(repeatTest)),
+    vscode.commands.registerCommand("tertestrial-vscode.stopTest", runSafe(stopTest))
+  )
 }
 
 async function testAll() {
