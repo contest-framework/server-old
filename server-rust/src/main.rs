@@ -120,16 +120,27 @@ fn run_with_decoration(text: String, config: &config::Configuration) -> Result<(
 
 fn run_command(text: String, configuration: &config::Configuration) -> Result<bool, TertError> {
     let trigger = trigger::from_string(&text)?;
-    let command = configuration.get_command(trigger)?;
-    match run::run(&command) {
-        run::Outcome::TestPass() => {
-            println!("SUCCESS!");
-            Ok(true)
-        }
-        run::Outcome::TestFail() => {
-            println!("FAILED!");
-            Ok(false)
-        }
-        run::Outcome::NotFound(command) => Err(TertError::RunCommandNotFound { command }),
+    match configuration.get_command(trigger) {
+        Err(err) => match err {
+            TertError::NoCommandToRepeat {} => {
+                // repeat non-existing command --> don't stop, just print an error message and keep going
+                let (msg, desc) = err.messages();
+                println!("{}", msg);
+                println!("{}", desc);
+                return Ok(false);
+            }
+            _ => return Err(err),
+        },
+        Ok(command) => match run::run(&command) {
+            run::Outcome::TestPass() => {
+                println!("SUCCESS!");
+                Ok(true)
+            }
+            run::Outcome::TestFail() => {
+                println!("FAILED!");
+                Ok(false)
+            }
+            run::Outcome::NotFound(command) => Err(TertError::RunCommandNotFound { command }),
+        },
     }
 }
