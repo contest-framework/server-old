@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("tertestrial-vscode.testFunction", runSafe(testFunction)),
     vscode.commands.registerCommand("tertestrial-vscode.repeatTest", runSafe(repeatTest)),
     vscode.commands.registerCommand("tertestrial-vscode.stopTest", runSafe(stopTest)),
-    vscode.commands.registerCommand("tertestrial-vscode.autoTest", switchAutoTest),
+    vscode.commands.registerCommand("tertestrial-vscode.autoRepeat", switchAutoTest),
     vscode.workspace.onDidSaveTextDocument(documentSaved)
   )
 }
@@ -60,19 +60,19 @@ function runSafe(f: () => Promise<void>): () => Promise<void> {
 }
 
 /** indicates whether auto-repeating is enabled on file save */
-let autoTest = false
+let autoRepeat = false
 
 function switchAutoTest() {
-  autoTest = !autoTest
-  if (autoTest) {
-    notification.display("AutoTest ON")
+  autoRepeat = !autoRepeat
+  if (autoRepeat) {
+    notification.display("auto-repeat ON")
   } else {
-    notification.display("AutoTest OFF")
+    notification.display("auto-repeat OFF")
   }
 }
 
 function documentSaved() {
-  if (autoTest) {
+  if (autoRepeat) {
     runSafe(repeatTest)()
   }
 }
