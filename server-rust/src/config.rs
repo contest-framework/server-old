@@ -9,7 +9,7 @@ use std::cell::Cell;
 use std::vec::Vec;
 
 /// Actions are executed when receiving a trigger.
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
 pub struct Action {
     trigger: Trigger,
     run: String,
@@ -35,14 +35,13 @@ impl std::fmt::Display for VarSource {
     }
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize)]
 struct Var {
     name: String,
     source: VarSource,
     filter: String,
 }
 
-#[derive(Debug)]
 pub struct Options {
     pub before_run: BeforeRun,
     pub after_run: AfterRun,
@@ -71,7 +70,6 @@ impl Options {
     }
 }
 
-#[derive(Debug)]
 pub struct BeforeRun {
     pub clear_screen: bool,
     pub newlines: u8,
@@ -85,7 +83,6 @@ struct FileBeforeRun {
     newlines: Option<u8>,
 }
 
-#[derive(Debug)]
 pub struct AfterRun {
     pub newlines: u8,
     pub indicator_lines: u8,
