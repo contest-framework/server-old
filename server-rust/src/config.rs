@@ -5,6 +5,7 @@ use super::trigger::Trigger;
 use prettytable::Table;
 use regex::Regex;
 use serde::Deserialize;
+use std::cell::Cell;
 use std::vec::Vec;
 
 /// Actions are executed when receiving a trigger.
@@ -104,10 +105,10 @@ struct FileConfiguration {
     options: Option<FileOptions>,
 }
 
-#[derive(Debug)]
 pub struct Configuration {
     pub actions: Vec<Action>,
     pub options: Options,
+    pub last_command: Cell<Option<String>>,
 }
 
 pub fn from_file() -> Result<Configuration, TertError> {
@@ -164,6 +165,7 @@ impl Configuration {
             None => Configuration {
                 actions: file.actions,
                 options: defaults,
+                last_command: Cell::new(None),
             },
             Some(file_options) => Configuration {
                 actions: file.actions,
@@ -191,14 +193,27 @@ impl Configuration {
                         },
                     },
                 },
+                last_command: Cell::new(None),
             },
         }
     }
 
     pub fn get_command(&self, trigger: Trigger) -> Result<String, TertError> {
+        if trigger.command == "repeatTest" {
+            // HACK: taking the value out of the cell and putting a clone back into it
+            //       because I don't understand how to implement Copy for the embedded String yet.
+            let last_command = self.last_command.take();
+            self.last_command.set(last_command.clone());
+            match last_command {
+                None => return Err(TertError::NoCommandToRepeat {}),
+                Some(command) => return Ok(command),
+            }
+        }
         for action in &self.actions {
             if action.trigger.matches_client_trigger(&trigger)? {
-                return self.format_run(&action, &trigger);
+                let command = self.format_run(&action, &trigger)?;
+                self.last_command.set(Some(command.clone()));
+                return Ok(command);
             }
         }
         Err(TertError::UnknownTrigger {
@@ -367,6 +382,7 @@ mod tests {
                         indicator_lines: 0,
                     },
                 },
+                last_command: Cell::new(None),
             };
             let give = Trigger {
                 command: "testAll".to_string(),
@@ -418,6 +434,7 @@ mod tests {
                         indicator_lines: 0,
                     },
                 },
+                last_command: Cell::new(None),
             };
             let give = Trigger {
                 command: "testFunction".to_string(),
@@ -451,6 +468,7 @@ mod tests {
                         indicator_lines: 0,
                     },
                 },
+                last_command: Cell::new(None),
             };
             let give = Trigger {
                 command: "testFile".to_string(),

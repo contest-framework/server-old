@@ -34,6 +34,7 @@ pub enum TertError {
         line: String,
         err: String,
     },
+    NoCommandToRepeat {},
     RunCommandNotFound {
         command: String,
     },
@@ -69,6 +70,7 @@ impl TertError {
       TertError::FifoCannotRead{err} => (format!("Cannot read from pipe: {}", err), "This is an internal error".to_string()),
       TertError::InvalidTrigger{line, err} => (format!("cannot parse command received from client: {}", line),
         format!( "This is a problem with your Tertestrial client.\n\nError message from JSON parser: {}", err)),
+      TertError::NoCommandToRepeat{} => ("No command to repeat found".to_string(), "You must submit a test command first before you can repeat it.".to_string()),
       TertError::RunCommandNotFound{command} => (format!("test command to run not found: {}", command),
                 "Please verify that the command is in the path or fix your config file.".to_string()),
       TertError::TriggerTooManyCaptures{count, regex, line} => (format!("found {} captures using regex \"{}\" on line: {}", count, regex, line),
