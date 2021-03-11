@@ -198,7 +198,7 @@ impl Configuration {
     pub fn get_command(&self, trigger: Trigger) -> Result<String, TertError> {
         for action in &self.actions {
             if action.trigger.matches_client_trigger(&trigger)? {
-                return Ok(self.format_run(&action, &trigger)?);
+                return self.format_run(&action, &trigger);
             }
         }
         Err(TertError::UnknownTrigger {
