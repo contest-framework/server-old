@@ -6,31 +6,27 @@ This extension provides these commands inside VSCode:
 
 <table type="commands">
   <tr>
-    <th>command</th>
-    <th>description</th>
-  </tr>
-  <tr>
-    <td>testAll</td>
+    <td><b>testAll</b></td>
     <td>Test everything</td>
   </tr>
   <tr>
-    <td>testFile</td>
+    <td><b>testFile</b></td>
     <td>Test this file</td>
   </tr>
   <tr>
-    <td>testFunction</td>
+    <td><b>testFunction</b></td>
     <td>Test this function</td>
   </tr>
   <tr>
-    <td>repeatTest</td>
+    <td><b>repeatTest</b></td>
     <td>Repeat the last test</td>
   </tr>
   <tr>
-    <td>stopTest</td>
+    <td><b>stopTest</b></td>
     <td>Stop the current test</td>
   </tr>
   <tr>
-    <td>autoRepeat</td>
+    <td><b>autoRepeat</b></td>
     <td>Start/Stop auto-repeat on file save</td>
   </tr>
 </table>
