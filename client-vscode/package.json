@@ -1,7 +1,8 @@
 {
   "name": "tertestrial-vscode",
   "displayName": "Tertestrial",
-  "description": "A Tertestrial client for VSCode",
+  "description": "The official Tertestrial plugin for VSCode",
+  "publisher": "kevgo",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.52.0"
