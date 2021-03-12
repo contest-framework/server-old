@@ -1,3 +1,3 @@
 # Tertestrial client for VSCode
 
-This VSCode plugin make VSCode a client for [Tertestrial](https://github.com/kevgo/tertestrial-server).
+The official [Tertestrial](https://github.com/kevgo/tertestrial) plugin for [VSCode](https://code.visualstudio.com).
