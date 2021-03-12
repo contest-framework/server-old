@@ -57,7 +57,7 @@ impl TertError {
     pub fn messages(&self) -> (String, String) {
         match self {
       TertError::ArgsMissingOptionForRunCommand{} => ("missing option for \"run\" command".to_string(), "The \"run\" command requires the command to run".to_string()),
-      TertError::ArgsUnknownCommand { command }  => (format!("unknown argument: {}", command), "The arguments are \"debug\" or \"run <command>\".".to_string()),
+      TertError::ArgsUnknownCommand { command }  => (format!("unknown argument: {}", command), help()),
       TertError::CannotCreateConfigFile{err} => (format!("cannot create configuration file: {}", err), "".to_string()),
       TertError::ConfigFileInvalidContent{err} => {
         (format!("Cannot parse configuration file: {}", err), "".to_string())
@@ -81,4 +81,19 @@ impl TertError {
       "Please make sure that this trigger is listed in your configuration file".to_string()),
     }
     }
+}
+
+fn help() -> String {
+    "\
+Usage: tertestial [command]
+
+Without command, Tertestrial starts normally.
+
+You can provide the following commands:
+- debug: prints the commands received from the client without running them
+- run: executes the given command as if it was received by the client
+- setup: create an example configuration file
+- version: show the version of the installed Tertestrial server
+"
+    .to_string()
 }
