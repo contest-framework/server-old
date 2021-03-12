@@ -32,6 +32,10 @@ fn main_with_err() -> Result<(), TertError> {
     match args::parse(std::env::args())? {
         args::Command::Normal => listen(false),
         args::Command::Debug => listen(true),
+        args::Command::Help => {
+            println!("{}", errors::help());
+            Ok(())
+        }
         args::Command::Run(cmd) => {
             println!("running cmd: {}", cmd);
             let config = config::from_file()?;

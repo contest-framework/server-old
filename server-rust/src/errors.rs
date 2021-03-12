@@ -83,7 +83,7 @@ impl TertError {
     }
 }
 
-fn help() -> String {
+pub fn help() -> String {
     "\
 Usage: tertestial [command]
 
@@ -91,6 +91,7 @@ Without command, Tertestrial starts normally.
 
 You can provide the following commands:
 - debug: prints the commands received from the client without running them
+- help: display this help screen
 - run: executes the given command as if it was received by the client
 - setup: create an example configuration file
 - version: show the version of the installed Tertestrial server

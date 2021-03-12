@@ -6,6 +6,7 @@ use super::errors::TertError;
 pub enum Command {
     Normal,      // normal operation
     Debug,       // print the received commands from the pipe
+    Help,        // print the help screen
     Run(String), // run the given command manually
     Setup,       // create a config file
     Version,     // show the version
@@ -22,6 +23,7 @@ where
             None => return Ok(mode),
             Some(command) => match command.as_str() {
                 "debug" => mode = Command::Debug,
+                "help" => mode = Command::Help,
                 "run" => match argv.next() {
                     Some(cmd) => mode = Command::Run(cmd),
                     None => return Err(TertError::ArgsMissingOptionForRunCommand {}),
