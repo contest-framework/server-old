@@ -1,4 +1,46 @@
 {
   "$schema": "http://json-schema.org/schema#",
-  "$id": "http://github.com/kevgo/tertestrial/testconfig.json"
+  "$id": "http://github.com/kevgo/tertestrial/testconfig.schema.json",
+  "title": "Tertestrial configuration",
+  "type": "object",
+  "properties": {
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "beforeRun": {
+          "type": "object",
+          "properties": {
+            "clearScreen": {
+              "type": "boolean"
+            },
+            "newlines": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "afterRun": {
+          "type": "object",
+          "properties": {
+            "newlines": {
+              "type": "number",
+              "minimum": 0
+            },
+            "indicatorLines": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["actions"]
 }
