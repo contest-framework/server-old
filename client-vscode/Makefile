@@ -32,9 +32,8 @@ setup:  # prepare this code base for development
 	make build
 
 test:  # runs all the tests
-	make unit &
-	make doc &
-	make build
+	make --no-print-directory doc &
+	make --no-print-directory build
 
 test-ci:  # runs all the tests on ci
 	make build
