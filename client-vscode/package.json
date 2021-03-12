@@ -4,8 +4,15 @@
   "description": "The official Tertestrial plugin for VSCode",
   "publisher": "kevgo",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevgo/tertestrial"
+  },
+  "bugs": {
+    "url": "https://github.com/kevgo/tertestrial/issues"
+  },
   "engines": {
-    "vscode": "^1.52.0"
+    "vscode": "^1.54.0"
   },
   "categories": [
     "Other"
