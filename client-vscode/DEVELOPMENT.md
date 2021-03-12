@@ -11,6 +11,17 @@
 - run tests: <code type="make/command">make test</code>
 - see all dev scripts: <code type="make/command">make help</code>
 
+To try the extension out locally:
+
+- menu: Run > Run Without Debugging
+- in the new VSCode instance that pops up: File > Open Folder > select folder that isn't open in a VSCode instance yet
+
+Local installation:
+
+- <code type="make/command">make package</code>
+- run `code --install-extension tikibase-*.vsix` in terminal
+- restart VSCode
+
 ### debug
 
 Debug in VSCode:
@@ -20,12 +31,6 @@ Debug in VSCode:
 - choose `Run Extension`
 - click on the `play` icon
 - open folder > choose a different folder than the current one
-
-Local installation:
-
-- <code type="make/command">make package</code>
-- run `code --install-extension tikibase-*.vsix` in terminal
-- restart VSCode
 
 ### update
 
