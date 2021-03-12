@@ -1,5 +1,6 @@
 build:  # compiles the extension
 	${CURDIR}/node_modules/.bin/tsc -p .
+	cp src/testconfig.schema.json out/
 
 doc:  # runs the documentation tests
 	${CURDIR}/node_modules/.bin/text-run --format=dot
