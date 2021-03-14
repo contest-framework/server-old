@@ -1,5 +1,7 @@
 # Tertestrial client for VSCode
 
+<img src="icon-color-400.png" width="200" height="200">
+
 The official [Tertestrial](https://github.com/kevgo/tertestrial) plugin for [VSCode](https://code.visualstudio.com).
 
 This extension provides these commands inside VSCode:
