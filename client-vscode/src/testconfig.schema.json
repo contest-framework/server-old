@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/schema#",
-  "$id": "http://github.com/kevgo/tertestrial/testconfig.schema.json",
   "title": "Tertestrial configuration",
   "type": "object",
   "properties": {
