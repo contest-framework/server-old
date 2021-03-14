@@ -1,6 +1,6 @@
 # Tertestrial client for VSCode
 
-<img src="icon-color-400.png" width="200" height="200">
+<img src="../documentation/icon/icon-color-300.png" width="150" height="124">
 
 The official [Tertestrial](https://github.com/kevgo/tertestrial) plugin for [VSCode](https://code.visualstudio.com).
 
