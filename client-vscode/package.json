@@ -56,7 +56,7 @@
     "jsonValidation": [
       {
         "fileMatch": ".testconfig.json",
-        "url": "./out/testconfig.schema.json"
+        "url": "./src/testconfig.schema.json"
       }
     ]
   },
