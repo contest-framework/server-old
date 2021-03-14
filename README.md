@@ -1,5 +1,5 @@
 ---
-# DEPRECATED, PLEASE USE THE NEW SERVER IMPLEMENTATION AT https://github.com/tertestrial/server
+# DEPRECATED, PLEASE USE THE NEW IMPLEMENTATION AT https://github.com/tertestrial/server
 ---
 
 # Tertestrial Server - a test auto-runner
