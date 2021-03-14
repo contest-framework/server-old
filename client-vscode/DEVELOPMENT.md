@@ -19,7 +19,7 @@ To try the extension out locally:
 Local installation:
 
 - <code type="make/command">make package</code>
-- run `code --install-extension tikibase-*.vsix` in terminal
+- run `code --install-extension tertestrial-*.vsix` in terminal
 - restart VSCode
 
 ### debug

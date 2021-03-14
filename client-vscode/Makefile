@@ -1,6 +1,3 @@
-build:  # compiles the extension
-	${CURDIR}/node_modules/.bin/tsc -p .
-
 doc:  # runs the documentation tests
 	${CURDIR}/node_modules/.bin/text-run --format=dot
 
@@ -32,8 +29,8 @@ setup:  # prepare this code base for development
 	make build
 
 test:  # runs all the tests
-	make --no-print-directory doc &
-	make --no-print-directory build
+	${CURDIR}/node_modules/.bin/tsc -p . &
+	make --no-print-directory doc
 
 test-ci:  # runs all the tests on ci
 	make build

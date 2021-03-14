@@ -1,4 +1,76 @@
 {
   "$schema": "http://json-schema.org/schema#",
-  "$id": "http://github.com/kevgo/tertestrial/testconfig.json"
+  "title": "Tertestrial configuration",
+  "type": "object",
+  "properties": {
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "type": "object",
+            "properties": {
+              "command": {
+                "type": "string",
+                "enum": ["testAll", "testFile", "testFunction", "repeatTest", "stopTest"],
+                "description": "command sent from the Tertestrial client"
+              },
+              "file": {
+                "type": "string",
+                "description": "filename sent from the Tertestrial client"
+              },
+              "line": {
+                "type": "string",
+                "description": "line sent from the Tertestrial client"
+              }
+            }
+          },
+          "run": {
+            "type": "string",
+            "description": "the command to run"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "options": {
+      "type": "object",
+      "description": "Tertestrial options",
+      "properties": {
+        "beforeRun": {
+          "type": "object",
+          "description": "Things Tertestrial does before executing the test",
+          "properties": {
+            "clearScreen": {
+              "type": "boolean",
+              "description": "whether to clear the terminal before running the test"
+            },
+            "newlines": {
+              "type": "number",
+              "description": "number of newlines before printing the test output",
+              "minimum": 0
+            }
+          }
+        },
+        "afterRun": {
+          "type": "object",
+          "description": "Things Tertestrial does after executing the test",
+          "properties": {
+            "newlines": {
+              "type": "number",
+              "description": "number of newlines after printing the test output",
+              "minimum": 0
+            },
+            "indicatorLines": {
+              "type": "number",
+              "description": "number of red/green lines indicating the test result",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["actions"]
 }
