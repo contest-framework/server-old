@@ -6,7 +6,31 @@
     "actions": {
       "type": "array",
       "items": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "type": "object",
+            "properties": {
+              "command": {
+                "type": "string",
+                "enum": ["testAll", "testFile", "testFunction", "repeatTest", "stopTest"],
+                "description": "command sent from the Tertestrial client"
+              },
+              "file": {
+                "type": "string",
+                "description": "filename sent from the Tertestrial client"
+              },
+              "line": {
+                "type": "string",
+                "description": "line sent from the Tertestrial client"
+              }
+            }
+          },
+          "run": {
+            "type": "string",
+            "description": "the command to run"
+          }
+        }
       },
       "minItems": 1
     },
