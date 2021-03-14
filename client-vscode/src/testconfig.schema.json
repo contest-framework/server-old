@@ -12,28 +12,35 @@
     },
     "options": {
       "type": "object",
+      "description": "Tertestrial options",
       "properties": {
         "beforeRun": {
           "type": "object",
+          "description": "Things Tertestrial does before executing the test",
           "properties": {
             "clearScreen": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "whether to clear the terminal before running the test"
             },
             "newlines": {
               "type": "number",
+              "description": "number of newlines before printing the test output",
               "minimum": 0
             }
           }
         },
         "afterRun": {
           "type": "object",
+          "description": "Things Tertestrial does after executing the test",
           "properties": {
             "newlines": {
               "type": "number",
+              "description": "number of newlines after printing the test output",
               "minimum": 0
             },
             "indicatorLines": {
               "type": "number",
+              "description": "number of red/green lines indicating the test result",
               "minimum": 0
             }
           }
