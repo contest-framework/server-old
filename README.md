@@ -1,3 +1,7 @@
+---
+# DEPRECATED IN FAVOR OF https://github.com/tertestrial/server
+---
+
 # Tertestrial Server - a test auto-runner
 
 <a href="https://travis-ci.org/kevgo/tertestrial-server">
