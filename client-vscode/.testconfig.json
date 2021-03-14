@@ -4,6 +4,5 @@
       "trigger": { "command": "testAll" },
       "run": "make test"
     }
-  ],
-  "options": {}
+  ]
 }
